@@ -1,0 +1,57 @@
+services:
+  postgresql:
+    image: postgres:16.4
+    container_name: postgresql
+    networks:
+      - transcendence
+    build:
+      context: requirements/postgresql
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/mysql
+    expose:
+      - "3306"
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    networks:
+      - transcendence
+    depends_on:
+      - app
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - static:/var/www/html
+    ports:
+      - "443:443"
+    restart: on-failure
+
+  app:
+    container_name: app
+    networks:
+      - transcendence
+    depends_on:
+      - postgresql
+    build:
+      context: requirements/app
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - static:/var/www/html
+    expose:
+      - "9000"
+    restart: unless-stopped
+
+volumes:
+  static:
+  db:
+      
+networks:
+  transcendence:
+    driver: bridge
