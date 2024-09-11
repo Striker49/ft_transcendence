@@ -10,10 +10,13 @@ RUN apk update && \
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/nginx/ssl/nginx.key \
     -out /etc/nginx/ssl/nginx.crt \
-    -subj "/C=CA/ST=QC/L=Quebec/O=42 School/OU=inception/CN=inception"
+    -subj "/C=CA/ST=QC/L=Quebec/O=42 School/OU=transcendence/CN=transcendence"
 
 # Copy conf in image
 COPY ./conf/nginx.conf ./etc/nginx/nginx.conf
+
+# Copy static folder in image
+COPY /static/ /static/
 
 # Create folder where temporary files will be kept
 RUN mkdir -p /run/nginx
