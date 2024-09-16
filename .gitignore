@@ -1,0 +1,5 @@
+srcs/.env.dev
+srcs/requirements/app/Django/__pycache__/wsgi.cpython-312.pyc
+srcs/requirements/app/Django/__pycache__/urls.cpython-312.pyc
+srcs/requirements/app/Django/__pycache__/settings.cpython-312.pyc
+srcs/requirements/app/Django/__pycache__/__init__.cpython-312.pyc
