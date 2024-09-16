@@ -9,6 +9,7 @@ export function createBall() {
     const ball = new THREE.Mesh(geometry, material);
 	ball.position.x = 0;
 	ball.position.y = 0;
+	ball.position.z = -1.1;
 
     return { ball };
 }
