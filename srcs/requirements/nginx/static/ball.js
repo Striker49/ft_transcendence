@@ -11,5 +11,5 @@ export function createBall() {
 	ball.position.y = 0;
 	ball.position.z = -1.1;
 
-    return { ball };
+    return ball ;
 }

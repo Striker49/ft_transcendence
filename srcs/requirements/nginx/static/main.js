@@ -20,8 +20,8 @@ camera.position.set(0, 0, 120 );
 
 const scene = new THREE.Scene();
 
-// renderer.shadowMap.enabled = true;
-// renderer.shadowMap.type = THREE.PCSoftShadowMap;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCSoftShadowMap;
 
 const light = new THREE.AmbientLight(0xffffff);  // Ambient light
 // const light = new THREE.SpotLight(0xffffff);  // Ambient light
@@ -37,30 +37,6 @@ const controls = new TrackballControls( camera, renderer.domElement );
 // controls.noPan = true;
 // controls.target = new THREE.Vector3(0,0,0);
 controls.update();
-
-
-
-// loader.load('resources/fonts/helvetiker_regular.typeface.json', function (font) {
-//     const geometry = new TextGeometry('0 - 0', {
-//         font: font,
-//         size: 15,
-//         depth: 0.5,
-//         height: 2,
-//         curveSegments: 12,
-//         bevelEnabled: true,
-//         bevelThickness: 1,
-//         bevelSize: 1,
-//         bevelOffset: 0,
-//         bevelSegments: 5
-//     });
-//     const material2 = new THREE.MeshStandardMaterial({ color: 0xffd700 });
-//     const text = new THREE.Mesh(geometry, material2);
-//     text.position.y = 30;
-//     text.position.x = -22;
-//     text.position.z = 0;
-//     scene.add(text);
-// });
-
 
 // const loader = new GLTFLoader();
 
@@ -78,69 +54,88 @@ controls.update();
 //     console.error();
 // });
 
+
+
 createText(function (text) {
     scene.add(text); // Add the text mesh to the scene once it's ready
 });
 
-const plane = createField();
-// plane.receiveShadow = true;
-scene.add(plane);
+let paddles = [];
+let balls = [];
+let field = [];
+let BB = [];
+let helpers = [];
 
-//Create sides
-const { side1, side2 } = createSides();
-scene.add(side1);
-scene.add(side2);
+initObjects();
+init_BB();
+init_helper();
 
-// Create and add the field to the scene
-// const field = createField();
-// scene.add(field);
+function initObjects() {
+    const plane = createField();
+    field[0] = plane;
+    // plane.receiveShadow = true;
+    // scene.add(plane);
 
-// Create and add the paddles to the scene
-const { paddle1, paddle2 } = createPaddles();
-scene.add(paddle1);
-scene.add(paddle2);
+    //Create sides
+    const {side1, side2} = createSides();
+    // field.push(side1, side2);
+    field[1] = side1;
+    field[2] = side2;
 
-// Create and add the ball to the scene
-const { ball } = createBall();
-// ball.castShadow = true;
-scene.add(ball);
+    // Create and add the paddles to the scene
+    const {paddle1, paddle2} = createPaddles();
+    paddles[0] = paddle1;
+    paddles[1] = paddle2;
 
-
+    // Create and add the ball to the scene
+    const ball = createBall();
+    balls[0] = ball;
+    // balls[0].castShadow = true;
+}
 
 //Create bouncing box
-const paddle1BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
-paddle1BB.setFromObject(paddle1);
-
-const paddle2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
-paddle2BB.setFromObject(paddle2);
-
-const ballBB = new THREE.Box3(ball.computeBoundingSphere);
-ballBB.setFromObject(ball);
-
-const side1BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
-side1BB.setFromObject(side1);
-
-const side2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
-side2BB.setFromObject(side2);
+function init_BB() {
+    const paddle1BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
+    paddle1BB.setFromObject(paddles[0]);
+    
+    const paddle2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
+    paddle2BB.setFromObject(paddles[1]);
+    
+    const ballBB = new THREE.Box3(balls[0].computeBoundingSphere);
+    ballBB.setFromObject(balls[0]);
+    
+    const side1BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
+    side1BB.setFromObject(field[1]);
+    
+    const side2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
+    side2BB.setFromObject(field[2]);
+    
+    BB.push(paddle1BB, paddle2BB, ballBB, side1BB, side2BB);
+    
+}
 
 //Creating Hitboxes
-const helperSide1 = new THREE.Box3Helper( side1BB, 0xffff00);
-const helperSide2 = new THREE.Box3Helper( side2BB, 0xffff00);
-const helperPaddle1 = new THREE.Box3Helper( paddle1BB, 0xffff00);
-const helperPaddle2 = new THREE.Box3Helper( paddle2BB, 0xffff00);
-const helperBall = new THREE.Box3Helper( ballBB, 0xffff00);
+function init_helper() {
+    
+    const helperPaddle1 = new THREE.Box3Helper( BB[0], 0xffff00);
+    const helperPaddle2 = new THREE.Box3Helper( BB[1], 0xffff00);
+    const helperBall = new THREE.Box3Helper( BB[2], 0xffff00);
+    const helperSide1 = new THREE.Box3Helper( BB[3], 0xffff00);
+    const helperSide2 = new THREE.Box3Helper( BB[4], 0xffff00);
+    helpers.push(helperPaddle1, helperPaddle2, helperBall, helperSide1, helperSide2);
+}
 
+field.forEach(obj => {scene.add(obj)});
+paddles.forEach(obj => {scene.add(obj)});
+balls.forEach(obj => {scene.add(obj)});
+helpers.forEach(obj => {scene.add(obj)});
 // fieldBB.min.multiplyScalar(0.75);
 // fieldBB.translate(new THREE.Vector3(-4, -3, 0));
 
-const group = new THREE.Group();
-group.add(helperSide1, helperSide2, helperPaddle1, helperPaddle2, helperBall);
-scene.add(group);
 
 
 
-//fieldBB.expandByScalar(-0.5);
-
+// fieldBB.expandByScalar(-0.5);
 
 let paddleYDirection = 1;   // Direction for paddle 1
 let paddle2YDirection = -1;  // Direction for paddle 2
@@ -148,47 +143,48 @@ let paddle2YDirection = -1;  // Direction for paddle 2
 let ballYDirection = 2;
 let ballXDirection = 1;
 
-const paddleSpeed = 0.005;   // Speed of the movement
+const paddleSpeed = 0.000;   // Speed of the movement
 const ballSpeed = 0.001;   // Speed of the movement
-
 
 // Function to check collision
 function checkCollision() {
     // Update bounding boxes
-    paddle1BB.setFromObject(paddle1);
-    paddle2BB.setFromObject(paddle2);
-    ballBB.setFromObject(ball);
+    BB[0].setFromObject(paddles[0]);
+    BB[1].setFromObject(paddles[1]);
+    BB[2].setFromObject(balls[0]);
 
-    if (paddle1BB.intersectsBox(ballBB)) {
+    //paddle1BB
+    if (BB[0].intersectsBox(BB[2])) {
         // ball.material.transparent = true;
         // ball.material.opacity = 0.5;
-        ball.material.color.set(new THREE.Color(Math.random() * 0xffffff));
+        balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= 1;
         ballXDirection *= -1;
-        while (side1BB.intersectsBox(ballBB))
+        while (BB[3].intersectsBox(BB[2]))
         {
-            ball.position.x += ballSpeed * ballXDirection;
-            ball.position.y += ballSpeed * ballYDirection;
+            balls[0].position.x += ballSpeed * ballXDirection;
+            balls[0].position.y += ballSpeed * ballYDirection;
         }
     }
-    if (paddle2BB.intersectsBox(ballBB)) {
+    //paddle2BB
+    if (BB[1].intersectsBox(BB[2])) {
         // ball.material.transparent = true;
         // ball.material.opacity = 0.5;
-        ball.material.color.set(new THREE.Color(Math.random() * 0xffffff));
+        balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= 1;
         ballXDirection *= -1;
-        while (side2BB.intersectsBox(ballBB))
+        while (BB[4].intersectsBox(BB[2]))
         {
-            ball.position.x += ballSpeed * ballXDirection;
-            ball.position.y += ballSpeed * ballYDirection;
+            balls[0].position.x += ballSpeed * ballXDirection;
+            balls[0].position.y += ballSpeed * ballYDirection;
         }
     }
-    if (side1BB.intersectsBox(ballBB)) {
-        ball.material.color.set(new THREE.Color(Math.random() * 0xffffff));
+    if (BB[3].intersectsBox(BB[2])) {
+        balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= -1;
     }
-    if (side2BB.intersectsBox(ballBB)) {
-        ball.material.color.set(new THREE.Color(Math.random() * 0xffffff));
+    if (BB[4].intersectsBox(BB[2])) {
+        balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= -1;
     }
 }
@@ -198,17 +194,15 @@ function animate() {
     requestAnimationFrame(animate);
     
     // Move the second paddle up and down (with different speed)
-    paddle2.position.y += paddleSpeed * paddle2YDirection;
+    paddles[1].position.y += paddleSpeed * paddle2YDirection;
 
-    ball.position.x += ballSpeed * ballXDirection;
-    ball.position.y += ballSpeed * ballYDirection;
+    balls[0].position.x += ballSpeed * ballXDirection;
+    balls[0].position.y += ballSpeed * ballYDirection;
 
     // Reverse direction if the second paddle reaches a certain height
-    if (paddle2.position.y > 14 || paddle2.position.y < -14) {
-        paddle2YDirection *= -1;
-    }
-    // scene.rotation.y += 0.0001;
-    // scene.rotation.x += 0.0001;
+    // if (paddle2.position.y > 14 || paddle2.position.y < -14) {
+    //     paddle2YDirection *= -1;
+    // }
     controls.update();
 
     // Render the scene
@@ -216,25 +210,27 @@ function animate() {
 }
 
 // movement - please calibrate these values
-var xSpeed = 2;
-var ySpeed = 2;
+let paddleXSpeed = 0.2;
+let paddleYSpeed = 0.2;
 
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
-    var keyCode = event.which;
-    if (keyCode == 87 && paddle1.position.y + ySpeed < 15) {
-        paddle1.position.y += ySpeed;
-	} else if (keyCode == 83 && paddle1.position.y + ySpeed > -12) {
-        paddle1.position.y -= ySpeed;
-    // } else if (keyCode == 65 && paddle1.position.x + ySpeed > -25) {
-    //     paddle1.position.x -= xSpeed;
-    // } else if (keyCode == 68 && paddle1.position.x + ySpeed < 0) {
-    //     paddle1.position.x += xSpeed;
+    let keyCode = event.which;
+    if (keyCode == 87 && paddles[0].position.y + paddleYSpeed < 15) {
+        paddles[0].position.y += paddleYSpeed;
+	} else if (keyCode == 83 && paddles[0].position.y + paddleYSpeed > -12) {
+        paddles[0].position.y -= paddleYSpeed;
+    // } else if (keyCode == 65 && paddles[0].position.x + paddleYSpeed > -25) {
+    //     paddles[0].position.x -= paddleXSpeed;
+    // } else if (keyCode == 68 && paddles[0].position.x + paddleYSpeed < 0) {
+    //     paddles[0].position.x += paddleXSpeed;
     } else if (keyCode == 67) {
-        if (group.visible == true)
-            group.visible = false;
+        if (helpers[0].visible == true)
+        {
+            helpers.forEach(obj => {obj.visible = false});
+        }
         else
-            group.visible = true;
+            helpers.forEach(obj => {obj.visible = true});
     } else if (keyCode == 32) {
         controls.reset();
     }
@@ -251,6 +247,7 @@ function onWindowResize(){
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
+
 
 // Start the animation
 animate();
