@@ -27,13 +27,6 @@ services:
       - ./requirements/app:/code
     expose:
       - "8000"
-    environment:
-      - SQL_ENGINE=django.db.backends.postgresql
-      - SQL_DATABASE=postgres
-      - SQL_USER=postgres
-      - SQL_PASSWORD=postgres
-      - SQL_HOST=db
-      - SQL_PORT=5432
     depends_on:
       - db
     env_file:
@@ -54,8 +47,7 @@ services:
       dockerfile: Dockerfile
     env_file: .env.dev
     volumes:
-      - .:/code
-      - web_static:/code/static
+      - ./requirements/app:/code
     ports:
       - "443:443"
       - "80:80"
@@ -65,6 +57,3 @@ networks:
   transcendence:
     driver: bridge
 
-volumes:
-  web_static:
-    external: true
