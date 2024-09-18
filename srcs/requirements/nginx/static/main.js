@@ -143,7 +143,7 @@ let paddle2YDirection = -1;  // Direction for paddle 2
 let ballYDirection = 2;
 let ballXDirection = 1;
 
-const paddleSpeed = 0.000;   // Speed of the movement
+const paddleSpeed = 0.005;   // Speed of the movement
 const ballSpeed = 0.001;   // Speed of the movement
 
 // Function to check collision
@@ -189,9 +189,21 @@ function checkCollision() {
     }
 }
 
+// movement - please calibrate these values
+let paddleXSpeed = 2;
+let paddleYSpeed = 0.005;
+let paddleMovingUp = false;
+let paddleMovingDown= false;
+
 function animate() {
     checkCollision();
     requestAnimationFrame(animate);
+    
+    // Move the first paddle up and down
+    if (paddleMovingUp)
+        paddles[0].position.y += paddleYSpeed;
+    if (paddleMovingDown)
+        paddles[0].position.y -= paddleYSpeed;
     
     // Move the second paddle up and down (with different speed)
     paddles[1].position.y += paddleSpeed * paddle2YDirection;
@@ -200,41 +212,51 @@ function animate() {
     balls[0].position.y += ballSpeed * ballYDirection;
 
     // Reverse direction if the second paddle reaches a certain height
-    // if (paddle2.position.y > 14 || paddle2.position.y < -14) {
-    //     paddle2YDirection *= -1;
-    // }
+    if (paddles[1].position.y > 14 || paddles[1].position.y < -14) {
+        paddle2YDirection *= -1;
+    }
+
+    paddles[0].position.y = Math.max(-14, Math.min(14, paddles[0].position.y));
+
     controls.update();
 
     // Render the scene
     renderer.render(scene, camera);
 }
 
-// movement - please calibrate these values
-let paddleXSpeed = 0.2;
-let paddleYSpeed = 0.2;
 
-document.addEventListener("keydown", onDocumentKeyDown, false);
-function onDocumentKeyDown(event) {
-    let keyCode = event.which;
-    if (keyCode == 87 && paddles[0].position.y + paddleYSpeed < 15) {
-        paddles[0].position.y += paddleYSpeed;
-	} else if (keyCode == 83 && paddles[0].position.y + paddleYSpeed > -12) {
-        paddles[0].position.y -= paddleYSpeed;
+window.addEventListener("keydown", (event) => {
+    if (event.code === "KeyW") {
+        paddleMovingUp = true;
+	} 
+    if (event.code === "KeyS") {
+        paddleMovingDown = true;
+    }
     // } else if (keyCode == 65 && paddles[0].position.x + paddleYSpeed > -25) {
     //     paddles[0].position.x -= paddleXSpeed;
     // } else if (keyCode == 68 && paddles[0].position.x + paddleYSpeed < 0) {
     //     paddles[0].position.x += paddleXSpeed;
-    } else if (keyCode == 67) {
+    if (event.code === "KeyC") {
         if (helpers[0].visible == true)
         {
             helpers.forEach(obj => {obj.visible = false});
         }
         else
             helpers.forEach(obj => {obj.visible = true});
-    } else if (keyCode == 32) {
+    }
+    if (event.code === "Space") {
         controls.reset();
     }
-};
+});
+
+window.addEventListener("keyup", (event) => {
+    if (event.code === "KeyW") {
+        paddleMovingUp = false;
+	}
+    if (event.code === "KeyS") {
+        paddleMovingDown = false;
+    }
+});
 
 
 window.addEventListener( 'resize', onWindowResize, false );
