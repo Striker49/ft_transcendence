@@ -1,0 +1,59 @@
+services:
+  db:
+    build:
+      context: services/postgres
+      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+    networks:
+      #- transcendence
+      - app_network
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    restart: unless-stopped
+
+  app:
+    networks:
+      - transcendence
+      - app_network
+    build:
+      context: services/app
+      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./services/app:/code
+    expose:
+      - "8000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  nginx:
+    networks:
+      - transcendence
+    depends_on:
+      - app
+    build:
+      context: services/nginx
+      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+    env_file: .env
+    volumes:
+      - ./services/app:/code
+    ports:
+      - "443:443"
+      - "80:80"
+    restart: on-failure
+
+networks:
+  transcendence:
+    driver: bridge
+  app_network:
+    driver: bridge
+
+
+volumes:
+  postgres-db:

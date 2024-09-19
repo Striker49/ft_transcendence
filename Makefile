@@ -1,22 +1,14 @@
 start:
-	cd srcs/ && \
 	docker-compose up --build
 stop:
-	cd srcs/ && \
 	docker-compose down
 prune:
 	docker system prune --all --volumes
 delete_volumes:
 	make stop
 	docker volume ls -q | xargs docker volume rm
-# exec_mariadb:
-# 	docker exec -it mariadb sh
-# exec_wp:
-# 	docker exec -it wordpress sh
 fclean:
 	make delete_volumes
-	rm -rf /home/$(USER)/data/mariadb
-	rm -rf /home/$(USER)/data/wordpress
 	docker rmi -f $$(docker images -qa); \
 	docker rm -vf $$(docker ps -aq); \
 	make prune
