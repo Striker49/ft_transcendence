@@ -24,10 +24,11 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCSoftShadowMap;
 
 const light = new THREE.AmbientLight(0xffffff);  // Ambient light
-// const light = new THREE.SpotLight(0xffffff);  // Ambient light
+const light2 = new THREE.SpotLight(0xffffff, 0.3);  // Ambient light
 light.position.set(0, 0, 20);
-// light.castShadow = true;
-scene.add(light);
+light2.position.set(0, 0, 20);
+light2.castShadow = true;
+scene.add(light, light2);
 
 // const lightHelper = new THREE.CameraHelper(light.shadow.camera);
 // scene.add(lightHelper);
@@ -73,7 +74,7 @@ init_helper();
 function initObjects() {
     const plane = createField();
     field[0] = plane;
-    // plane.receiveShadow = true;
+    plane.receiveShadow = true;
     // scene.add(plane);
 
     //Create sides
@@ -86,11 +87,14 @@ function initObjects() {
     const {paddle1, paddle2} = createPaddles();
     paddles[0] = paddle1;
     paddles[1] = paddle2;
+    paddles[0].castShadow = true;
+    paddles[1].castShadow = true;
+
 
     // Create and add the ball to the scene
     const ball = createBall();
     balls[0] = ball;
-    // balls[0].castShadow = true;
+    balls[0].castShadow = true;
 }
 
 //Create bouncing box
