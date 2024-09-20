@@ -24,7 +24,7 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCSoftShadowMap;
 
 const light = new THREE.AmbientLight(0xffffff);  // Ambient light
-const light2 = new THREE.SpotLight(0xffffff, 0.3);  // Ambient light
+const light2 = new THREE.SpotLight(0xffffff, 0.25);  // Ambient light
 light.position.set(0, 0, 20);
 light2.position.set(0, 0, 20);
 light2.castShadow = true;
@@ -37,7 +37,6 @@ scene.add(light, light2);
 const controls = new TrackballControls( camera, renderer.domElement );
 // controls.noPan = true;
 // controls.target = new THREE.Vector3(0,0,0);
-controls.update();
 
 // const loader = new GLTFLoader();
 
@@ -56,10 +55,10 @@ controls.update();
 // });
 
 
+let scoreP1 = 0;
+let scoreP2 = 0;
+let text, currentText;
 
-createText(function (text) {
-    scene.add(text); // Add the text mesh to the scene once it's ready
-});
 
 let paddles = [];
 let balls = [];
@@ -67,6 +66,7 @@ let field = [];
 let BB = [];
 let helpers = [];
 
+updateScore(text);
 initObjects();
 init_BB();
 init_helper();
@@ -82,6 +82,8 @@ function initObjects() {
     // field.push(side1, side2);
     field[1] = side1;
     field[2] = side2;
+    field[1].castShadow = true;
+    field[2].castShadow = true;
 
     // Create and add the paddles to the scene
     const {paddle1, paddle2} = createPaddles();
@@ -110,11 +112,17 @@ function init_BB() {
     
     const side1BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
     side1BB.setFromObject(field[1]);
+
     
     const side2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
     side2BB.setFromObject(field[2]);
     
-    BB.push(paddle1BB, paddle2BB, ballBB, side1BB, side2BB);
+    const planeBB = new THREE.Box3(new THREE.Vector3(0), new THREE.Vector3(0), new THREE.Vector3(0));
+    planeBB.setFromObject(field[0]);
+    planeBB.min.multiplyScalar(1.25);
+    planeBB.max.multiplyScalar(1.25);
+    planeBB.translate(new THREE.Vector3(0, 0, 2));
+    BB.push(paddle1BB, paddle2BB, ballBB, side1BB, side2BB, planeBB);
     
 }
 
@@ -126,7 +134,8 @@ function init_helper() {
     const helperBall = new THREE.Box3Helper( BB[2], 0xffff00);
     const helperSide1 = new THREE.Box3Helper( BB[3], 0xffff00);
     const helperSide2 = new THREE.Box3Helper( BB[4], 0xffff00);
-    helpers.push(helperPaddle1, helperPaddle2, helperBall, helperSide1, helperSide2);
+    const helperField = new THREE.Box3Helper( BB[5], 0xffff00);
+    helpers.push(helperPaddle1, helperPaddle2, helperBall, helperSide1, helperSide2, helperField);
 }
 
 field.forEach(obj => {scene.add(obj)});
@@ -145,7 +154,7 @@ let paddleYDirection = 1;   // Direction for paddle 1
 let paddle2YDirection = -1;  // Direction for paddle 2
 
 let ballYDirection = 2;
-let ballXDirection = 1;
+let ballXDirection = 2;
 
 const paddleSpeed = 0.005;   // Speed of the movement
 const ballSpeed = 0.001;   // Speed of the movement
@@ -164,11 +173,6 @@ function checkCollision() {
         balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= 1;
         ballXDirection *= -1;
-        while (BB[3].intersectsBox(BB[2]))
-        {
-            balls[0].position.x += ballSpeed * ballXDirection;
-            balls[0].position.y += ballSpeed * ballYDirection;
-        }
     }
     //paddle2BB
     if (BB[1].intersectsBox(BB[2])) {
@@ -191,6 +195,38 @@ function checkCollision() {
         balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= -1;
     }
+    if (!BB[5].intersectsBox(BB[2]))
+    {
+        if (ballXDirection > 0)
+            scoreP2++;
+        else
+            scoreP1++;
+        updateScore(text);
+        balls[0].position.x = 0;
+        balls[0].position.y = 0;
+        balls[0].position.z = 0;
+    }
+}
+
+function updateScore(text) {
+    createText(function (text) {
+        // Remove the old text if it exists
+        if (currentText) {
+            scene.remove(currentText);      // Remove the old text from the scene
+            currentText.geometry.dispose(); // Dispose of the geometry
+            currentText.material.dispose(); // Dispose of the material
+        }
+    
+        // Add the new text
+        text.castShadow = true;
+        text.receiveShadow = true;
+        scene.add(text);   // Add the new text to the scene
+    
+        // Store the reference to the new text
+        currentText = text;
+    }, scoreP1, scoreP2);
+    
+
 }
 
 // movement - please calibrate these values
@@ -242,9 +278,7 @@ window.addEventListener("keydown", (event) => {
     //     paddles[0].position.x += paddleXSpeed;
     if (event.code === "KeyC") {
         if (helpers[0].visible == true)
-        {
             helpers.forEach(obj => {obj.visible = false});
-        }
         else
             helpers.forEach(obj => {obj.visible = true});
     }

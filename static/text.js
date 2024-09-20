@@ -3,12 +3,14 @@ import * as THREE from 'three'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
-export function createText(callback) {
+export function createText(callback, scoreP1, scoreP2) {
 
 	const loader = new FontLoader();
 
+	let textScore = `${scoreP1} - ${scoreP2}`;
+
 	loader.load('resources/fonts/helvetiker_regular.typeface.json', function (font) {
-		const geometry = new TextGeometry('0 - 0', {
+		const geometry = new TextGeometry(textScore, {
 			font: font,
 			size: 15,
 			depth: 0.5,
