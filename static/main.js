@@ -138,9 +138,9 @@ function init_helper() {
     helpers.push(helperPaddle1, helperPaddle2, helperBall, helperSide1, helperSide2, helperField);
 }
 
-field.forEach(obj => {scene.add(obj)});
-paddles.forEach(obj => {scene.add(obj)});
-balls.forEach(obj => {scene.add(obj)});
+// field.forEach(obj => {scene.add(obj)});
+// paddles.forEach(obj => {scene.add(obj)});
+// balls.forEach(obj => {scene.add(obj)});
 helpers.forEach(obj => {scene.add(obj)});
 // fieldBB.min.multiplyScalar(0.75);
 // fieldBB.translate(new THREE.Vector3(-4, -3, 0));
@@ -232,31 +232,39 @@ function updateScore(text) {
 // movement - please calibrate these values
 let paddleXSpeed = 2;
 let paddleYSpeed = 0.005;
-let paddleMovingUp = false;
-let paddleMovingDown= false;
+let paddle1MovingUp = false;
+let paddle1MovingDown= false;
+let paddle2MovingUp = false;
+let paddle2MovingDown= false;
 
 function animate() {
     checkCollision();
     requestAnimationFrame(animate);
     
     // Move the first paddle up and down
-    if (paddleMovingUp)
+    if (paddle1MovingUp)
         paddles[0].position.y += paddleYSpeed;
-    if (paddleMovingDown)
+    if (paddle1MovingDown)
         paddles[0].position.y -= paddleYSpeed;
     
+    if (paddle2MovingUp)
+        paddles[1].position.y += paddleYSpeed;
+    if (paddle2MovingDown)
+        paddles[1].position.y -= paddleYSpeed;
+
     // Move the second paddle up and down (with different speed)
-    paddles[1].position.y += paddleSpeed * paddle2YDirection;
+    // paddles[1].position.y += paddleSpeed * paddle2YDirection;
 
     balls[0].position.x += ballSpeed * ballXDirection;
     balls[0].position.y += ballSpeed * ballYDirection;
 
     // Reverse direction if the second paddle reaches a certain height
-    if (paddles[1].position.y > 14 || paddles[1].position.y < -14) {
-        paddle2YDirection *= -1;
-    }
+    // if (paddles[1].position.y > 14 || paddles[1].position.y < -14) {
+    //     paddle2YDirection *= -1;
+    // }
 
     paddles[0].position.y = Math.max(-14, Math.min(14, paddles[0].position.y));
+    paddles[1].position.y = Math.max(-14, Math.min(14, paddles[1].position.y));
 
     controls.update();
 
@@ -266,11 +274,18 @@ function animate() {
 
 
 window.addEventListener("keydown", (event) => {
+    event.preventDefault();
     if (event.code === "KeyW") {
-        paddleMovingUp = true;
+        paddle1MovingUp = true;
 	} 
     if (event.code === "KeyS") {
-        paddleMovingDown = true;
+        paddle1MovingDown = true;
+    }
+    if (event.code === "ArrowUp") {
+        paddle2MovingUp = true;
+	} 
+    if (event.code === "ArrowDown") {
+        paddle2MovingDown = true;
     }
     // } else if (keyCode == 65 && paddles[0].position.x + paddleYSpeed > -25) {
     //     paddles[0].position.x -= paddleXSpeed;
@@ -288,11 +303,18 @@ window.addEventListener("keydown", (event) => {
 });
 
 window.addEventListener("keyup", (event) => {
+    event.preventDefault();
     if (event.code === "KeyW") {
-        paddleMovingUp = false;
+        paddle1MovingUp = false;
 	}
     if (event.code === "KeyS") {
-        paddleMovingDown = false;
+        paddle1MovingDown = false;
+    }
+    if (event.code === "ArrowUp") {
+        paddle2MovingUp = false;
+	}
+    if (event.code === "ArrowDown") {
+        paddle2MovingDown = false;
     }
 });
 
