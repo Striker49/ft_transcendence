@@ -20,8 +20,8 @@ camera.position.set(0, 0, 120 );
 
 const scene = new THREE.Scene();
 
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCSoftShadowMap;
+// renderer.shadowMap.enabled = true;
+// renderer.shadowMap.type = THREE.PCSoftShadowMap;
 
 const light = new THREE.AmbientLight(0xffffff);  // Ambient light
 const light2 = new THREE.SpotLight(0xffffff, 0.25);  // Ambient light
@@ -66,7 +66,7 @@ let field = [];
 let BB = [];
 let helpers = [];
 
-updateScore(text);
+// updateScore(text);
 initObjects();
 init_BB();
 init_helper();
@@ -75,7 +75,7 @@ function initObjects() {
     const plane = createField();
     field[0] = plane;
     plane.receiveShadow = true;
-    // scene.add(plane);
+    scene.add(plane);
 
     //Create sides
     const {side1, side2} = createSides();
@@ -138,9 +138,9 @@ function init_helper() {
     helpers.push(helperPaddle1, helperPaddle2, helperBall, helperSide1, helperSide2, helperField);
 }
 
-// field.forEach(obj => {scene.add(obj)});
-// paddles.forEach(obj => {scene.add(obj)});
-// balls.forEach(obj => {scene.add(obj)});
+field.forEach(obj => {scene.add(obj)});
+paddles.forEach(obj => {scene.add(obj)});
+balls.forEach(obj => {scene.add(obj)});
 helpers.forEach(obj => {scene.add(obj)});
 // fieldBB.min.multiplyScalar(0.75);
 // fieldBB.translate(new THREE.Vector3(-4, -3, 0));
@@ -188,20 +188,20 @@ function checkCollision() {
         }
     }
     if (BB[3].intersectsBox(BB[2])) {
-        balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
+        // balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= -1;
     }
     if (BB[4].intersectsBox(BB[2])) {
-        balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
+        // balls[0].material.color.set(new THREE.Color(Math.random() * 0xffffff));
         ballYDirection *= -1;
     }
     if (!BB[5].intersectsBox(BB[2]))
     {
         if (ballXDirection > 0)
-            scoreP2++;
-        else
             scoreP1++;
-        updateScore(text);
+        else
+            scoreP2++;
+        // updateScore(text);
         balls[0].position.x = 0;
         balls[0].position.y = 0;
         balls[0].position.z = 0;

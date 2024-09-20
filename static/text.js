@@ -17,10 +17,10 @@ export function createText(callback, scoreP1, scoreP2) {
 			height: 2,
 			curveSegments: 12,
 			bevelEnabled: true,
-			bevelThickness: 1,
+			bevelThickness: 0.2,
 			bevelSize: 1,
 			bevelOffset: 0,
-			bevelSegments: 5
+			bevelSegments: 10
 		});
 		const material2 = new THREE.MeshStandardMaterial({ color: 0xffd700 });
 		const text = new THREE.Mesh(geometry, material2);
