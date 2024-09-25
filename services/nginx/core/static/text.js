@@ -1,30 +1,34 @@
 import * as THREE from 'three'
-
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
-export function createText(callback) {
+
+export function createText(callback, scoreP1, scoreP2) {
 
 	const loader = new FontLoader();
 
+	let textScore = `${scoreP1} - ${scoreP2}`;
+	console.log(textScore);
+
 	loader.load('resources/fonts/helvetiker_regular.typeface.json', function (font) {
-		const geometry = new TextGeometry('0 - 0', {
+		const geometry = new TextGeometry(textScore, {
 			font: font,
-			size: 15,
-			depth: 0.5,
-			height: 2,
-			curveSegments: 12,
+			size: 2,
+			depth: 1,
+			height: 0.5,
+			curveSegments: 3,
 			bevelEnabled: true,
-			bevelThickness: 1,
-			bevelSize: 1,
-			bevelOffset: 0,
-			bevelSegments: 5
+			bevelThickness: 0.5,
+			bevelSize: 0.28,
+			bevelOffset: -0.1,
+			bevelSegments: 20
 		});
 		const material2 = new THREE.MeshStandardMaterial({ color: 0xffd700 });
 		const text = new THREE.Mesh(geometry, material2);
-		text.position.y = 30;
-		text.position.x = -22;
-		text.position.z = 0;
+		text.position.y = -2;
+		// text.position.x = 0;
+		text.position.z = -6;
+		text.rotation.x = -1.55;
 		
 		callback(text);
 	});
