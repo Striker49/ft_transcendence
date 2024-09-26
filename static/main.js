@@ -6,7 +6,7 @@ import { createText } from './text.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 11, 0);
+camera.position.set(0, 9, 0);
 scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // Adjust the intensity if needed
@@ -26,7 +26,13 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let speed = 0.1;
+let speed = 0.15;
+let text, currentText;
+let scoreP1 = 0;
+let scoreP2 = 0;
+let groundWidth = 13;
+let paddleWidth = 0.5;
+let ballAcceleration = 0.01;
 
 function inBounds({box1, box2}) {
     box1.updateSides();
@@ -34,27 +40,77 @@ function inBounds({box1, box2}) {
     return (collision);
 }
 
-const cube = new Box({
-    width: 1,
-    height: 1,
-    depth: 3,
+const paddle = new Box({
+    width: paddleWidth,
+    height: 0.5,
+    depth: 2.5,
     velocity: {
         x: 0,
         y: -0.01,
         z: 0
     },
     position: {
-        x: -4.5,
+        x: -((groundWidth / 2) - (paddleWidth / 2)),
         y: -1.25,
         z:0
     }
 });
-cube.castShadow = true;
-scene.add(cube);
+paddle.castShadow = true;
+scene.add(paddle);
 
-let text, currentText;
-let scoreP1 = 0;
-let scoreP2 = 0;
+
+
+const paddleL = new Box({
+    width: paddleWidth,
+    height: 0.5,
+    depth: 2.5,
+    velocity: {
+        x: 0,
+        y: -0.01,
+        z: 0
+    },
+    position: {
+        x: ((groundWidth / 2) - (paddleWidth / 2)),
+        y: -1.25,
+        z: 0
+    },
+    color: 'red'
+});
+paddleL.castShadow = true;
+scene.add(paddleL);
+
+const ball = new Ball({
+    radius: 0.18,
+    width: 15,
+    height: 15,
+    velocity: {
+        x: 0.06,
+        y: -0.01,
+        z: 0.06
+    },
+    position: {
+        x: 0,
+        y: -1.5,
+        z: 0
+    },
+    color: 'yellow'
+});
+ball.castShadow = true;
+scene.add(ball);
+
+const ground = new Box({
+    width: groundWidth, 
+    height: 0.5,
+    depth: 9,
+    color: '#0369a1',
+    position: {
+        x: 0,
+        y: -2,
+        z: 0
+    }
+});
+ground.receiveShadow = true;
+scene.add(ground);
 
 function updateScore(text) {
     createText(function (text) {
@@ -79,59 +135,6 @@ function updateScore(text) {
 }
 
 updateScore();
-
-
-const cube2 = new Box({
-    width: 1,
-    height: 1,
-    depth: 3,
-    velocity: {
-        x: 0,
-        y: -0.01,
-        z: 0
-    },
-    position: {
-        x: 4.5,
-        y: -1.25,
-        z: 0
-    },
-    color: 'red'
-});
-cube2.castShadow = true;
-scene.add(cube2);
-
-const ball = new Ball({
-    radius: 0.25,
-    width: 15,
-    height: 15,
-    velocity: {
-        x: 0.05,
-        y: -0.01,
-        z: 0.05
-    },
-    position: {
-        x: 0,
-        y: -1.5,
-        z: 0
-    },
-    color: 'yellow'
-});
-ball.castShadow = true;
-scene.add(ball);
-
-const ground = new Box({
-    width: 10, 
-    height: 0.5,
-    depth: 10,
-    color: '#0369a1',
-    position: {
-        x: 0,
-        y: -2,
-        z: 0
-    }
-    });
-ground.receiveShadow = true;
-scene.add(ground);
 
 const keys = {
     a: {
@@ -242,27 +245,27 @@ function animate() {
     renderer.render(scene, camera);
 
     //movement code
-    cube.velocity.z = 0;
-    if (keys.w.pressed && (cube.back - speed >= ground.back))
-        cube.velocity.z = -speed;
-    else if (keys.s.pressed && (cube.front + speed <= ground.front)) {
-        cube.velocity.z = speed;
+    paddle.velocity.z = 0;
+    if (keys.w.pressed && (paddle.back - speed >= ground.back))
+        paddle.velocity.z = -speed;
+    else if (keys.s.pressed && (paddle.front + speed <= ground.front)) {
+        paddle.velocity.z = speed;
     }
 
-    cube2.velocity.z = 0;
-    if (keys.up.pressed && (cube2.back - speed >= ground.back))
-        cube2.velocity.z = -speed;
-    else if (keys.down.pressed && (cube2.front + speed <= ground.front)) {
-        cube2.velocity.z = speed;
+    paddleL.velocity.z = 0;
+    if (keys.up.pressed && (paddleL.back - speed >= ground.back))
+        paddleL.velocity.z = -speed;
+    else if (keys.down.pressed && (paddleL.front + speed <= ground.front)) {
+        paddleL.velocity.z = speed;
     }
     
-    //updates cubes and ball
-    cube.update(ground);
-    cube2.update(ground);
+    //updates paddles and ball
+    paddle.update(ground);
+    paddleL.update(ground);
     if (ball.velocity.x < 0)
-        ball.update(cube, ground);
+        ball.update(paddle, ground);
     else
-        ball.update(cube2, ground);
+        ball.update(paddleL, ground);
     frames++;
 }
 
@@ -274,6 +277,18 @@ export function resetBallPosition(ball, winner) {
 	ball.position.x = 0;
 	ball.position.y = -1.5;
 	ball.position.z = 0;
+    ball.velocity.x = randomVelocity();
+    ball.velocity.z = randomVelocity();
+    console.log("x", ball.velocity.x);
+    console.log("z", ball.velocity.z);
+
     updateScore();
+}
+
+function randomVelocity() {
+    let number = Math.random() * (0.1 - 0.06) + 0.06;
+    if (Math.random() > 0.5)
+        number *= -1;
+    return(number);
 }
 animate();

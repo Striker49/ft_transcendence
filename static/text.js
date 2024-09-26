@@ -14,10 +14,10 @@ export function createText(callback, scoreP1, scoreP2) {
 			font: font,
 			size: 2,
 			depth: 1,
-			height: 0.5,
+			height: 0.25,
 			curveSegments: 3,
 			bevelEnabled: true,
-			bevelThickness: 0.5,
+			bevelThickness: 0.25,
 			bevelSize: 0.28,
 			bevelOffset: -0.1,
 			bevelSegments: 20

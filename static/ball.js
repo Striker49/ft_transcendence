@@ -75,12 +75,12 @@ export class Ball extends THREE.Mesh{
 			// // const friction = 0.5;
 			if (this.front > box.back && this.back < box.front)
             {
-            	this.velocity.x *= -1;
-                console.log(this.velocity.y);
+            	this.velocity.x *= -(1.075);
                 if (this.back < box.back && this.velocity.z > 0)
                     this.velocity.z *= -1;
                 if (this.front > box.front && this.velocity.z < 0)
                     this.velocity.z *= -1;
+                this.velocity.z *= (1.075);
             }
         }
     }
@@ -90,9 +90,9 @@ export class Ball extends THREE.Mesh{
 		if (this.right >= ground.left && this.left <= ground.right)
 		{
 			//if the ball touches the top or bottom side
-			if (this.velocity.z > 0 && (this.front + (this.velocity.z * 7)) >= ground.front)
+			if (this.velocity.z > 0 && (this.front + (this.velocity.z)) >= ground.front)
 				this.velocity.z *= -1;
-			else if (this.velocity.z < 0 && this.back + (this.velocity.z * 7) <= ground.back)
+			else if (this.velocity.z < 0 && this.back + (this.velocity.z) <= ground.back)
 				this.velocity.z *= -1;
 		}
 	}
