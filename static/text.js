@@ -8,7 +8,6 @@ export function createText(callback, scoreP1, scoreP2) {
 	const loader = new FontLoader();
 
 	let textScore = `${scoreP1} - ${scoreP2}`;
-	console.log(textScore);
 
 	loader.load('resources/fonts/helvetiker_regular.typeface.json', function (font) {
 		const geometry = new TextGeometry(textScore, {

@@ -1,4 +1,8 @@
 {
 	"liveServer.settings.AdvanceCustomBrowserCmdLine": "",
-	"liveServer.settings.mount": []
+	"liveServer.settings.mount": [
+
+	],
+	"liveServer.settings.ChromeDebuggingAttachment": false,
+	"liveServer.settings.root": "/static"
 }
