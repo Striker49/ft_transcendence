@@ -76,11 +76,15 @@ export class Ball extends THREE.Mesh{
 			if (this.front > box.back && this.back < box.front)
             {
             	this.velocity.x *= -(1.075);
+                if (this.velocity.x > 0.25)
+                    this.velocity.x = 0.25;
                 if (this.back < box.back && this.velocity.z > 0)
                     this.velocity.z *= -1;
                 if (this.front > box.front && this.velocity.z < 0)
                     this.velocity.z *= -1;
                 this.velocity.z *= (1.075);
+                if (this.velocity.z > 0.25)
+                    this.velocity.z = 0.25;
             }
         }
     }

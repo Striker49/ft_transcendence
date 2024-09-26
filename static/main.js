@@ -84,9 +84,9 @@ const ball = new Ball({
     width: 15,
     height: 15,
     velocity: {
-        x: 0.06,
+        x: randomVelocity(),
         y: -0.01,
-        z: 0.06
+        z: randomVelocity()
     },
     position: {
         x: 0,
@@ -279,8 +279,6 @@ export function resetBallPosition(ball, winner) {
 	ball.position.z = 0;
     ball.velocity.x = randomVelocity();
     ball.velocity.z = randomVelocity();
-    console.log("x", ball.velocity.x);
-    console.log("z", ball.velocity.z);
 
     updateScore();
 }
