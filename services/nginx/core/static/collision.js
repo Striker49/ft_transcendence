@@ -10,8 +10,8 @@ export function boxCollision({box1, box2}) {
 export function ballCollision({ball, box}) {
 	let collision = 0;
 	if (ball.velocity.x > 0)
-    	collision = (ball.right + (ball.velocity.x * 2) >= box.left && ball.left < box.left);
+    	collision = (ball.right + (ball.velocity.x * 2) >= box.left && ball.left < box.right);
 	if (ball.velocity.x < 0)
-    	collision = ball.left + (ball.velocity.x * 2) <= box.right && ball.right > box.right;
+    	collision = ball.left + (ball.velocity.x * 2) <= box.right && ball.right > box.left;
     return (collision);
 }

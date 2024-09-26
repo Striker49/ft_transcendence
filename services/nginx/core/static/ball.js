@@ -72,13 +72,17 @@ export class Ball extends THREE.Mesh{
 			ball: this,
             box: box
 		})){
-			// const friction = 0.5;
+			// // const friction = 0.5;
 			if (this.front > box.back && this.back < box.front)
+            {
             	this.velocity.x *= -1;
-            // this.velocity.y = -this.velocity.y;
-
+                console.log(this.velocity.y);
+                if (this.back < box.back && this.velocity.z > 0)
+                    this.velocity.z *= -1;
+                if (this.front > box.front && this.velocity.z < 0)
+                    this.velocity.z *= -1;
+            }
         }
-		// console.log(this.velocity.x);
     }
 
 	sideBounce(ground) {
