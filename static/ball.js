@@ -72,16 +72,20 @@ export class Ball extends THREE.Mesh{
 			ball: this,
             box: box
 		})){
-			// // const friction = 0.5;
+            //Checks if the ball is on the paddle on the z axis
 			if (this.front > box.back && this.back < box.front)
             {
+                //Accelerates ball x velocity
             	this.velocity.x *= -(1.075);
                 if (this.velocity.x > 0.25)
                     this.velocity.x = 0.25;
+                // Checks if the ball is hitting the top of the paddle and inverts z velocity
                 if (this.back < box.back && this.velocity.z > 0)
                     this.velocity.z *= -1;
+                // Checks if the ball is hitting the bottom of the paddle and inverts z velocity
                 if (this.front > box.front && this.velocity.z < 0)
                     this.velocity.z *= -1;
+                //Accelerates ball z velocity
                 this.velocity.z *= (1.075);
                 if (this.velocity.z > 0.25)
                     this.velocity.z = 0.25;
@@ -89,6 +93,7 @@ export class Ball extends THREE.Mesh{
         }
     }
 
+    //Checks for to and bottom boundary bounce
 	sideBounce(ground) {
 		//if the ball is inside the ground
 		if (this.right >= ground.left && this.left <= ground.right)
@@ -100,7 +105,7 @@ export class Ball extends THREE.Mesh{
 				this.velocity.z *= -1;
 		}
 	}
-
+    //Checks if ball is a proportional (0.5x) distance away from ground
 	outOfBounds(ground) {
 		if (this.position.x < (ground.left - ground.width / 2) || this.position.z > (ground.front + ground.depth / 2))
 			resetBallPosition(this, 1);
