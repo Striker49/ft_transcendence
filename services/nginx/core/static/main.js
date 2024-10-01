@@ -2,15 +2,16 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { Box } from './box.js';
 import { Ball } from './ball.js';
+import { keys } from './keys.js';
 import { createText } from './text.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 11, 0);
+camera.position.set(0, 9, 0);
 scene.position.z = 1;
 
-const light = new THREE.DirectionalLight(0xffffff, 0.3);  // Adjust the intensity if needed
-const light2 = new THREE.AmbientLight(0xffffff, 1);  // Adjust the intensity if needed
+const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
+const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = 1;
 light.position.y = 2;
 light.castShadow = true;
@@ -24,90 +25,66 @@ renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// To move the scene around with the mouse
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let speed = 0.1;
+let speed = 0.15;
+let text, currentText;
+let scoreP1 = 0;
+let scoreP2 = 0;
+let groundWidth = 13;
+let paddleWidth = 0.5;
+let ballAcceleration = 0.01;
 
-function inBounds({box1, box2}) {
-    box1.updateSides();
-    const collision = box1.front + speed <= box2.front && box1.back - speed >= box2.back;
-    return (collision);
-}
-
-const cube = new Box({
-    width: 1,
-    height: 1,
-    depth: 3,
+//Create left paddle
+const paddleL = new Box({
+    width: paddleWidth,
+    height: 0.5,
+    depth: 2.5,
     velocity: {
         x: 0,
         y: -0.01,
         z: 0
     },
     position: {
-        x: -4.5,
+        x: -((groundWidth / 2) - (paddleWidth / 2)),
         y: -1.25,
         z:0
     }
 });
-cube.castShadow = true;
-scene.add(cube);
-
-let text, currentText;
-let scoreP1 = 0;
-let scoreP2 = 0;
-
-function updateScore(text) {
-    createText(function (text) {
-        // Remove the old text if it exists
-        if (currentText) {
-            scene.remove(currentText);      // Remove the old text from the scene
-            currentText.geometry.dispose(); // Dispose of the geometry
-            currentText.material.dispose(); // Dispose of the material
-        }
-    
-        // Add the new text
-        text.castShadow = true;
-        text.receiveShadow = true;
-        text.position.x = -2.75;
-        scene.add(text);   // Add the new text to the scene
-    
-        // Store the reference to the new text
-        currentText = text;
-    }, scoreP1, scoreP2);
-    
-
-}
-
-updateScore();
+paddleL.castShadow = true;
+scene.add(paddleL);
 
 
-const cube2 = new Box({
-    width: 1,
-    height: 1,
-    depth: 3,
+//Create right paddle
+const paddleR = new Box({
+    width: paddleWidth,
+    height: 0.5,
+    depth: 2.5,
     velocity: {
         x: 0,
         y: -0.01,
         z: 0
     },
     position: {
-        x: 4.5,
+        x: ((groundWidth / 2) - (paddleWidth / 2)),
         y: -1.25,
         z: 0
     },
     color: 'red'
 });
-cube2.castShadow = true;
-scene.add(cube2);
+paddleR.castShadow = true;
+scene.add(paddleR);
 
+//Create ball
 const ball = new Ball({
-    radius: 0.25,
+    radius: 0.18,
     width: 15,
     height: 15,
     velocity: {
-        x: 0.05,
+        x: randomVelocity(),
         y: -0.01,
-        z: 0.05
+        z: randomVelocity()
     },
     position: {
         x: 0,
@@ -119,48 +96,48 @@ const ball = new Ball({
 ball.castShadow = true;
 scene.add(ball);
 
+//Create ground
 const ground = new Box({
-    width: 10, 
+    width: groundWidth, 
     height: 0.5,
-    depth: 10,
+    depth: 9,
     color: '#0369a1',
     position: {
         x: 0,
         y: -2,
         z: 0
     }
-    });
+});
 ground.receiveShadow = true;
 scene.add(ground);
 
-const keys = {
-    a: {
-        pressed: false
-    },
-    d: {
-        pressed: false
-    },
-    w: {
-        pressed: false
-    },
-    s: {
-        pressed: false
-    },
-    left: {
-        pressed: false
-    },
-    right: {
-        pressed: false
-    },
-    up: {
-        pressed: false
-    },
-    down: {
-        pressed: false
-    }
+//Updates score text (alternates between old and new one)
+function updateScore(text) {
+    createText(function (text) {
+        // Remove the old text if it exists
+        if (currentText) {
+            scene.remove(currentText);      // Remove the old text from the scene
+            currentText.geometry.dispose(); // Dispose of the geometry
+            currentText.material.dispose(); // Dispose of the material
+        }
+    
+        text.castShadow = true;
+        text.receiveShadow = true;
+        text.position.x = -2.75;
+        scene.add(text);
+    
+        // Store the reference to the new text
+        currentText = text;
+    }, scoreP1, scoreP2);
+    
+
 }
 
+updateScore();
+
+//Event listener for KEYDOWN
 window.addEventListener('keydown', (event) => {
+    event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = true;
@@ -192,7 +169,9 @@ window.addEventListener('keydown', (event) => {
     }
 })
 
+//Event listener for KEYUP
 window.addEventListener('keyup', (event) => {
+    event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = false;
@@ -221,6 +200,7 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
+//Resizes the image if the window changes size
 window.addEventListener( 'resize', onWindowResize, false );
 
 function onWindowResize(){
@@ -233,42 +213,40 @@ function onWindowResize(){
 }
 
 
-const enemies = [];
-
 let frames = 0;
-let spawnRate = 200;
 function animate() {
     const animationID = requestAnimationFrame(animate);
     renderer.render(scene, camera);
 
-    //movement code
-    cube.velocity.z = 0;
-    if (keys.w.pressed && (cube.back - speed >= ground.back))
-        cube.velocity.z = -speed;
-    else if (keys.s.pressed && (cube.front + speed <= ground.front)) {
-        cube.velocity.z = speed;
+    paddleL.velocity.z = 0;
+    //Move left paddle if up/down key is pressed and will still be inbounds
+    if (keys.w.pressed && (paddleL.back - speed >= ground.back))
+        paddleL.velocity.z = -speed;
+    else if (keys.s.pressed && (paddleL.front + speed <= ground.front)) {
+        paddleL.velocity.z = speed;
     }
 
-    cube2.velocity.z = 0;
-    if (keys.up.pressed && (cube2.back - speed >= ground.back))
-        cube2.velocity.z = -speed;
-    else if (keys.down.pressed && (cube2.front + speed <= ground.front)) {
-        cube2.velocity.z = speed;
+    paddleR.velocity.z = 0;
+    //Move right paddle if up/down key is pressed and will still be inbounds
+    if (keys.up.pressed && (paddleR.back - speed >= ground.back))
+        paddleR.velocity.z = -speed;
+    else if (keys.down.pressed && (paddleR.front + speed <= ground.front)) {
+        paddleR.velocity.z = speed;
     }
-    //updates Score every 30 frames
-    // if (frames % 30 === 0)
-    //     updateScore(text);
-
-    //updates cubes and ball
-    cube.update(ground);
-    cube2.update(ground);
+    
+    //updates paddles
+    paddleR.update(ground);
+    paddleL.update(ground);
+    //updates ball depending if it's going towards left or right 
+    // to check the corresponding paddle hitbox
     if (ball.velocity.x < 0)
-        ball.update(cube, ground);
+        ball.update(paddleL, ground);
     else
-        ball.update(cube2, ground);
+        ball.update(paddleR, ground);
     frames++;
 }
 
+//Resets ball to 0 position with randomized velocities to change direction
 export function resetBallPosition(ball, winner) {
     if (winner === 1)
         scoreP2++;
@@ -277,6 +255,17 @@ export function resetBallPosition(ball, winner) {
 	ball.position.x = 0;
 	ball.position.y = -1.5;
 	ball.position.z = 0;
+    ball.velocity.x = randomVelocity();
+    ball.velocity.z = randomVelocity();
+
     updateScore();
+}
+
+//Generates a number between 0.06 and 0.1 and -0.1 and -0.06
+function randomVelocity() {
+    let number = Math.random() * (0.1 - 0.06) + 0.06;
+    if (Math.random() > 0.5)
+        number *= -1;
+    return(number);
 }
 animate();
