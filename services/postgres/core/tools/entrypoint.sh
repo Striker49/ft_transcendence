@@ -1,6 +1,14 @@
-#!/bin/sh
+# #!/bin/bash
+# # entrypoint.sh
 
-postgres -D /usr/local/pgsql/data
+# # Wait for PostgreSQL to start up before running the script
+# until psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c '\l'; do
+#   echo "Waiting for PostgreSQL to start..."
+#   sleep 1
+# done
 
-postgres stop
-exec postgres --datadir=/var/lib/postgres
+# # Create user and grant privileges
+# psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<-EOSQL
+#   CREATE USER myuser WITH PASSWORD 'mypassword';
+#   GRANT ALL PRIVILEGES ON DATABASE postgres TO myuser;
+# EOSQL

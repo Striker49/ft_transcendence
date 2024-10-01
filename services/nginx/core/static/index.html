@@ -1,44 +1,31 @@
 <!DOCTYPE html>
-<html>
-
-  <head>
-    <title>help me</title>
-      <style>
-        body {
-          margin: 0;
-          background: #0c4a6e;
-        }
-        /*
-        .follow-text {
-        position: absolute;
-        z-index: 100;
-        border: 2px solid rgba(0, 0, 0, 0);
-        background: rgba(128, 128, 128, 0);
-        font-family: Arial;
-        font-weight: bold;
-        font-size: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      */
-    </style>
-
-<!--     <div id="follow-text" class="follow-text">
-      test ahahah
-    </div> -->
-	<script type="importmap">
-		{
-		  "imports": {
-			"three": "https://unpkg.com/three@0.150.1/build/three.module.js",
-			"three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
-		  }
-		}
-	  </script>
-
-    <script src="main.js" type="module">
-
-	</script>
-  </head>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+		<script type="importmap">
+			{
+			  "imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js",
+				"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/"
+			  }
+			}
+		  </script>
+		  <form action="/profile" method="POST">
+			<label for="email">EMAIL</label>
+			<input type="text" name="email" required>
+			<label for="name">EMAIL</label>
+			<input type="text" name="name" required>
+			<label for="password">Password</label>
+			<input type="test" name="password" required>
+			<input typ="submit" value="Submit">
+		  </form>
+	</head>
+	<body>
+		<div id="info">Pong</div>
+		<script type="module" src="/main.js"></script>
+	</body>
 </html>
