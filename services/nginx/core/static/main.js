@@ -137,7 +137,7 @@ updateScore();
 
 //Event listener for KEYDOWN
 window.addEventListener('keydown', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = true;
@@ -171,7 +171,7 @@ window.addEventListener('keydown', (event) => {
 
 //Event listener for KEYUP
 window.addEventListener('keyup', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = false;
