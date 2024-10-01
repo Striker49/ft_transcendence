@@ -11,9 +11,10 @@ then
     echo "PostgreSQL started"
 fi
 
-python manage.py flush --no-input
+# python manage.py flush --no-input
 python manage.py makemigrations
 python manage.py makemigrations profiles
+python manage.py makemigrations polls
 python manage.py migrate --noinput
 
 # Checks if static dir exists and creates it if it doesn't
