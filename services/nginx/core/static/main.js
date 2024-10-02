@@ -37,7 +37,7 @@ let scoreP2 = 0;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
-let numberOfWins = 3;
+let numberOfWins = 11;
 let state = 1;
 
 //Create left paddle
@@ -127,7 +127,7 @@ function updateScore(text) {
     
         text.castShadow = true;
         text.receiveShadow = true;
-        text.position.x = -2.75;
+        // text.position.x = -2.75;
         scene.add(text);
     
         // Store the reference to the new text

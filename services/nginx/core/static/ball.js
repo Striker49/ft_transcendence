@@ -86,7 +86,7 @@ export class Ball extends THREE.Mesh{
                 if (this.front > box.front && this.velocity.z < 0)
                     this.velocity.z *= -1;
                 //Accelerates ball z velocity
-                this.velocity.z *= (1.075);
+                // this.velocity.z *= ((this.front - this.radius) / box.front);
                 if (this.velocity.z > 0.25)
                     this.velocity.z = 0.25;
             }
