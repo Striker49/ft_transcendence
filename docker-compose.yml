@@ -32,6 +32,19 @@ services:
     env_file:
       - .env
 
+  frontend:
+    networks:
+      - transcendence
+      - app_network
+    build:
+      context: services/frontend
+      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+    volumes:
+      - /frontend/node_modules
+      - ./services/frontend:/frontend/
+    expose:
+      - "8080"
+
   nginx:
     networks:
       - transcendence
