@@ -28,6 +28,8 @@ document.body.appendChild(renderer.domElement);
 // To move the scene around with the mouse
 const controls = new OrbitControls(camera, renderer.domElement);
 
+//Seting variable value
+//<----need to fetch player name-------->
 let speed = 0.15;
 let text, currentText;
 let scoreP1 = 0;
@@ -35,6 +37,8 @@ let scoreP2 = 0;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
+let numberOfWins = 3;
+let state = 1;
 
 //Create left paddle
 const paddleL = new Box({
@@ -219,6 +223,8 @@ let frames = 0;
 function animate() {
     const animationID = requestAnimationFrame(animate);
     renderer.render(scene, camera);
+    if (state === 0)
+        return;
 
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
@@ -257,10 +263,12 @@ export function resetBallPosition(ball, winner) {
 	ball.position.x = 0;
 	ball.position.y = -1.5;
 	ball.position.z = 0;
+    updateScore();
+    if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
+        endGame();
     ball.velocity.x = randomVelocity();
     ball.velocity.z = randomVelocity();
 
-    updateScore();
 }
 
 //Generates a number between 0.06 and 0.1 and -0.1 and -0.06
@@ -270,4 +278,21 @@ function randomVelocity() {
         number *= -1;
     return(number);
 }
+
+function endGame() {
+    ball.kill();
+    scene.remove(ball);
+    paddleL.kill();
+    scene.remove(paddleL);
+    paddleR.kill();
+    scene.remove(paddleR);
+    ground.kill();
+    scene.remove(ground);
+    // scene.remove.apply(scene, scene.children);
+    // cancelAnimationFrame(animationID);
+    state = 0;
+    // cancel();
+    // exit();
+}
+
 animate();
