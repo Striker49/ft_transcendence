@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'profiles',
+    # 'profiles',
+    # 'snippets',
+    'django_extensions',
+    'users.apps.UsersConfig'
+    
 ]
 
 MIDDLEWARE = [
@@ -133,6 +137,7 @@ STATIC_ROOT = '/code/core/static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'profiles.UserProfile'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 CSRF_TRUSTED_ORIGINS = ['https://localhost']
+
