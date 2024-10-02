@@ -9,6 +9,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from . import permissions
 from rest_framework import generics
+from django.http import JsonResponse
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -35,3 +36,8 @@ class UserLoginApiView(ObtainAuthToken):
 class UserDetail(generics.RetrieveAPIView):
 	queryset = models.CustomUser.objects.all()
 	serializer_class = serializers.CustomUserSerializer
+ 
+ # updates the database with the given selection and redirects to the results view function
+def hello(request):
+    if request.method == 'GET':
+    	return JsonResponse("Hello World", safe=False)
