@@ -13,8 +13,16 @@ scene.position.z = 1;
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
 const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = 1;
-light.position.y = 2;
+// light.position.x = 1;
+light.position.y = 3;
 light.castShadow = true;
+light.shadow.camera.left = -50;
+light.shadow.camera.right = 50;
+light.shadow.camera.top = 50;
+light.shadow.camera.bottom = -50;
+light.shadow.mapSize.set(9192, 9192);
+// light.shadow.mapSize.y = 2048
+light.shadowCameraVisible = true;
 scene.add(light, light2);
 
 const renderer = new THREE.WebGLRenderer({
@@ -142,7 +150,7 @@ updateScore();
 //Event listener for KEYDOWN
 window.addEventListener('keydown', (event) => {
     //prevents keys from default
-    // event.preventDefault();
+    event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = true;
