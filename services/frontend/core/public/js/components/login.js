@@ -13,11 +13,11 @@ loginForm.addEventListener('submit', async e => {
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
 	const url = 'https://localhost/api/users/login/';
-	
+
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
-			body: formData,
+			body: JSON.stringify(formData),
 			headers: headers
 		});
 		if (!response.ok) {
