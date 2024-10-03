@@ -15,6 +15,7 @@ const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = 1;
 light.position.y = 2;
 light.castShadow = true;
+scene.add(light);
 scene.add(light, light2);
 
 const renderer = new THREE.WebGLRenderer({
@@ -202,16 +203,16 @@ window.addEventListener('keyup', (event) => {
 })
 
 //Resizes the image if the window changes size
-window.addEventListener( 'resize', onWindowResize, false );
+// window.addEventListener( 'resize', onWindowResize, false );
 
-function onWindowResize(){
+// function onWindowResize(){
 
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+//     camera.aspect = window.innerWidth / window.innerHeight;
+//     camera.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+//     renderer.setSize( window.innerWidth, window.innerHeight );
 
-}
+// }
 
 
 let frames = 0;

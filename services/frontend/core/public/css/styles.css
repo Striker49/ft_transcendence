@@ -15,12 +15,10 @@ canvas {
 	left: 0;
 }
 
-/* main {
+main {
 	position: absolute;
-	margin: 0 auto;
-	z-index: 99;
 	width: 100%;
-} */
+}
 
 .back-circle {
 	background: linear-gradient(#94215a, #340c2f 90%) no-repeat;

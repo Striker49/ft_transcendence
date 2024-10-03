@@ -9,7 +9,7 @@ export function createText(callback, scoreP1, scoreP2) {
 
 	let textScore = `${scoreP1} - ${scoreP2}`;
 
-	loader.load('resources/fonts/helvetiker_regular.typeface.json', function (font) {
+	loader.load('/fonts/helvetiker_regular.typeface.json', function (font) {
 		const geometry = new TextGeometry(textScore, {
 			font: font,
 			size: 2,

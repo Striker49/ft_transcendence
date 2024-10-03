@@ -12,9 +12,7 @@ export default class extends Abstract {
 		`;
 	}
 
-	// async getJS() {
-	// 	return `
-	// 		<script type="module" src="/js/pong/main.js"></script>
-	// 	`;
-	// }
+	async getJS() {
+		return { url: "/js/game/main.js", isModule: true };
+	}
 }

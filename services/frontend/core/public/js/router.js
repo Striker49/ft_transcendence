@@ -1,10 +1,18 @@
-import About from "./views/About.js";
-import Game from "./views/Game.js";
-import Index from "./views/Index.js";
-import Instructions from "./views/Instructions.js";
-import Profile from "./views/Profile.js";
-import Select from "./views/Select.js";
-import Tournament from "./views/Tournament.js";
+import About from "./pages/About.js";
+import Game from "./pages/Game.js";
+import Index from "./pages/Index.js";
+import Instructions from "./pages/Instructions.js";
+import Profile from "./pages/Profile.js";
+import Select from "./pages/Select.js";
+import Tournament from "./pages/Tournament.js";
+
+const loadScript = ( url, isModule ) => {
+	const script = document.createElement("script");
+	script.src = url;
+	if (isModule)
+		script.type = "module";
+	document.body.appendChild(script);
+};
 
 const navigateTo = url => {
 	history.pushState(null, null, url);
@@ -13,13 +21,13 @@ const navigateTo = url => {
 
 const router = async () => {
 	const routes = [
-		{ path: "/", view: Index },
-		{ path: "/about", view: About },
-		{ path: "/game", view: Game },
-		{ path: "/instructions", view: Instructions },
-		{ path: "/profile", view: Profile },
-		{ path: "/select", view: Select },
-		{ path: "/tournament", view: Tournament }
+		{ path: "/", page: Index },
+		{ path: "/about", page: About },
+		{ path: "/game", page: Game },
+		{ path: "/instructions", page: Instructions },
+		{ path: "/profile", page: Profile },
+		{ path: "/select", page: Select },
+		{ path: "/tournament", page: Tournament }
 	];
 
 	// Test each route for potential match
@@ -40,14 +48,16 @@ const router = async () => {
 		}
 	}
 
-	console.log("Path: ", match.route.path);
+	// console.log(window.location.href);
 
-	const view = new match.route.view();
+	const page = new match.route.page();
 
-	document.querySelector("main").innerHTML = await view.getHtml();
+	document.querySelector("main").innerHTML = await page.getHtml();
 
-	// document.body.insertAdjacentHTML("beforeend", await view.getJS());
-
+	const script = await page.getJS();
+	if (script.url) {
+		loadScript(script.url, script.isModule);
+	}
 };
 
 window.addEventListener("popstate", router);
@@ -67,13 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
 // https://www.youtube.com/watch?v=ZleShIpv5zQ
 
 // const routes = {
-// 	404: "./views/404.html",
-// 	"/": "./views/main.js",
-// 	"/about": "./views/about.js",
-// 	"/instructions": "./views/instructions.js",
-// 	"/profile": "./views/profile.js",
-// 	"/select": "./views/select.js",
-// 	"/tournament": "./views/tournament.js"
+// 	404: "./pages/404.html",
+// 	"/": "./pages/main.js",
+// 	"/about": "./pages/about.js",
+// 	"/instructions": "./pages/instructions.js",
+// 	"/profile": "./pages/profile.js",
+// 	"/select": "./pages/select.js",
+// 	"/tournament": "./pages/tournament.js"
 // };
 
 // const router = async () => {
