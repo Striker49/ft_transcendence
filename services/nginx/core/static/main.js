@@ -231,6 +231,12 @@ function animate() {
     if (state === 0)
         return;
 
+    if (frames === 180)
+    {
+        ball.velocity.x = randomVelocity();
+        ball.velocity.z = randomVelocity();
+        ball.velocity.y = 0;
+    }
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
     if (keys.w.pressed && (paddleL.back - speed >= ground.back))
@@ -266,13 +272,17 @@ export function resetBallPosition(ball, winner) {
     else
         scoreP1++;
 	ball.position.x = 0;
-	ball.position.y = -1.5;
+	ball.position.y = -2.4;
 	ball.position.z = 0;
+    ball.velocity.y = 0;
+    ball.velocity.z = 0;
+    ball.velocity.x = 0;
+    frames = 0;
     updateScore();
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
         endGame();
-    ball.velocity.x = randomVelocity();
-    ball.velocity.z = randomVelocity();
+    // ball.velocity.x = randomVelocity();
+    // ball.velocity.z = randomVelocity();
 
 }
 
