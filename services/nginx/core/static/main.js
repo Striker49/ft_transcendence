@@ -12,8 +12,7 @@ scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
 const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
-light.position.z = 1;
-// light.position.x = 1;
+light.position.z = -1;
 light.position.y = 3;
 light.castShadow = true;
 light.shadow.camera.left = -50;
@@ -21,8 +20,6 @@ light.shadow.camera.right = 50;
 light.shadow.camera.top = 50;
 light.shadow.camera.bottom = -50;
 light.shadow.mapSize.set(9192, 9192);
-// light.shadow.mapSize.y = 2048
-light.shadowCameraVisible = true;
 scene.add(light, light2);
 
 const renderer = new THREE.WebGLRenderer({
@@ -94,13 +91,13 @@ const ball = new Ball({
     width: 15,
     height: 15,
     velocity: {
-        x: randomVelocity(),
+        x: 0,
         y: -0.01,
-        z: randomVelocity()
+        z: 0
     },
     position: {
         x: 0,
-        y: -1.5,
+        y: -1.25,
         z: 0
     },
     color: 'yellow'
@@ -116,7 +113,7 @@ const ground = new Box({
     color: '#0369a1',
     position: {
         x: 0,
-        y: -2,
+        y: -3,
         z: 0
     }
 });

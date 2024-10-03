@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import {ballCollision} from './collision.js'
+import {boxCollision} from './collision.js'
 import {resetBallPosition} from './main.js'
 
 export class Ball extends THREE.Mesh{
@@ -29,12 +30,12 @@ export class Ball extends THREE.Mesh{
 
     this.position.set(position.x, position.y, position.z);
 
-    this.bottom = this.position.y - this.radius / 2;
-    this.top = this.position.y + this.radius / 2;
-    this.right = this.position.x + this.radius / 2;
-    this.left = this.position.x - this.radius / 2;
-    this.front = this.position.z + this.radius / 2;
-    this.back = this.position.z - this.radius / 2;
+    this.bottom = this.position.y - this.radius;
+    this.top = this.position.y + this.radius;
+    this.right = this.position.x + this.radius;
+    this.left = this.position.x - this.radius;
+    this.front = this.position.z + this.radius;
+    this.back = this.position.z - this.radius;
 
     this.velocity = velocity;
     this.gravity = -0.002;
@@ -42,12 +43,12 @@ export class Ball extends THREE.Mesh{
     }
 
     updateSides() {
-        this.bottom = this.position.y - this.radius / 2;
-        this.top = this.position.y + this.radius / 2;
-        this.right = this.position.x + this.radius / 2;
-        this.left = this.position.x - this.radius / 2;
-        this.front = this.position.z + this.radius / 2;
-        this.back = this.position.z - this.radius / 2;
+        this.bottom = this.position.y - this.radius;
+        this.top = this.position.y + this.radius;
+        this.right = this.position.x + this.radius;
+        this.left = this.position.x - this.radius;
+        this.front = this.position.z + this.radius;
+        this.back = this.position.z - this.radius;
     }
 
     update(box, ground) {
@@ -61,9 +62,25 @@ export class Ball extends THREE.Mesh{
         this.position.x += this.velocity.x;
         this.position.z += this.velocity.z;
 
+        this.applyGravity(ground);
         this.paddleBounce(box);
         this.sideBounce(ground);
 		this.outOfBounds(ground);
+    }
+
+    applyGravity(ground) {
+        //This is where we hit the ground
+        if (boxCollision({
+            box1: this,
+            box2: ground
+            })){
+            const friction = 0.5;
+            this.velocity.y *= friction;
+            this.velocity.y = -this.velocity.y;
+        }   
+        else {
+            this.position.y += this.velocity.y;
+        }
     }
 
     paddleBounce(box) {
