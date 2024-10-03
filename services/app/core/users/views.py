@@ -40,4 +40,4 @@ class UserDetail(generics.RetrieveAPIView):
  # updates the database with the given selection and redirects to the results view function
 def hello(request):
     if request.method == 'GET':
-    	return JsonResponse("Hello World", safe=False)
+    	return JsonResponse({'message':'hello world'})
