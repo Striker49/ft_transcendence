@@ -6,23 +6,26 @@ from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
 	"""Manager for user profiles"""
-	
-	def create_user(self, email, name, password=None):
+
+	def create_user(self, email, username, password):
 		"""create a new user profile"""
 		if not email:
 			raise ValueError('Users must have an email address')
-
+		if not password:
+			raise ValueError('Users must have a password')
+		if not username:
+			raise ValueError('Users must have a username')
 		email = self.normalize_email(email)
-		user = self.model(email=email, name=name)
+		user = self.model(email=email, username=username)
 
 		user.set_password(password)
 		user.save(using=self._db)
 
 		return user
 
-	def create_superuser(self, email, name, password):
+	def create_superuser(self, email, password):
 		"""Create and save a new superuser with the given details"""
-		user = self.create_user(email, name, password)
+		user = self.create_user(email, password)
   
 		user.is_superuser = True
 		user.is_staff = True
@@ -30,20 +33,18 @@ class UserManager(BaseUserManager):
 
 		return user
 
-# Create your models here.
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 	"""Database model for the users that will be created"""
 	created = models.DateTimeField(auto_now_add=True) #Created a field with date of creation.
 	email= models.EmailField(max_length=255, unique=True) #users email adress will be used as login.
-	name=models.CharField(max_length=255) #name of the user
-	profile_picture_path = models.CharField(max_length=255, blank=True)
+	username=models.CharField(max_length=255, unique=True) #users unique username
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 
 	objects = UserManager()
 
-	USERNAME_FIELD = 'email'
-	REQUIRED_FIELDS = ['name',]
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email',]
  
 	class Meta:
 		ordering = ['created']

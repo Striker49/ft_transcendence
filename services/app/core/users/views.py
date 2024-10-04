@@ -1,22 +1,20 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-from . import serializers
-from . import models
+from . import serializers, models, permissions
 from rest_framework.authentication import TokenAuthentication
-from profiles import permissions
-from rest_framework import filters
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 from rest_framework.settings import api_settings
-from . import permissions
-from rest_framework import generics
+from rest_framework import generics, status, viewsets, filters
 from django.http import JsonResponse
+from rest_framework.response import Response
+from .serializers import AuthCustomTokenSerializer
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
-	"""Handle creating and updating profiles
-
-	Args:
-		viewsets (_type_): _description_
+	"""Handle creating and updating users
 	"""
 	serializer_class = serializers.CustomUserSerializer
 	queryset = models.CustomUser.objects.all()
@@ -25,14 +23,61 @@ class UserViewSet(viewsets.ModelViewSet):
 	filter_backends = (filters.SearchFilter,)
 	search_fields = ('name', 'email', )
 
+	def create(self, request, *args, **kwargs):
+		"""User creation function"""
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		self.perform_create(serializer)
+		response_data = {
+			'message': "User created successfully",
+			'user' : serializer.data
+		}
+		return Response(response_data, status=status.HTTP_201_CREATED)
+
+class UserRegistrationAPIView(APIView):
+	"""Register new users and creates their profile
+	"""
+	serializer_class = serializers.RegistrationSerializer
+	permission_classes = [AllowAny]
+	
+	def create(self, request, *args, **kwargs):
+		serializer = serializers.RegistrationSerializer(data=request.data)
+		serializer.is_valid(rais_exceprion=True)
+		self.perform_create(serializer)
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+	def post(self, request, format=None):
+		serializer = self.serializer_class(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		response_data = {
+			'success': True,
+			'message': "User registerd successfully",
+			'user' : serializer.data
+		}
+		return Response(response_data, status=status.HTTP_201_CREATED)
+
+
 class UserLoginApiView(ObtainAuthToken):
 	"""Handle creating user authentication tokens
-
-	Args:
-		ObtainAuthToken (_type_): _description_
 	"""
 	renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+	serializer_class = AuthCustomTokenSerializer
+ 
+	def post(self, request, *args, **kwargs):
+		"""log in user using either their email or their username"""
+		serializer = self.serializer_class(data=request.data)	
+		serializer.is_valid(raise_exception=True)
+  
+		user = serializer.validated_data['user']
+		token, created = Token.objects.get_or_create(user=user)
 
+		return Response({
+			'message': "User connected succesfully",
+			'token': token.key,
+			'user_id': user.id,
+		})
+  
 class UserDetail(generics.RetrieveAPIView):
 	queryset = models.CustomUser.objects.all()
 	serializer_class = serializers.CustomUserSerializer
@@ -40,4 +85,4 @@ class UserDetail(generics.RetrieveAPIView):
  # updates the database with the given selection and redirects to the results view function
 def hello(request):
     if request.method == 'GET':
-    	return JsonResponse({'message':'Hello World!'})
+    	return JsonResponse({'message':'hello world'})

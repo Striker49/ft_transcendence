@@ -14,7 +14,7 @@ fi
 # python manage.py flush --no-input
 python manage.py makemigrations
 python manage.py makemigrations profiles
-python manage.py makemigrations polls
+python manage.py makemigrations users
 python manage.py migrate --noinput
 
 # Checks if static dir exists and creates it if it doesn't
@@ -22,6 +22,5 @@ if [ ! -d "/code/core/static" ]
 then
 python manage.py collectstatic
 fi
-
 
 exec "$@"
