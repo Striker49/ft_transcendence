@@ -35,13 +35,13 @@ footer {
 
 /* Main sections */
 
-#game {
+/* #game {
 	background-image: url("../images/Pong.webp");
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
 	height: 540px;
-}
+} */
 
 h1 {
 	font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;

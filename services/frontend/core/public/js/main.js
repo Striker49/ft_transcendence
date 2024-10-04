@@ -1,20 +1,10 @@
 import * as THREE from "three";
 
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { scene, camera, renderer, controls } from "./three/base.js";
+
+import { updateGameScene } from "./game/main.js";
 
 //// Variables ////
-
-// Scene, camera and renderer
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-const renderer = new THREE.WebGLRenderer({
-	alpha: true,
-	antialias: true,
-	canvas: document.querySelector("#bg")
-});
-
-// Controls
-const controls = new OrbitControls(camera, renderer.domElement);
 
 // Lights
 const ambientLight = new THREE.AmbientLight(0xFFFFFF);
@@ -36,6 +26,7 @@ const init = () => {
 	renderer.setClearColor( 0xffffff, 0 );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.shadowMap.enabled = true;
 
 	scene.add(torus);
 	scene.add(ambientLight);
@@ -68,19 +59,22 @@ const onWindowResize = () => {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 };
 
-// Render every frame
+const updateMainScene = () => {
+	torus.rotation.x += 0.01;
+	torus.rotation.y += 0.005;
+	torus.rotation.z += 0.01;
+};
+
+// Animation Loop
 const animate = () => {
 
 	requestAnimationFrame( animate );
 
-	torus.rotation.x += 0.01;
-	torus.rotation.y += 0.005;
-	torus.rotation.z += 0.01;
+	updateMainScene();
 
-	if (window.location.href == "https://localhost/game") {
-		
-	}
+	updateGameScene();
 
+	// Only necessary for certain effects like damping
 	controls.update();
 
 	renderer.render( scene, camera );

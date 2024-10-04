@@ -1,10 +1,5 @@
-const loginForm = document.getElementById('login-form');
-
-loginForm.addEventListener('submit', async e => {
+document.querySelector("#login-form").addEventListener("submit", async e => {
     e.preventDefault();
-    // const email = loginForm.email.value;
-    // const password = loginForm.password.value;
-	// const formData = new FormData(loginForm);
 
 	const formData = {
 		username: loginForm.email.value,
@@ -12,11 +7,11 @@ loginForm.addEventListener('submit', async e => {
 	}
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
-	const url = 'https://localhost/api/users/login/';
+	const url = "https://localhost/api/users/login/";
 
 	try {
 		const response = await fetch(url, {
-			method: 'POST',
+			method: "POST",
 			body: JSON.stringify(formData),
 			headers: headers
 		});
@@ -29,4 +24,4 @@ loginForm.addEventListener('submit', async e => {
 	} catch (error) {
 		console.error(error.message);
 	}
-})
+});

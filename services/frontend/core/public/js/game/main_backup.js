@@ -1,32 +1,35 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { scene, camera, renderer, controls } from "../three/base.js";
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 9, 0);
-scene.position.z = 1;
+// const scene = new THREE.Scene();
+// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+// camera.position.set(0, 9, 0);
+// scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
-const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
+// const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = 1;
 light.position.y = 2;
 light.castShadow = true;
-scene.add(light, light2);
+scene.add(light);
+// scene.add(light, light2);
 
-const renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    antialias: true
-});
+// const renderer = new THREE.WebGLRenderer({
+//     alpha: true,
+//     antialias: true,
+//     canvas: document.querySelector('#bg')
+// });
 renderer.shadowMap.enabled = true;
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// renderer.setSize(window.innerWidth, window.innerHeight);
+// document.body.appendChild(renderer.domElement);
 
 // To move the scene around with the mouse
-const controls = new OrbitControls(camera, renderer.domElement);
+// const controls = new OrbitControls(camera, renderer.domElement);
 
 let speed = 0.15;
 let text, currentText;
@@ -171,7 +174,7 @@ window.addEventListener('keydown', (event) => {
 
 //Event listener for KEYUP
 window.addEventListener('keyup', (event) => {
-    // event.preventDefault();
+    event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = false;
@@ -201,22 +204,22 @@ window.addEventListener('keyup', (event) => {
 })
 
 //Resizes the image if the window changes size
-window.addEventListener( 'resize', onWindowResize, false );
+// window.addEventListener( 'resize', onWindowResize, false );
 
-function onWindowResize(){
+// function onWindowResize(){
 
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+//     camera.aspect = window.innerWidth / window.innerHeight;
+//     camera.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+//     renderer.setSize( window.innerWidth, window.innerHeight );
 
-}
+// }
 
 
-let frames = 0;
-function animate() {
-    const animationID = requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+// let frames = 0;
+function updateGame() {
+    // const animationID = requestAnimationFrame(updateGame);
+    // renderer.render(scene, camera);
 
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
@@ -243,7 +246,7 @@ function animate() {
         ball.update(paddleL, ground);
     else
         ball.update(paddleR, ground);
-    frames++;
+    // frames++;
 }
 
 //Resets ball to 0 position with randomized velocities to change direction
@@ -268,4 +271,7 @@ function randomVelocity() {
         number *= -1;
     return(number);
 }
-animate();
+
+export const updateGameScene = () => {
+    updateGame();
+}

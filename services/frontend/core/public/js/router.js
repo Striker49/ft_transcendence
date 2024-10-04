@@ -48,7 +48,7 @@ const router = async () => {
 		}
 	}
 
-	// console.log(window.location.href);
+	// console.log(window.location.pathname);
 
 	const page = new match.route.page();
 
