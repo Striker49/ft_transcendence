@@ -1,12 +1,17 @@
-document.querySelector("#login-form").addEventListener("submit", async e => {
+const form = document.querySelector("#login-form");
+
+const headers = new Headers({
+	"Content-Type": "application/json"
+});
+
+form.addEventListener("submit", async e => {
     e.preventDefault();
 
 	const formData = {
-		username: loginForm.email.value,
-		password: loginForm.password.value
-	}
-	const headers = new Headers();
-	headers.append("Content-Type", "application/json");
+		email_or_username: form.username.value,
+		password: form.password.value
+	};
+
 	const url = "https://localhost/api/users/login/";
 
 	try {
@@ -16,6 +21,8 @@ document.querySelector("#login-form").addEventListener("submit", async e => {
 			headers: headers
 		});
 		if (!response.ok) {
+			const errorResponse = await response.text();
+			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
 
