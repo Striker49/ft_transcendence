@@ -42,7 +42,7 @@ let scoreP2 = 0;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
-let numberOfWins = 11;
+let numberOfWins = 1;
 let state = 1;
 
 //Create left paddle
@@ -231,7 +231,7 @@ function animate() {
     if (state === 0)
         return;
 
-    if (frames === 180)
+    if (frames === 120)
     {
         ball.velocity.x = randomVelocity();
         ball.velocity.z = randomVelocity();
