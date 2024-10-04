@@ -14,23 +14,32 @@ class UserManagerTest(TestCase):
 
 	def test_user_creation(self):
 		"""Test to see if user creation works"""
-		testuser = CustomUser.objects.create_user(
-			email='test@test.com',
-			name='Test',
-			password='testpass'
-		)
-		self.assertEqual(testuser.email,'test@test.com')
-		self.assertEqual(testuser.name,'Test')
-		self.assertTrue(testuser.check_password("testpass"))
+		user = CustomUser.objects.create_user(email='test@example.com', name='Test User', password='password123')
+		self.assertIsNotNone(user)
+		self.assertEqual(user.email, 'test@example.com')
+		self.assertTrue(user.check_password('password123'))
+
 
 	def test_no_email(self):
 		"""If no email is entered, an appropriate message is displayed."""
 		with self.assertRaises(ValueError) as context:
 			self.manager.create_user(
 				email=None,
-				name='Test Usr',
+				name='Test',
 				password='testpass'
 			)
 		self.assertEqual(str(context.exception), 'Users must have an email address')
+
+	def test_no_name(self):
+		"""If no email is entered, an appropriate message is displayed."""
+		with self.assertRaises(ValueError) as context:
+			self.manager.create_user(
+				email='test@example.com',
+				name=None,
+				password='testpass'
+			)
+		self.assertEqual(str(context.exception), 'Users must have a name')
+	
+	
 
 

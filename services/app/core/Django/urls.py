@@ -20,10 +20,7 @@ from users import views
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    # path('api/', include('profiles.urls')),
-    path('api/polls/', include('polls.urls')),
-    path('api/polls2/', include('polls2.urls')),
-    # path('api/snippets/', include('snippets.urls')),
     path('api/users/', include('users.urls')),
-    path('api/hello/', views.hello)
+    path('api/hello/', views.hello),
+    path('api/profiles/', include('profiles.urls'))
 ]
