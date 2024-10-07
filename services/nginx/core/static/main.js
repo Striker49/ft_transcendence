@@ -1,9 +1,11 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
+import { setGui } from './gui.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -42,7 +44,9 @@ let scoreP2 = 0;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
-let numberOfWins = 1;
+let numberOfWins = 11;
+let powerUps = false;
+let theme = 'Christmas';
 let state = 1;
 
 //Create left paddle
@@ -119,6 +123,57 @@ const ground = new Box({
 });
 ground.receiveShadow = true;
 scene.add(ground);
+
+const gui = new GUI();
+
+const leftMaterialParams = {
+    leftPaddleColor: paddleL.material.color.getHex(),
+};
+
+const rightMaterialParams = {
+    rightPaddleColor: paddleR.material.color.getHex(),
+};
+
+const themeParams = {
+    theme: 'Christmas'
+};
+
+function updateTheme(theme) {
+    switch(theme) {
+        case 'Christmas':
+            paddleL.material.color.set(0x00ff00);
+            paddleR.material.color.set(0xff0000);
+            ground.material.color.set(0x0369a1);
+            break;
+        case 'Halloween':
+            paddleL.material.color.set(0xff6600);
+            paddleR.material.color.set(0x8c00ff);
+            ground.material.color.set(0x564c43);
+            break;
+        case 'Winter':
+            paddleL.material.color.set(0x9fffff);
+            paddleR.material.color.set(0x96b8ee);
+            ground.material.color.set(0xffffff);
+            ball.material.color.set(0x00ffff);
+            break;
+        default:
+            paddleL.material.color.set(0xffffff);
+    }
+}
+
+gui.add({ wins: numberOfWins }, 'wins', 0, 11, 1).onChange((value) => {
+    numberOfWins = value; // Update numberOfWins
+  });
+
+gui.add(paddleL.material, 'wireframe');
+gui.addColor(leftMaterialParams, 'leftPaddleColor')
+    .onChange((value) => paddleL.material.color.set(value));
+gui.addColor(rightMaterialParams, 'rightPaddleColor')
+    .onChange((value) => paddleR.material.color.set(value));
+gui.add(themeParams, 'theme', ['Christmas', 'Halloween', 'Winter'])
+  .onChange((value) => updateTheme(value));
+// updateTheme(themeParams);
+
 
 //Updates score text (alternates between old and new one)
 function updateScore(text) {

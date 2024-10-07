@@ -7,6 +7,37 @@
 			body { margin: 0;
         background: #63a4ca;
 			}
+        /* Custom styles for dat.GUI */
+        .dg.main {
+            background: #d1d1d1; /* Change panel background color */
+            border: 1px solid #666; /* Panel border color */
+            color: #fff; /* Text color */
+        }
+
+        .dg .cr {
+            background-color: #444 !important; /* Controller background */
+        }
+
+        .dg .cr:hover {
+            background-color: #555 !important; /* Hover state */
+        }
+
+        .dg .slider {
+            background: #fff; /* Slider track color */
+        }
+
+        .dg .slider-fg {
+            background: #00ff00 !important; /* Slider foreground color */
+        }
+
+        .dg .c, .dg .controller-row {
+            color: #0f0 !important; /* Text color for controllers */
+        }
+
+        .dg .property-name {
+            font-family: 'Courier New', Courier, monospace; /* Custom font for labels */
+        }
+    </style>
 		</style>
 		<script type="importmap">
 			{
@@ -27,7 +58,7 @@
 		  </form>
 	</head>
 	<body>
-		<div id="info">Pong</div>
+		<div id="info">Sign Up</div>
 		<script type="module" src="/main.js"></script>
 	</body>
 </html>
