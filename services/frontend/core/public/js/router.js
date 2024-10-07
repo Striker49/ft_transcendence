@@ -48,7 +48,7 @@ const router = async () => {
 		}
 	}
 
-	// console.log(window.location.pathname);
+	console.log(window.location.pathname);
 
 	const page = new match.route.page();
 
@@ -62,7 +62,7 @@ const router = async () => {
 
 window.addEventListener("popstate", router);
 
-document.addEventListener("DOMContentLoaded", () => {
+const init = () => {
 	document.body.addEventListener("click", e => {
 		if (e.target.matches("[data-link]")) {
 			e.preventDefault();
@@ -70,7 +70,19 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 	router();
-});
+};
+
+init();
+
+// document.addEventListener("DOMContentLoaded", () => {
+// 	document.body.addEventListener("click", e => {
+// 		if (e.target.matches("[data-link]")) {
+// 			e.preventDefault();
+// 			navigateTo(e.target.href);
+// 		}
+// 	});
+// 	router();
+// });
 
 
 // ============== Test with fetch() ===============
