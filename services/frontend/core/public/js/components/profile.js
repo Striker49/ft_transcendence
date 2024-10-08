@@ -7,17 +7,16 @@ export const submitRegistrationForm = async form => {
 		"email": form.email.value,
 		"username": form.username.value,
 		"password": form.password.value,
-		"profile.first_name": form.firstname.value,
-		"profile.last_name": form.lastname.value,
-		"profile.avatar_path": form.avatar.value,
-		"profile.bio": form.bio.value,
-		"profile.lang": form.lang.value
+		"first_name": form.firstname.value,
+		"last_name": form.lastname.value,
+		"avatar_path": form.avatar.value,
+		"bio": form.bio.value,
+		"lang": form.lang.value
 	};
 
 	const url = "https://localhost/api/users/registration/";
 
 	try {
-		console.log("Yo");
 		const response = await fetch(url, {
 			method: "POST",
 			body: JSON.stringify(formData),
