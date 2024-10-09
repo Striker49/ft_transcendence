@@ -3,13 +3,15 @@ node_modules/
 
 # Python
 __pycache__/
+__init__*
 .venv/
 
 # Django
 migrations/
+static
 
 # Build files
-build/
+dist/
 
 # Logs
 logs/
@@ -19,15 +21,11 @@ logs/
 # OS
 .DS_Store
 
-# Environment variables
+# Environment
 .env
 secrets
+test
 
 # Editor files
 .vscode/
-
-# services/app/Django/__pycache__/wsgi.cpython-312.pyc
-# services/app/Django/__pycache__/urls.cpython-312.pyc
-# services/app/Django/__pycache__/settings.cpython-312.pyc
-# services/app/Django/__pycache__/__init__.cpython-312.pyc
-# services/app/core/static
+.code

@@ -4,8 +4,7 @@ services:
       context: services/postgres
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     networks:
-      #- transcendence
-      - app_network
+      - django_network
     environment:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_USER=${DB_USER}
@@ -15,32 +14,32 @@ services:
       - "5432"
     restart: unless-stopped
 
-  app:
+  django:
     networks:
       - transcendence
-      - app_network
+      - django_network
     build:
-      context: services/app
+      context: ./services/django
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./services/app:/code
+      - ./services/django:/code
     expose:
       - "8000"
     depends_on:
       - db
     env_file:
-      - .env
+      - ./services/django/.env
 
   frontend:
     networks:
       - transcendence
-      - app_network
+      - django_network
     build:
-      context: services/frontend
+      context: ./services/frontend
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     volumes:
-      - /frontend/node_modules
+      - ./frontend/node_modules
       - ./services/frontend:/frontend/
     expose:
       - "8080"
@@ -49,24 +48,24 @@ services:
     networks:
       - transcendence
     depends_on:
-      - app
+      - django
     build:
-      context: services/nginx
+      context: ./services/nginx
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
-    env_file: .env
     volumes:
       - ./services/app:/code
     ports:
       - "443:443"
       - "80:80"
     restart: on-failure
+    env_file:
+    - ./services/nginx/.env
 
 networks:
   transcendence:
     driver: bridge
-  app_network:
+  django_network:
     driver: bridge
-
 
 volumes:
   postgres-db:
