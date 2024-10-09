@@ -1,6 +1,33 @@
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+.venv/
+
+# Django
+migrations/
+
+# Build files
+build/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS
+.DS_Store
+
+# Environment variables
 .env
-services/app/Django/__pycache__/wsgi.cpython-312.pyc
-services/app/Django/__pycache__/urls.cpython-312.pyc
-services/app/Django/__pycache__/settings.cpython-312.pyc
-services/app/Django/__pycache__/__init__.cpython-312.pyc
-services/app/core/static
+secrets
+
+# Editor files
+.vscode/
+
+# services/app/Django/__pycache__/wsgi.cpython-312.pyc
+# services/app/Django/__pycache__/urls.cpython-312.pyc
+# services/app/Django/__pycache__/settings.cpython-312.pyc
+# services/app/Django/__pycache__/__init__.cpython-312.pyc
+# services/app/core/static
