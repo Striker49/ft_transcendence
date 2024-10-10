@@ -1,0 +1,9 @@
+{
+	"liveServer.settings.AdvanceCustomBrowserCmdLine": "",
+	"liveServer.settings.mount": [
+
+	],
+	"liveServer.settings.ChromeDebuggingAttachment": false,
+	"liveServer.settings.root": "services/nginx/core/static",
+	"liveServer.settings.port": 3001
+}

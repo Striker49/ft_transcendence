@@ -1,10 +1,12 @@
 import * as THREE from 'three'
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { scene, camera, renderer, controls } from "../three/base.js";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
+import { setGui } from './gui.js';
 
 // const scene = new THREE.Scene();
 // const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -12,12 +14,16 @@ import { createText } from './text.js';
 // scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
-// const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
-light.position.z = 1;
-light.position.y = 2;
+const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
+light.position.z = -1;
+light.position.y = 3;
 light.castShadow = true;
-scene.add(light);
-// scene.add(light, light2);
+light.shadow.camera.left = -50;
+light.shadow.camera.right = 50;
+light.shadow.camera.top = 50;
+light.shadow.camera.bottom = -50;
+light.shadow.mapSize.set(9192, 9192);
+scene.add(light, light2);
 
 // const renderer = new THREE.WebGLRenderer({
 //     alpha: true,
@@ -31,6 +37,9 @@ renderer.shadowMap.enabled = true;
 // To move the scene around with the mouse
 // const controls = new OrbitControls(camera, renderer.domElement);
 
+//Seting variable value
+//<----need to fetch player name-------->
+let isStarted = false;
 let speed = 0.15;
 let text, currentText;
 let scoreP1 = 0;
@@ -38,6 +47,10 @@ let scoreP2 = 0;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
+let numberOfWins = 11;
+let powerUps = false;
+let theme = 'Christmas';
+let state = 1;
 
 //Create left paddle
 const paddleL = new Box({
@@ -85,13 +98,13 @@ const ball = new Ball({
     width: 15,
     height: 15,
     velocity: {
-        x: randomVelocity(),
+        x: 0,
         y: -0.01,
-        z: randomVelocity()
+        z: 0
     },
     position: {
         x: 0,
-        y: -1.5,
+        y: -1.25,
         z: 0
     },
     color: 'yellow'
@@ -107,12 +120,72 @@ const ground = new Box({
     color: '#0369a1',
     position: {
         x: 0,
-        y: -2,
+        y: -3,
         z: 0
     }
 });
 ground.receiveShadow = true;
 scene.add(ground);
+
+const gui = new GUI();
+
+const leftMaterialParams = {
+    leftPaddleColor: paddleL.material.color.getHex(),
+};
+
+const rightMaterialParams = {
+    rightPaddleColor: paddleR.material.color.getHex(),
+};
+
+const themeParams = {
+    theme: 'Christmas'
+};
+
+function updateTheme(theme) {
+    switch(theme) {
+        case 'Christmas':
+            paddleL.material.color.set(0x00ff00);
+            paddleR.material.color.set(0xff0000);
+            ground.material.color.set(0x0369a1);
+            break;
+        case 'Halloween':
+            paddleL.material.color.set(0xff6600);
+            paddleR.material.color.set(0x8c00ff);
+            ground.material.color.set(0x564c43);
+            break;
+        case 'Winter':
+            paddleL.material.color.set(0x9fffff);
+            paddleR.material.color.set(0x96b8ee);
+            ground.material.color.set(0xffffff);
+            ball.material.color.set(0x00ffff);
+            break;
+        default:
+            paddleL.material.color.set(0xffffff);
+    }
+}
+
+gui.add({ wins: numberOfWins }, 'wins', 0, 11, 1).onChange((value) => {
+    numberOfWins = value; // Update numberOfWins
+  });
+
+gui.add(paddleL.material, 'wireframe');
+gui.addColor(leftMaterialParams, 'leftPaddleColor')
+    .onChange((value) => paddleL.material.color.set(value));
+gui.addColor(rightMaterialParams, 'rightPaddleColor')
+    .onChange((value) => paddleR.material.color.set(value));
+gui.add(themeParams, 'theme', ['Christmas', 'Halloween', 'Winter'])
+  .onChange((value) => updateTheme(value));
+// updateTheme(themeParams);
+
+function startGame() {
+    scene.add(light);
+    scene.add(paddleL);
+    scene.add(paddleR);
+    scene.add(ball);
+    scene.add(ground);
+    
+    updateScore();
+}
 
 //Updates score text (alternates between old and new one)
 function updateScore(text) {
@@ -126,7 +199,7 @@ function updateScore(text) {
     
         text.castShadow = true;
         text.receiveShadow = true;
-        text.position.x = -2.75;
+        // text.position.x = -2.75;
         scene.add(text);
     
         // Store the reference to the new text
@@ -140,6 +213,7 @@ updateScore();
 
 //Event listener for KEYDOWN
 window.addEventListener('keydown', (event) => {
+    // prevents keys from default
     // event.preventDefault();
     switch(event.code) {
         case 'KeyW':
@@ -166,15 +240,15 @@ window.addEventListener('keydown', (event) => {
         case 'ArrowRight':
             keys.right.pressed = true;
             break;
-        case 'Space':
-            controls.reset();
-            break;
+        // case 'Space':
+        //     controls.reset();
+        //     break;
     }
 })
 
 //Event listener for KEYUP
 window.addEventListener('keyup', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     switch(event.code) {
         case 'KeyW':
             keys.w.pressed = false;
@@ -216,11 +290,19 @@ window.addEventListener('keyup', (event) => {
 // }
 
 
-// let frames = 0;
+let frames = 0;
 function updateGame() {
-    // const animationID = requestAnimationFrame(updateGame);
+    // const animationID = requestAnimationFrame(animate);
     // renderer.render(scene, camera);
+    if (state === 0)
+        return;
 
+    if (frames === 120)
+    {
+        ball.velocity.x = randomVelocity();
+        ball.velocity.z = randomVelocity();
+        ball.velocity.y = 0;
+    }
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
     if (keys.w.pressed && (paddleL.back - speed >= ground.back))
@@ -246,7 +328,7 @@ function updateGame() {
         ball.update(paddleL, ground);
     else
         ball.update(paddleR, ground);
-    // frames++;
+    frames++;
 }
 
 //Resets ball to 0 position with randomized velocities to change direction
@@ -256,12 +338,18 @@ export function resetBallPosition(ball, winner) {
     else
         scoreP1++;
 	ball.position.x = 0;
-	ball.position.y = -1.5;
+	ball.position.y = -2.4;
 	ball.position.z = 0;
-    ball.velocity.x = randomVelocity();
-    ball.velocity.z = randomVelocity();
-
+    ball.velocity.y = 0;
+    ball.velocity.z = 0;
+    ball.velocity.x = 0;
+    frames = 0;
     updateScore();
+    if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
+        endGame();
+    // ball.velocity.x = randomVelocity();
+    // ball.velocity.z = randomVelocity();
+
 }
 
 //Generates a number between 0.06 and 0.1 and -0.1 and -0.06
@@ -273,5 +361,34 @@ function randomVelocity() {
 }
 
 export const updateGameScene = () => {
-    updateGame();
+    if (window.location.pathname == '/game') {
+        if (!isStarted) {
+            startGame();
+            isStarted = true;
+        }
+        updateGame();
+    } else {
+        if (isStarted) {
+            console.log('Game Ended');
+            isStarted = false;
+        }
+    }
 }
+
+function endGame() {
+    ball.kill();
+    scene.remove(ball);
+    paddleL.kill();
+    scene.remove(paddleL);
+    paddleR.kill();
+    scene.remove(paddleR);
+    ground.kill();
+    scene.remove(ground);
+    // scene.remove.apply(scene, scene.children);
+    // cancelAnimationFrame(animationID);
+    state = 0;
+    // cancel();
+    // exit();
+}
+
+// animate();

@@ -22,12 +22,14 @@ export function createText(callback, scoreP1, scoreP2) {
 			bevelOffset: -0.1,
 			bevelSegments: 20
 		});
+		geometry.computeBoundingBox();
+		const centerOffset = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
 		const material2 = new THREE.MeshStandardMaterial({ color: 0xffd700 });
 		const text = new THREE.Mesh(geometry, material2);
 		text.position.y = -2;
-		// text.position.x = 0;
+		text.position.x = centerOffset;
 		text.position.z = -6;
-		text.rotation.x = -1.55;
+		text.rotation.x = -1.5;
 		
 		callback(text);
 	});

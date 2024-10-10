@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import { scene, camera, renderer, controls } from "./three/base.js";
 
-import { updateGameScene } from "./game/main.js";
+import { updateGameScene } from "./game/main_backup.js";
 
 //// Variables ////
 

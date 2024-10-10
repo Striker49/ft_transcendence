@@ -77,5 +77,9 @@ export class Box extends THREE.Mesh {
             this.position.y += this.velocity.y;
         }
     }
-
+    
+    kill() {
+        this.material.dispose();
+        this.geometry.dispose();
+    }
 };
