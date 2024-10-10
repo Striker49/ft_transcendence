@@ -127,7 +127,27 @@ const ground = new Box({
 ground.receiveShadow = true;
 scene.add(ground);
 
-const gui = new GUI();
+const gui = new GUI({ autoPlace: false, width: 300 });  // Adjust the width if needed
+
+// Create a custom div to hold the GUI
+const guiContainer = document.createElement('div');
+guiContainer.id = 'guiContainer';  // Assign an ID for styling
+document.body.appendChild(guiContainer);
+
+// Move the GUI to the container
+gui.domElement.classList.add('custom-gui'); // Add a class for styling
+guiContainer.appendChild(gui.domElement);
+
+// Add any other controls to your GUI
+// gui.add(...);  // Example controls
+
+// gui.domElement.style.backgroundColor = 'rgba(50, 50, 50, 0.9)'; // Background color
+// gui.domElement.style.color = 'white'; // Text color
+// gui.domElement.style.border = '2px solid #444'; // Optional border
+
+// // Optionally append it to your HTML element
+// document.body.appendChild(gui.domElement);
+
 
 const leftMaterialParams = {
     leftPaddleColor: paddleL.material.color.getHex(),
