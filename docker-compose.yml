@@ -39,7 +39,7 @@ services:
       context: ./services/frontend
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     volumes:
-      - ./frontend/node_modules
+      - /frontend/node_modules
       - ./services/frontend:/frontend/
     expose:
       - "8080"
@@ -53,7 +53,7 @@ services:
       context: ./services/nginx
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     volumes:
-      - ./services/app:/code
+      - ./services/django:/code
     ports:
       - "443:443"
       - "80:80"

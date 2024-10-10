@@ -51,4 +51,4 @@ fclean:
 	docker rm -vf $$(docker ps -aq); \
 	make prune
 
-.PHONY build build-hard up up-verbose start down down-hard stop restart deploy eval prune fclean
+.PHONY : build build-hard up up-verbose start down down-hard stop restart deploy eval prune fclean
