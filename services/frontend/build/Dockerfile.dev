@@ -13,4 +13,4 @@ RUN npm install -g serve
 EXPOSE 8080
 
 # Serve a specific file (e.g., index.html)
-CMD ["serve", "-s", "core/public-old", "-l", "8080"]
+CMD ["serve", "-s", "core/public", "-l", "8080"]

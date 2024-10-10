@@ -54,6 +54,7 @@ services:
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     volumes:
       - ./services/django:/code
+      - ./services/frontend:/frontend
     ports:
       - "443:443"
       - "80:80"
