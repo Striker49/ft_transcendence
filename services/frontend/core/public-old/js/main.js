@@ -1,8 +1,9 @@
 import Canvas from "./components/canvas.js"
 import Footer from "./components/footer.js"
-import Login, { submitLoginForm } from "./components/login.js"
+import Login, { login, logout } from "./components/login.js"
 import Main from "./components/main.js"
 import Nav from "./components/nav.js"
+import { submitRegistrationForm } from "./components/profile.js"
 
 const addScript = url => {
 	const script = document.createElement("script");
@@ -11,28 +12,29 @@ const addScript = url => {
 	document.body.appendChild(script);
 };
 
-const renderHtml = component => {
-	const html = component;
-	document.body.insertAdjacentHTML("beforeend", html);
-};
+document.addEventListener("click", e => {
+	if (e.target.matches("#logout-btn")) {
+		logout();
+	}
+});
 
 document.addEventListener("submit", e => {
 	e.preventDefault();
 	if (e.target.matches("#login-form")) {
-		submitLoginForm(e.target);
+		login(e.target);
+	} else if (e.target.matches("#registration-form")) {
+		submitRegistrationForm(e.target);
 	}
 });
 
 document.addEventListener("DOMContentLoaded", e => {
-
-	renderHtml(Canvas);
-	renderHtml(Nav);
-	renderHtml(Login);
-	renderHtml(Main);
-	renderHtml(Footer);
-
-	document.body.insertAdjacentHTML("beforeend", "<!-- Scripts -->");
-
+	document.body.insertAdjacentHTML("afterbegin", `
+		${Canvas}
+		${Nav}
+		${Login}
+		${Main}
+		${Footer}
+	`);
 	addScript("/js/router.js");
 	addScript("/js/scene.js");
 });
