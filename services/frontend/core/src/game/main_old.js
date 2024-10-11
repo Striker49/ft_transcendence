@@ -1,36 +1,17 @@
 import * as THREE from 'three'
 // import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { scene, camera, renderer, controls } from "../three/base.js";
+import { scene, camera, renderer, controls } from "../threejs/base.js";
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
 
-// const scene = new THREE.Scene();
-// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// camera.position.set(0, 9, 0);
-// scene.position.z = 1;
-
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
-// const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = 1;
 light.position.y = 2;
 light.castShadow = true;
-scene.add(light);
-// scene.add(light, light2);
 
-// const renderer = new THREE.WebGLRenderer({
-//     alpha: true,
-//     antialias: true,
-//     canvas: document.querySelector('#bg')
-// });
-renderer.shadowMap.enabled = true;
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// document.body.appendChild(renderer.domElement);
-
-// To move the scene around with the mouse
-// const controls = new OrbitControls(camera, renderer.domElement);
-
+let isStarted = false;
 let speed = 0.15;
 let text, currentText;
 let scoreP1 = 0;
@@ -56,8 +37,6 @@ const paddleL = new Box({
     }
 });
 paddleL.castShadow = true;
-scene.add(paddleL);
-
 
 //Create right paddle
 const paddleR = new Box({
@@ -77,7 +56,6 @@ const paddleR = new Box({
     color: 'red'
 });
 paddleR.castShadow = true;
-scene.add(paddleR);
 
 //Create ball
 const ball = new Ball({
@@ -97,7 +75,6 @@ const ball = new Ball({
     color: 'yellow'
 });
 ball.castShadow = true;
-scene.add(ball);
 
 //Create ground
 const ground = new Box({
@@ -112,7 +89,16 @@ const ground = new Box({
     }
 });
 ground.receiveShadow = true;
-scene.add(ground);
+
+function startGame() {
+    scene.add(light);
+    scene.add(paddleL);
+    scene.add(paddleR);
+    scene.add(ball);
+    scene.add(ground);
+    
+    updateScore();
+}
 
 //Updates score text (alternates between old and new one)
 function updateScore(text) {
@@ -132,11 +118,7 @@ function updateScore(text) {
         // Store the reference to the new text
         currentText = text;
     }, scoreP1, scoreP2);
-    
-
 }
-
-updateScore();
 
 //Event listener for KEYDOWN
 window.addEventListener('keydown', (event) => {
@@ -203,23 +185,7 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
-//Resizes the image if the window changes size
-// window.addEventListener( 'resize', onWindowResize, false );
-
-// function onWindowResize(){
-
-//     camera.aspect = window.innerWidth / window.innerHeight;
-//     camera.updateProjectionMatrix();
-
-//     renderer.setSize( window.innerWidth, window.innerHeight );
-
-// }
-
-
-// let frames = 0;
 function updateGame() {
-    // const animationID = requestAnimationFrame(updateGame);
-    // renderer.render(scene, camera);
 
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
@@ -246,7 +212,6 @@ function updateGame() {
         ball.update(paddleL, ground);
     else
         ball.update(paddleR, ground);
-    // frames++;
 }
 
 //Resets ball to 0 position with randomized velocities to change direction
@@ -273,5 +238,16 @@ function randomVelocity() {
 }
 
 export const updateGameScene = () => {
-    updateGame();
+    if (window.location.pathname == '/game') {
+        if (!isStarted) {
+            startGame();
+            isStarted = true;
+        }
+        updateGame();
+    } else {
+        if (isStarted) {
+            console.log('Game Ended');
+            isStarted = false;
+        }
+    }
 }
