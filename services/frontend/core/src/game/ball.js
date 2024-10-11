@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import {ballCollision} from './collision.js'
-import {resetBallPosition} from './main.js'
+import {boxCollision} from './collision.js'
+// import {resetBallPosition} from './main_old.js'
 
 export class Ball extends THREE.Mesh{
     constructor({radius,
@@ -29,12 +30,12 @@ export class Ball extends THREE.Mesh{
 
     this.position.set(position.x, position.y, position.z);
 
-    this.bottom = this.position.y - this.radius / 2;
-    this.top = this.position.y + this.radius / 2;
-    this.right = this.position.x + this.radius / 2;
-    this.left = this.position.x - this.radius / 2;
-    this.front = this.position.z + this.radius / 2;
-    this.back = this.position.z - this.radius / 2;
+    this.bottom = this.position.y - this.radius;
+    this.top = this.position.y + this.radius;
+    this.right = this.position.x + this.radius;
+    this.left = this.position.x - this.radius;
+    this.front = this.position.z + this.radius;
+    this.back = this.position.z - this.radius;
 
     this.velocity = velocity;
     this.gravity = -0.002;
@@ -42,12 +43,12 @@ export class Ball extends THREE.Mesh{
     }
 
     updateSides() {
-        this.bottom = this.position.y - this.radius / 2;
-        this.top = this.position.y + this.radius / 2;
-        this.right = this.position.x + this.radius / 2;
-        this.left = this.position.x - this.radius / 2;
-        this.front = this.position.z + this.radius / 2;
-        this.back = this.position.z - this.radius / 2;
+        this.bottom = this.position.y - this.radius;
+        this.top = this.position.y + this.radius;
+        this.right = this.position.x + this.radius;
+        this.left = this.position.x - this.radius;
+        this.front = this.position.z + this.radius;
+        this.back = this.position.z - this.radius;
     }
 
     update(box, ground) {
@@ -61,9 +62,25 @@ export class Ball extends THREE.Mesh{
         this.position.x += this.velocity.x;
         this.position.z += this.velocity.z;
 
+        this.applyGravity(ground);
         this.paddleBounce(box);
         this.sideBounce(ground);
 		this.outOfBounds(ground);
+    }
+
+    applyGravity(ground) {
+        //This is where we hit the ground
+        if (boxCollision({
+            box1: this,
+            box2: ground
+            })){
+            const friction = 0.5;
+            this.velocity.y *= friction;
+            this.velocity.y = -this.velocity.y;
+        }   
+        else {
+            this.position.y += this.velocity.y;
+        }
     }
 
     paddleBounce(box) {
@@ -86,7 +103,7 @@ export class Ball extends THREE.Mesh{
                 if (this.front > box.front && this.velocity.z < 0)
                     this.velocity.z *= -1;
                 //Accelerates ball z velocity
-                this.velocity.z *= (1.075);
+                // this.velocity.z *= ((this.front - this.radius) / box.front);
                 if (this.velocity.z > 0.25)
                     this.velocity.z = 0.25;
             }
@@ -107,9 +124,18 @@ export class Ball extends THREE.Mesh{
 	}
     //Checks if ball is a proportional (0.5x) distance away from ground
 	outOfBounds(ground) {
-		if (this.position.x < (ground.left - ground.width / 2) || this.position.z > (ground.front + ground.depth / 2))
-			resetBallPosition(this, 1);
-		else if (this.position.x > (ground.right + ground.width / 2) || this.position.z < (ground.back - ground.depth / 2))
-			resetBallPosition(this, 2);
+        let winner;
+        if (this.position.x < (ground.left - ground.width / 2))
+            winner = 1;
+        else if (this.position.x > (ground.right + ground.width / 2))
+            winner = 2;
+		if (this.position.x < (ground.left - ground.width / 2) || this.position.z > (ground.front + ground.depth / 2) || 
+            this.position.x > (ground.right + ground.width / 2) || this.position.z < (ground.back - ground.depth / 2))
+			    return (winner);
 	}
+
+    kill() {
+        this.material.dispose();
+        this.geometry.dispose();
+    }
 }

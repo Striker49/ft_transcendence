@@ -14,7 +14,7 @@ import { setGui } from './gui.js';
 // scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
-// const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
+const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = -1;
 light.position.y = 3;
 light.castShadow = true;
@@ -23,7 +23,7 @@ light.shadow.camera.right = 50;
 light.shadow.camera.top = 50;
 light.shadow.camera.bottom = -50;
 light.shadow.mapSize.set(9192, 9192);
-// scene.add(light, light2);
+scene.add(light, light2);
 
 // const renderer = new THREE.WebGLRenderer({
 //     alpha: true,
@@ -69,7 +69,7 @@ const paddleL = new Box({
     }
 });
 paddleL.castShadow = true;
-// scene.add(paddleL);
+scene.add(paddleL);
 
 
 //Create right paddle
@@ -90,7 +90,7 @@ const paddleR = new Box({
     color: 'red'
 });
 paddleR.castShadow = true;
-// scene.add(paddleR);
+scene.add(paddleR);
 
 //Create ball
 const ball = new Ball({
@@ -110,7 +110,7 @@ const ball = new Ball({
     color: 'yellow'
 });
 ball.castShadow = true;
-// scene.add(ball);
+scene.add(ball);
 
 //Create ground
 const ground = new Box({
@@ -125,7 +125,7 @@ const ground = new Box({
     }
 });
 ground.receiveShadow = true;
-// scene.add(ground);
+scene.add(ground);
 
 const gui = new GUI({ autoPlace: false, width: 300 });  // Adjust the width if needed
 

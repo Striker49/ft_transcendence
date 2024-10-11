@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import {ballCollision} from './collision.js'
 import {boxCollision} from './collision.js'
-import {resetBallPosition} from './main_backup.js'
+import {resetBallPosition} from './main_old.js'
 
 export class Ball extends THREE.Mesh{
     constructor({radius,
