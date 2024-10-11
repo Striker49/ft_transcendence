@@ -19,12 +19,14 @@ document.addEventListener("click", e => {
 });
 
 document.addEventListener("submit", e => {
-	e.preventDefault();
+	// e.preventDefault();
 	if (e.target.matches("#login-form")) {
+		e.preventDefault();
 		login(e.target);
-	} else if (e.target.matches("#registration-form")) {
-		submitRegistrationForm(e.target);
-	}
+	} 
+	// else if (e.target.matches("#registration-form")) {
+	// 	submitRegistrationForm(e.target);
+	// }
 });
 
 document.addEventListener("DOMContentLoaded", e => {

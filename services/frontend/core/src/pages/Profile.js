@@ -11,9 +11,113 @@ export default class extends Abstract {
 	}
 }
 
-// document.querySelector("custom-image").addEventListener("click", e => {
-// 	e.preventDefault;
-// });
+let upload = false; 
+
+const avatarPath = custom => {
+
+	if (!upload) {
+
+		const avatars = document.querySelector("#avatar-section-1");
+
+		for (const avatar of avatars.children) {
+			if (avatar.classList.contains("border-warning")) {
+				return avatar.getAttribute("src");
+			}
+		}
+
+	} else if (custom) {
+		return custom;
+	}
+	return "/src/assets/avatar/avatar1.jpg";
+};
+
+const submitRegistrationForm = async form => {
+	
+	const formData = {
+		"email": form.email.value,
+		"username": form.username.value,
+		"password": form.password.value,
+		"first_name": form.firstname.value,
+		"last_name": form.lastname.value,
+		"avatar_path": avatarPath(form.avatar.value),
+		"bio": form.bio.value,
+		"lang": form.lang.value
+	};
+
+	const headers = new Headers({
+		"Content-Type": "application/json"
+	});
+
+	const url = "https://localhost/api/users/registration/";
+
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(formData),
+			headers: headers
+		});
+		if (!response.ok) {
+			const errorResponse = await response.text();
+			console.log(errorResponse);
+			throw new Error(`Response status: ${response.status}`);
+		}
+
+		const json = await response.json();
+		console.log(json);
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+const toggleAvatarSection = isCustom => {
+
+	const avatarSection1 = document.querySelector("#avatar-section-1");
+	const avatarSection2 = document.querySelector("#avatar-section-2");
+
+	if (isCustom) {
+		upload = true;
+		avatarSection1.classList.add("d-none");
+		avatarSection2.classList.remove("d-none");
+	} else {
+		upload = false;
+		avatarSection1.classList.remove("d-none");
+		avatarSection2.classList.add("d-none");
+	}
+};
+
+document.addEventListener("click", e => {
+
+	const element = e.target;
+
+	switch (true) {
+		case element.matches("#avatar-section-1 img"):
+			const parent = e.target.parentElement;
+			for (const child of parent.children) {
+				child.classList.add("border-success");
+				child.classList.remove("border-warning");
+			}
+			e.target.classList.add("border-warning");
+			e.target.classList.remove("border-success");
+			break;
+
+		case element.matches("#custom-image"):
+			e.preventDefault();
+			toggleAvatarSection(true);
+			break;
+
+		case element.matches("#default-image"):
+			e.preventDefault();
+			toggleAvatarSection(false);
+			break;
+	}
+});
+
+document.addEventListener("submit", e => {
+	if (e.target.matches("#registration-form")) {
+		e.preventDefault();
+		submitRegistrationForm(e.target);
+	}
+});
 
 const defaultForm = () => {
 	return `
@@ -44,17 +148,17 @@ const defaultForm = () => {
 						</div>
 					</div>
 					<div class="col ps-4">
-						<div class="mb-4" id="avatar-section-1">
-							<p>Choose Avatar <span class="text-success">or <a href="" class="text-decoration-none text-success" id="custom-image">Upload Custom Image</a></span></p>
-							<div id="avatar-selection-1">
-								<a href="" class="m-2 border border-5 border-success d-inline-block"><img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="64px" height="64px"></a>
-								<a href="" class="m-2 border border-5 border-success d-inline-block"><img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="64px" height="64px"></a>
-								<a href="" class="m-2 border border-5 border-success d-inline-block"><img src="/src/assets/avatar/avatar3.jpg" alt="Avatar image 3" width="64px" height="64px"></a>
-								<a href="" class="m-2 border border-5 border-success d-inline-block"><img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="64px" height="64px"></a>
-								<a href="" class="m-2 border border-5 border-success d-inline-block"><img src="/src/assets/avatar/avatar5.jpg" alt="Avatar image 5" width="64px" height="64px"></a>
-								<a href="" class="m-2 border border-5 border-success d-inline-block"><img src="/src/assets/avatar/avatar6.jpg" alt="Avatar image 6" width="64px" height="64px"></a>
+						<div class="mb-4">
+							<p><a href="" class="text-decoration-none text-success" id="default-image">Choose Avatar</a> or <a href="" class="text-decoration-none text-success" id="custom-image">Upload Custom Image</a></p>
+							<div id="avatar-section-1">
+								<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="64px" height="64px" class="m-2 border border-5 border-warning d-inline-block" style="cursor: pointer;">
+								<img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
+								<img src="/src/assets/avatar/avatar3.jpg" alt="Avatar image 3" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
+								<img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
+								<img src="/src/assets/avatar/avatar5.jpg" alt="Avatar image 5" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
+								<img src="/src/assets/avatar/avatar6.jpg" alt="Avatar image 6" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
 							</div>
-							<div class="d-none" id="avatar-selection-2">
+							<div id="avatar-section-2" class="d-none">
 								<input type="file" class="form-control" id="avatar">
 							</div>
 						</div>
