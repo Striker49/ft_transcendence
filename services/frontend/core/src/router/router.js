@@ -5,6 +5,7 @@ import Instructions from "../pages/Instructions.js";
 import Profile from "../pages/Profile.js";
 import Select from "../pages/Select.js";
 import Tournament from "../pages/Tournament.js";
+import FetchTest from "../pages/FetchTest.js";
 
 const loadScript = ( url, isModule ) => {
 	const script = document.createElement("script");
@@ -27,7 +28,8 @@ const router = async () => {
 		{ path: "/instructions", page: Instructions },
 		{ path: "/profile", page: Profile },
 		{ path: "/select", page: Select },
-		{ path: "/tournament", page: Tournament }
+		{ path: "/tournament", page: Tournament },
+		{ path: "/fetch-test", page: FetchTest }
 	];
 
 	// Test each route for potential match
