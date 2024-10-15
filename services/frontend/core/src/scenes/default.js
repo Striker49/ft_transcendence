@@ -71,7 +71,7 @@ const animate = () => {
 	requestAnimationFrame( animate );
 
 	updateMainScene();
-
+	
 	updateGameScene();
 
 	// Only necessary for certain effects like damping
