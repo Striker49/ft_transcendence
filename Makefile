@@ -46,7 +46,8 @@ prune:
 	docker system prune --all --volumes
 
 fclean:
-	make delete_volumes
+	docker stop $$(docker ps -qa); \
+	docker volume rm $$(docker volume ls -q); \
 	docker rmi -f $$(docker images -qa); \
 	docker rm -vf $$(docker ps -aq); \
 	make prune

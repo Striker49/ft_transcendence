@@ -259,7 +259,7 @@ function updateScore(text) {
 
 }
 
-updateScore();
+// updateScore();
 
 //Event listener for KEYDOWN
 window.addEventListener('keydown', (event) => {
