@@ -14,8 +14,8 @@ export default class extends Abstract {
 						<li class="nav-item dropdown-center">
 							<a href="#" class="nav-link my-2 bg-transparent border-0 text-success fw-bold fs-5" data-bs-toggle="dropdown" role="button" aria-expanded="false">Single Game</a>
 							<ul class="dropdown-menu">
-								<li><a class="dropdown-item text-success fw-bold" href="/game" data-link>1 Player</a></li>
-								<li><a class="dropdown-item text-success fw-bold" href="/game" data-link>2 Players</a></li>
+								<li><a class="dropdown-item text-success fw-bold" href="/gameConfig" data-link>1 Player</a></li>
+								<li><a class="dropdown-item text-success fw-bold" href="/gameConfig" data-link>2 Players</a></li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown-center">

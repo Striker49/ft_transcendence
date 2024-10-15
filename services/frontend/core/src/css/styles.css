@@ -72,3 +72,8 @@ h1 {
     padding: 15px;
     color: white;
 }
+
+.auto-width-select {
+	width: auto;
+	min-width: 10px;
+}

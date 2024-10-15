@@ -1,5 +1,6 @@
 import About from "../pages/About.js";
 import Game from "../pages/Game.js";
+import GameConfig from "../pages/GameConfig.js";
 import Index from "../pages/Index.js";
 import Instructions from "../pages/Instructions.js";
 import Profile from "../pages/Profile.js";
@@ -29,6 +30,7 @@ const router = async () => {
 		{ path: "/profile", page: Profile },
 		{ path: "/select", page: Select },
 		{ path: "/tournament", page: Tournament },
+		{ path: "/gameConfig", page: GameConfig },
 		{ path: "/fetch-test", page: FetchTest }
 	];
 
