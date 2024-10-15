@@ -65,7 +65,7 @@ export class Ball extends THREE.Mesh{
         this.applyGravity(ground);
         this.paddleBounce(box);
         this.sideBounce(ground);
-		this.outOfBounds(ground);
+		return (this.outOfBounds(ground));
     }
 
     applyGravity(ground) {
@@ -124,7 +124,7 @@ export class Ball extends THREE.Mesh{
 	}
     //Checks if ball is a proportional (0.5x) distance away from ground
 	outOfBounds(ground) {
-        let winner;
+        let winner = 0;
         if (this.position.x < (ground.left - ground.width / 2))
             winner = 1;
         else if (this.position.x > (ground.right + ground.width / 2))
@@ -132,6 +132,7 @@ export class Ball extends THREE.Mesh{
 		if (this.position.x < (ground.left - ground.width / 2) || this.position.z > (ground.front + ground.depth / 2) || 
             this.position.x > (ground.right + ground.width / 2) || this.position.z < (ground.back - ground.depth / 2))
 			    return (winner);
+        return (winner);
 	}
 
     kill() {

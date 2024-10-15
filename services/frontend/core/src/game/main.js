@@ -372,12 +372,17 @@ function updateGame() {
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);
+
+    let winner = 0;
+
     //updates ball depending if it's going towards left or right 
     // to check the corresponding paddle hitbox
     if (ball.velocity.x < 0)
-        ball.update(paddleL, ground);
+        winner = ball.update(paddleL, ground);
     else
-        ball.update(paddleR, ground);
+        winner = ball.update(paddleR, ground);
+    if (winner != 0)
+        resetBallPosition(ball, winner);
     frames++;
 }
 
