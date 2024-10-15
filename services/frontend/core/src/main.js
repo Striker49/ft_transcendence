@@ -1,6 +1,7 @@
 import Canvas from "./components/canvas.js"
 import Footer from "./components/footer.js"
 import Login, { login, logout } from "./components/login.js"
+import About from "./components/about.js"
 import Main from "./components/main.js"
 import Nav from "./components/nav.js"
 import { submitRegistrationForm } from "./components/profile.js"
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", e => {
 		${Canvas}
 		${Nav}
 		${Login}
+		${About}
 		${Main}
 		${Footer}
 	`);

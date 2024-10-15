@@ -7,13 +7,13 @@ import Select from "../pages/Select.js";
 import Tournament from "../pages/Tournament.js";
 import FetchTest from "../pages/FetchTest.js";
 
-const loadScript = ( url, isModule ) => {
-	const script = document.createElement("script");
-	script.src = url;
-	if (isModule)
-		script.type = "module";
-	document.body.appendChild(script);
-};
+// const loadScript = ( url, isModule ) => {
+// 	const script = document.createElement("script");
+// 	script.src = url;
+// 	if (isModule)
+// 		script.type = "module";
+// 	document.body.appendChild(script);
+// };
 
 const navigateTo = url => {
 	history.pushState(null, null, url);
@@ -54,12 +54,17 @@ const router = async () => {
 
 	const page = new match.route.page();
 
-	document.querySelector("main").innerHTML = await page.getHtml();
-
-	const script = await page.getJS();
-	if (script.url) {
-		loadScript(script.url, script.isModule);
+	const customBehaviour = await page.getCustomBehaviour();
+	if (!customBehaviour) {
+		document.querySelector("main").innerHTML = await page.getHtml();
+	} else {
+		page.executeCustomScript();
 	}
+
+	// const script = await page.getJS();
+	// if (script.url) {
+	// 	loadScript(script.url, script.isModule);
+	// }
 };
 
 window.addEventListener("popstate", router);
