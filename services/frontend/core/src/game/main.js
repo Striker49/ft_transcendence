@@ -42,8 +42,7 @@ renderer.shadowMap.enabled = true;
 let isStarted = false;
 let speed = 0.15;
 let text, currentText;
-let scoreP1 = 0;
-let scoreP2 = 0;
+let scoreP1, scoreP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
@@ -62,6 +61,8 @@ let guiContainer;
 
 function initGame(numberOfWins = 3) {
 
+    scoreP1 = 0;
+    scoreP2 = 0;
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
@@ -246,10 +247,10 @@ function updateScore(text) {
             currentText.geometry.dispose(); // Dispose of the geometry
             currentText.material.dispose(); // Dispose of the material
         }
-    
+        if (state == 0)
+            return;
         text.castShadow = true;
         text.receiveShadow = true;
-        // text.position.x = -2.75;
         scene.add(text);
     
         // Store the reference to the new text
@@ -426,11 +427,21 @@ export const updateGameScene = () => {
         if (isStarted) {
             console.log('Game Ended');
             isStarted = false;
+            removeGameObjects();
         }
     }
 }
 
 function endGame() {
+    removeGameObjects();
+    // scene.remove.apply(scene, scene.children);
+    // cancelAnimationFrame(animationID);
+    state = 0;
+    //GoToEndScreen
+    window.location.href = "/endGame";
+}
+
+function removeGameObjects() {
     ball.kill();
     scene.remove(ball);
     paddleL.kill();
@@ -439,11 +450,7 @@ function endGame() {
     scene.remove(paddleR);
     ground.kill();
     scene.remove(ground);
-    // scene.remove.apply(scene, scene.children);
-    // cancelAnimationFrame(animationID);
-    state = 0;
-    // cancel();
-    // exit();
+    currentText.material.dispose();
+    currentText.geometry.dispose();
+    scene.remove(currentText);
 }
-
-// animate();

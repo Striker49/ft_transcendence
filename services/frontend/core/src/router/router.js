@@ -1,4 +1,5 @@
 import About from "../pages/About.js";
+import EndGame from "../pages/EndGame.js";
 import Game from "../pages/Game.js";
 import GameConfig from "../pages/GameConfig.js";
 import Index from "../pages/Index.js";
@@ -25,12 +26,13 @@ const router = async () => {
 	const routes = [
 		{ path: "/", page: Index },
 		{ path: "/about", page: About },
+		{ path: "/endGame", page: EndGame },
 		{ path: "/game", page: Game },
+		{ path: "/gameConfig", page: GameConfig },
 		{ path: "/instructions", page: Instructions },
 		{ path: "/profile", page: Profile },
 		{ path: "/select", page: Select },
 		{ path: "/tournament", page: Tournament },
-		{ path: "/gameConfig", page: GameConfig },
 		{ path: "/fetch-test", page: FetchTest }
 	];
 
