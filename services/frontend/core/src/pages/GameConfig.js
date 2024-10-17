@@ -26,7 +26,7 @@ export default class extends Abstract {
 							</select>
 						</div>
 					<div class="mt-5 d-flex justify-content-center">
-						<button id="startBtn" type="submit" class="btn btn-primary">START</button>
+						<a href="/game" id="startBtn" class="btn btn-primary" data-link>START</a>
 					</div>
 					</div>
 					</div>
@@ -41,20 +41,32 @@ document.addEventListener("input", (event) => {
 		var slider = document.getElementById("winRange");
 		var output = document.getElementById("demo");
 		output.innerHTML = slider.value;
+		localStorage.setItem("numberOfWins", slider.value);
+	}
+})
+
+document.addEventListener("input", (event) => {
+	if (event.target.matches("#theme")) {
+		theme = document.getElementById("theme");
+		newTheme = document.getElementById("theme")
+		newTheme.innerHTML = theme.value;
+		console.log('theme', theme);
+		localStorage.setItem("theme", theme.value);
+
 	}
 })
 
 document.addEventListener('click', function (event){
 	event.preventDefault();
 	if (event.target.matches("#startBtn")) {
-		console.log(event.target);
-		const numberOfWins = document.getElementById("winRange").value;
+		// console.log('allo', document.getElementById("winRange").value);
+		// console.log(event.target);
+		// const numberOfWins = document.getElementById("winRange").value;
 		// const theme = document.getElementById("theme").value;
-		console.log('local storage success');
 		
-		localStorage.setItem("numberOfWins", numberOfWins);
+		// localStorage.setItem("numberOfWins", numberOfWins);
 		// localStorage.setItem("theme", theme);
 		console.log(localStorage);
-		window.location.href = "/game";
+		// window.location.href = "/game";
 	}
 })

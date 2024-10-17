@@ -146,6 +146,7 @@ function initGame() {
     });
     ground.receiveShadow = true;
     // scene.add(ground);
+    frames = 0;
     startGame();
 }
 
