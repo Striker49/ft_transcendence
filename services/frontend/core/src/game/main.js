@@ -324,23 +324,8 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
-//Resizes the image if the window changes size
-// window.addEventListener( 'resize', onWindowResize, false );
-
-// function onWindowResize(){
-
-//     camera.aspect = window.innerWidth / window.innerHeight;
-//     camera.updateProjectionMatrix();
-
-//     renderer.setSize( window.innerWidth, window.innerHeight );
-
-// }
-
-
 let frames = 0;
 function updateGame() {
-    // const animationID = requestAnimationFrame(animate);
-    // renderer.render(scene, camera);
     if (state === 0)
         return;
 
