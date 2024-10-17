@@ -45,14 +45,6 @@ footer {
 
 /* Main sections */
 
-/* #game {
-	background-image: url("../images/Pong.webp");
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: contain;
-	height: 540px;
-} */
-
 h1 {
 	font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 	font-size: 180px;
@@ -61,34 +53,7 @@ h1 {
 	margin-top: 120px;
 }
 
-#guiContainer {
-    transform: translate(-50%, -50%);
-    transform: scale(3);
-	font-size: 1.2em;
-	display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 50%;
-    left: 30%;
-	/* transform-origin: center; */
-	/* height: 50%; */
-    z-index: 1000; /* Ensure it appears above other elements */
-}
-
-.custom-gui {
-    background-color: rgba(0, 0, 0, 0.8);  /* Dark background for the GUI */
-    border-radius: 10px;
-    padding: 15px;
-    color: white;
-}
-
-/* Animations */
-
-.translate-left {
-	transform: translateX(-100%);
-}
-
-.translate-right {
-	transform: translateX(100%);
+.auto-width-select {
+	width: auto;
+	min-width: 10px;
 }
