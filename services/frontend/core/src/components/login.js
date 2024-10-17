@@ -62,12 +62,12 @@ const updateContent = () => {
 					<div class="modal-body">
 						<form id="login-form" action="" method="post">
 							<div class="mb-3">
-								<label for="username" class="form-label">Email address</label>
-								<input type="email" name="username" id="username" class="form-control" required>
+								<label for="login-user" class="form-label">Email address</label>
+								<input type="email" name="username" id="login-user" class="form-control" required>
 							</div>
 							<div class="mb-3">
-								<label for="password" class="form-label">Password</label>
-								<input type="password" name="password" id="password" class="form-control" required>
+								<label for="login-pass" class="form-label">Password</label>
+								<input type="password" name="password" id="login-pass" class="form-control" required>
 							</div>
 						</form>
 					</div>

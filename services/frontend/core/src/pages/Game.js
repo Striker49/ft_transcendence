@@ -11,8 +11,4 @@ export default class extends Abstract {
 	// 		<div id="game" class="mt-5"></div>
 	// 	`;
 	// }
-
-	// async getJS() {
-	// 	return { url: "/js/game/main.js", isModule: true };
-	// }
 }

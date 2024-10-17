@@ -1,4 +1,4 @@
 export default `
 	<!-- Main Content -->
-	<main></main>
+	<main class="on-screen"></main>
 `;

@@ -49,6 +49,7 @@ services:
       - transcendence
     depends_on:
       - django
+      - frontend
     build:
       context: ./services/nginx
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}

@@ -1,15 +1,9 @@
 import Abstract from "./Abstract.js";
-import { translateLeft } from "../components/about.js";
 
 export default class extends Abstract {
 	constructor() {
 		super();
 		this.setTitle("About");
-		this.setCustomBehaviour(true);
-	}
-
-	executeCustomScript() {
-		translateLeft();
 	}
 
 	// async getHtml() {
