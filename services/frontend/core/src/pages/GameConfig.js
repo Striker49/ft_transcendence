@@ -26,7 +26,7 @@ export default class extends Abstract {
 							</select>
 						</div>
 					<div class="mt-5 d-flex justify-content-center">
-						<a id="start" class="btn btn-primary" href="/game" data-link>START</a>
+						<button id="startBtn" type="submit" class="btn btn-primary">START</button>
 					</div>
 					</div>
 					</div>
@@ -44,8 +44,17 @@ document.addEventListener("input", (event) => {
 	}
 })
 
-// document.addEventListener("click", (event) => {
-// 	if (event.target.matches("#start")) {
-// 		document.querySelector("#/game");
-// 	}
-// })
+document.addEventListener('click', function (event){
+	event.preventDefault();
+	if (event.target.matches("#startBtn")) {
+		console.log(event.target);
+		const numberOfWins = document.getElementById("winRange").value;
+		// const theme = document.getElementById("theme").value;
+		console.log('local storage success');
+		
+		localStorage.setItem("numberOfWins", numberOfWins);
+		// localStorage.setItem("theme", theme);
+		console.log(localStorage);
+		window.location.href = "/game";
+	}
+})

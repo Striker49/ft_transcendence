@@ -1,12 +1,10 @@
 import * as THREE from 'three'
 import { scene, camera, renderer, controls } from "../threejs/base.js";
 // import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
-import { setGui } from './gui.js';
 
 // const scene = new THREE.Scene();
 // const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -46,7 +44,7 @@ let scoreP1, scoreP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
-let numberOfWins = 11;
+let numberOfWins;
 let powerUps = false;
 let theme = 'Christmas';
 let state = 0;
@@ -55,14 +53,25 @@ let paddleL;
 let paddleR;
 let ground;
 let ball;
-let gui;
-let guiContainer;
 
+function startGame() {
+    scene.add(light);
+    scene.add(paddleL);
+    scene.add(paddleR);
+    scene.add(ball);
+    scene.add(ground);
+    
+    updateScore(); // Make sure this function updates the score correctly
+    state = 1;
+}
 
-function initGame(numberOfWins = 3) {
+function initGame() {
 
     scoreP1 = 0;
     scoreP2 = 0;
+    numberOfWins = localStorage.getItem("numberOfWins") || 3;
+    console.log('initGame', numberOfWins);
+    theme = localStorage.getItem("theme") || 'none';
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
@@ -137,106 +146,93 @@ function initGame(numberOfWins = 3) {
     });
     ground.receiveShadow = true;
     // scene.add(ground);
-
+    startGame();
 }
 
-function initGui() {
+// function initGui() {
 
-    initGame();
-    gui = new GUI({ autoPlace: false, width: 300 });  // Adjust the width if needed
+//     initGame();
+//     gui = new GUI({ autoPlace: false, width: 300 });  // Adjust the width if needed
 
-    // Create a custom div to hold the GUI
-    guiContainer = document.createElement('div');
-    guiContainer.id = 'guiContainer';  // Assign an ID for styling
-    document.body.appendChild(guiContainer);
+//     // Create a custom div to hold the GUI
+//     guiContainer = document.createElement('div');
+//     guiContainer.id = 'guiContainer';  // Assign an ID for styling
+//     document.body.appendChild(guiContainer);
 
-    // Move the GUI to the container
-    gui.domElement.classList.add('custom-gui'); // Add a class for styling
-    guiContainer.appendChild(gui.domElement);
+//     // Move the GUI to the container
+//     gui.domElement.classList.add('custom-gui'); // Add a class for styling
+//     guiContainer.appendChild(gui.domElement);
 
-    // Add any other controls to your GUI
-    // gui.add(...);  // Example controls
+//     // Add any other controls to your GUI
+//     // gui.add(...);  // Example controls
 
-    // gui.domElement.style.backgroundColor = 'rgba(50, 50, 50, 0.9)'; // Background color
-    // gui.domElement.style.color = 'white'; // Text color
-    // gui.domElement.style.border = '2px solid #444'; // Optional border
+//     // gui.domElement.style.backgroundColor = 'rgba(50, 50, 50, 0.9)'; // Background color
+//     // gui.domElement.style.color = 'white'; // Text color
+//     // gui.domElement.style.border = '2px solid #444'; // Optional border
 
-    // // Optionally append it to your HTML element
-    // document.body.appendChild(gui.domElement);
+//     // // Optionally append it to your HTML element
+//     // document.body.appendChild(gui.domElement);
 
 
-    const leftMaterialParams = {
-        leftPaddleColor: paddleL.material.color.getHex(),
-    };
+//     const leftMaterialParams = {
+//         leftPaddleColor: paddleL.material.color.getHex(),
+//     };
 
-    const rightMaterialParams = {
-        rightPaddleColor: paddleR.material.color.getHex(),
-    };
+//     const rightMaterialParams = {
+//         rightPaddleColor: paddleR.material.color.getHex(),
+//     };
 
-    const themeParams = {
-        theme: 'Christmas'
-    };
+//     const themeParams = {
+//         theme: 'Christmas'
+//     };
 
-    const params = {
-        start: function() {
-            startGame();
-        }
-    }
+//     const params = {
+//         start: function() {
+//             startGame();
+//         }
+//     }
 
-    function updateTheme(theme) {
-        switch(theme) {
-            case 'Christmas':
-                paddleL.material.color.set(0x00ff00); // Green
-                paddleR.material.color.set(0xff0000); // Red
-                ground.material.color.set(0x0369a1);  // Blue
-                break;
-            case 'Halloween':
-                paddleL.material.color.set(0xff6600); // Orange
-                paddleR.material.color.set(0x8c00ff); // Purple
-                ground.material.color.set(0x564c43);  // Brown
-                break;
-            case 'Winter':
-                paddleL.material.color.set(0x9fffff); // Light Blue
-                paddleR.material.color.set(0x96b8ee); // Light Purple
-                ground.material.color.set(0xffffff);  // White
-                ball.material.color.set(0x00ffff);    // Cyan for the ball
-                break;
-            default:
-                paddleL.material.color.set(0xffffff); // Default white
-        }
-    }
+//     function updateTheme(theme) {
+//         switch(theme) {
+//             case 'Christmas':
+//                 paddleL.material.color.set(0x00ff00); // Green
+//                 paddleR.material.color.set(0xff0000); // Red
+//                 ground.material.color.set(0x0369a1);  // Blue
+//                 break;
+//             case 'Halloween':
+//                 paddleL.material.color.set(0xff6600); // Orange
+//                 paddleR.material.color.set(0x8c00ff); // Purple
+//                 ground.material.color.set(0x564c43);  // Brown
+//                 break;
+//             case 'Winter':
+//                 paddleL.material.color.set(0x9fffff); // Light Blue
+//                 paddleR.material.color.set(0x96b8ee); // Light Purple
+//                 ground.material.color.set(0xffffff);  // White
+//                 ball.material.color.set(0x00ffff);    // Cyan for the ball
+//                 break;
+//             default:
+//                 paddleL.material.color.set(0xffffff); // Default white
+//         }
+//     }
 
-    // Adding GUI elements
-    gui.add({ wins: numberOfWins }, 'wins', 0, 11, 1).onChange((value) => {
-        numberOfWins = value; // Update numberOfWins
-    });
+//     // Adding GUI elements
+//     gui.add({ wins: numberOfWins }, 'wins', 0, 11, 1).onChange((value) => {
+//         numberOfWins = value; // Update numberOfWins
+//     });
 
-    // gui.add(paddleL.material, 'wireframe'); // Add wireframe toggle
-    gui.addColor(leftMaterialParams, 'leftPaddleColor')
-        .onChange((value) => paddleL.material.color.set(value)); // Change left paddle color
-    gui.addColor(rightMaterialParams, 'rightPaddleColor')
-        .onChange((value) => paddleR.material.color.set(value)); // Change right paddle color
-    gui.add(themeParams, 'theme', ['Christmas', 'Halloween', 'Winter'])
-        .onChange((value) => updateTheme(value)); // Theme selection
-    gui.add(params, 'start').name('Start'); // Start game button
+//     // gui.add(paddleL.material, 'wireframe'); // Add wireframe toggle
+//     gui.addColor(leftMaterialParams, 'leftPaddleColor')
+//         .onChange((value) => paddleL.material.color.set(value)); // Change left paddle color
+//     gui.addColor(rightMaterialParams, 'rightPaddleColor')
+//         .onChange((value) => paddleR.material.color.set(value)); // Change right paddle color
+//     gui.add(themeParams, 'theme', ['Christmas', 'Halloween', 'Winter'])
+//         .onChange((value) => updateTheme(value)); // Theme selection
+//     gui.add(params, 'start').name('Start'); // Start game button
 
-    // Optional: Set the initial theme on load
-    updateTheme(themeParams.theme);
+//     // Optional: Set the initial theme on load
+//     updateTheme(themeParams.theme);
 
-}
-
-function startGame() {
-    scene.add(light);
-    scene.add(paddleL);
-    scene.add(paddleR);
-    scene.add(ball);
-    scene.add(ground);
-    
-    updateScore(); // Make sure this function updates the score correctly
-    guiContainer.style.display = 'none';
-    state = 1;
-}
-
+// }
 
 //Updates score text (alternates between old and new one)
 function updateScore(text) {
@@ -403,9 +399,6 @@ export function resetBallPosition(ball, winner) {
     updateScore();
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
         endGame();
-    // ball.velocity.x = randomVelocity();
-    // ball.velocity.z = randomVelocity();
-
 }
 
 //Generates a number between 0.06 and 0.1 and -0.1 and -0.06
@@ -419,7 +412,7 @@ function randomVelocity() {
 export const updateGameScene = () => {
     if (window.location.pathname == '/game') {
         if (!isStarted) {
-            initGui();
+            initGame();
             isStarted = true;
         }
         updateGame();
