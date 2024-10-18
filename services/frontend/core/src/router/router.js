@@ -8,14 +8,7 @@ import Profile from "../pages/Profile.js";
 import Select from "../pages/Select.js";
 import Tournament from "../pages/Tournament.js";
 import FetchTest from "../pages/FetchTest.js";
-
-const loadScript = ( url, isModule ) => {
-	const script = document.createElement("script");
-	script.src = url;
-	if (isModule)
-		script.type = "module";
-	document.body.appendChild(script);
-};
+import { translateX } from "../utils/utils.js";
 
 export const navigateTo = url => {
 	history.pushState(null, null, url);
@@ -54,16 +47,18 @@ const router = async () => {
 		}
 	}
 
-	// console.log(window.location.pathname);
-
 	const page = new match.route.page();
 
-	document.querySelector("main").innerHTML = await page.getHtml();
-
-	const script = await page.getJS();
-	if (script.url) {
-		loadScript(script.url, script.isModule);
+	const customBehaviour = await page.getCustomBehaviour();
+	if (!customBehaviour) {
+		document.querySelector("main").innerHTML = await page.getHtml();
+	} else {
+		if (window.location.pathname === "/profile") {
+			page.executeCustomBehaviour();
+		}
 	}
+
+	translateX();
 };
 
 window.addEventListener("popstate", router);
