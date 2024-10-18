@@ -16,7 +16,7 @@ export default class extends Abstract {
 					</ul>
 					</div>
 					<div class="mt-5 d-flex justify-content-center">
-						<button type="submit" class="btn btn-primary">PLAY AGAIN</button>
+						<a href="/gameConfig" id="playAgain" class="btn btn-primary" data-link>PLAY AGAIN</a>
 					</div>
 					</div>
 					</div>
@@ -26,10 +26,8 @@ export default class extends Abstract {
 	}
 }
 
-document.addEventListener("input", (event) => {
-	if (event.target.matches("#submit")) {
-		var slider = document.getElementById("customRange1");
-		var output = document.getElementById("demo");
-		output.innerHTML = slider.value;
+document.addEventListener("click", (event) => {
+	if (event.target.matches("#playAgain")) {
+		// localStorage.setItem('theme', '');
 	}
 })

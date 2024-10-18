@@ -1,4 +1,5 @@
 import About from "../pages/About.js";
+import EndGame from "../pages/EndGame.js";
 import Game from "../pages/Game.js";
 import GameConfig from "../pages/GameConfig.js";
 import Index from "../pages/Index.js";
@@ -7,16 +8,9 @@ import Profile from "../pages/Profile.js";
 import Select from "../pages/Select.js";
 import Tournament from "../pages/Tournament.js";
 import FetchTest from "../pages/FetchTest.js";
+import { translateX } from "../utils/utils.js";
 
-const loadScript = ( url, isModule ) => {
-	const script = document.createElement("script");
-	script.src = url;
-	if (isModule)
-		script.type = "module";
-	document.body.appendChild(script);
-};
-
-const navigateTo = url => {
+export const navigateTo = url => {
 	history.pushState(null, null, url);
 	router();
 };
@@ -25,12 +19,13 @@ const router = async () => {
 	const routes = [
 		{ path: "/", page: Index },
 		{ path: "/about", page: About },
+		{ path: "/endGame", page: EndGame },
 		{ path: "/game", page: Game },
+		{ path: "/gameConfig", page: GameConfig },
 		{ path: "/instructions", page: Instructions },
 		{ path: "/profile", page: Profile },
 		{ path: "/select", page: Select },
 		{ path: "/tournament", page: Tournament },
-		{ path: "/gameConfig", page: GameConfig },
 		{ path: "/fetch-test", page: FetchTest }
 	];
 
@@ -52,16 +47,18 @@ const router = async () => {
 		}
 	}
 
-	// console.log(window.location.pathname);
-
 	const page = new match.route.page();
 
-	document.querySelector("main").innerHTML = await page.getHtml();
-
-	const script = await page.getJS();
-	if (script.url) {
-		loadScript(script.url, script.isModule);
+	const customBehaviour = await page.getCustomBehaviour();
+	if (!customBehaviour) {
+		document.querySelector("main").innerHTML = await page.getHtml();
+	} else {
+		if (window.location.pathname === "/profile") {
+			page.executeCustomBehaviour();
+		}
 	}
+
+	translateX();
 };
 
 window.addEventListener("popstate", router);
