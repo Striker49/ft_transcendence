@@ -1,5 +1,32 @@
 import Abstract from "./Abstract.js";
 
+let userData;
+
+const headers = new Headers({
+	"Content-Type": "application/json",
+	"Authorization": localStorage.getItem("transcendenceToken")
+})
+
+const options = {
+	method: "GET",
+	headers: headers
+};
+
+async function getUserProfile() {
+	const url = "https://localhost/api/profiles/";
+	try {
+		const response = await fetch(url, options);
+		if(!response.ok) { 
+			throw new Error(`Response status: ${response.status}`);
+		}
+		const userData = await response.json();
+		console.log("USER DATA", userData);
+	} catch (error) {
+		console.error(error.message);
+		// userData = {first_name: "Guest"};
+	}
+}
+
 export default class extends Abstract {
 	constructor() {
 		super();
@@ -7,9 +34,14 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
+		getUserProfile();
+		// console.log("user name: ", json[0].first_name);
+		console.log("local storage: ", localStorage);
+		console.log("token: ", localStorage.transcendenceToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
+				<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text">${userData != null ? userData.username : "Player 1"}</span>
 				<div class="slidecontainer">
 					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" >Number of wins:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
 					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
@@ -56,18 +88,3 @@ document.addEventListener("change", (event) => {
 
 	}
 })
-
-// document.addEventListener('click', function (event){
-// 	event.preventDefault();
-// 	if (event.target.matches("#startBtn")) {
-// 		// console.log('allo', document.getElementById("winRange").value);
-// 		// console.log(event.target);
-// 		// const numberOfWins = document.getElementById("winRange").value;
-// 		// const theme = document.getElementById("theme").value;
-		
-// 		// localStorage.setItem("numberOfWins", numberOfWins);
-// 		// localStorage.setItem("theme", theme);
-// 		console.log(localStorage);
-// 		// window.location.href = "/game";
-// 	}
-// })
