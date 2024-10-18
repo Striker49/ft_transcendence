@@ -1,25 +1,51 @@
 let upload = false; 
 
-const avatarPath = custom => {
+const avatarPath = customURL => {
 
 	if (!upload) {
 
 		const avatars = document.querySelector("#avatar-section-1");
 
 		for (const avatar of avatars.children) {
-			if (avatar.classList.contains("border-warning")) {
+			if (avatar.classList.contains("border")) {
 				return avatar.getAttribute("src");
 			}
 		}
 
-	} else if (custom) {
-		return custom;
+	} else if (customURL) {
+		return customURL;
 	}
 	return "/src/assets/avatar/avatar1.jpg";
 };
 
+// const uploadAvatar = url => {
+// 	try {
+// 		const response = await fetch(url, {
+// 			method: "POST",
+// 			body: JSON.stringify(formData),
+// 			headers: headers
+// 		});
+// 		if (!response.ok) {
+// 			const errorResponse = await response.text();
+// 			console.log(errorResponse);
+// 			throw new Error(`Response status: ${response.status}`);
+// 		}
+
+// 		if (upload && avatar) {
+// 			uploadAvatar(avatar);
+// 		}
+
+// 		const json = await response.json();
+// 		console.log(json);
+// 	} catch (error) {
+// 		console.error(error.message);
+// 	}
+// };
+
 const submitRegistrationForm = async form => {
 	
+	const avatar = form.avatar.value;
+
 	const formData = {
 		"email": form.email.value,
 		"username": form.username.value,
@@ -27,7 +53,7 @@ const submitRegistrationForm = async form => {
 		"profile": {
 			"first_name": form.firstname.value,
 			"last_name": form.lastname.value,
-			"avatar_path": avatarPath(form.avatar.value),
+			"avatar_path": avatarPath(avatar),
 			"bio": form.bio.value,
 			"lang": form.lang.value
 		}
@@ -50,6 +76,10 @@ const submitRegistrationForm = async form => {
 			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
+
+		// if (upload && avatar) {
+		// 	uploadAvatar(avatar);
+		// }
 
 		const json = await response.json();
 		console.log(json);
