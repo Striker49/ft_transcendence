@@ -17,10 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users import views
+import debug_toolbar
 
 urlpatterns = [
+    path('api/__debug__/', include(debug_toolbar.urls)),
     path('api/admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/hello/', views.hello),
-    path('api/profiles/', include('profiles.urls'))
+    path('api/profiles/', include('profiles.urls')),
 ]

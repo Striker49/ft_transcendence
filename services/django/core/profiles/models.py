@@ -19,7 +19,7 @@ class UserProfile(models.Model):
 	first_name=models.CharField(max_length=255, blank=True)
 	last_name=models.CharField(max_length=255, blank=True)
 	avatar_path=models.CharField(max_length=255, blank=True)
-	bio=models.TextField(editable=True)
+	bio=models.TextField(editable=True, blank=True)
 	
 	lang= models.CharField(max_length=2, choices=LANGUAGES, default='en')
 

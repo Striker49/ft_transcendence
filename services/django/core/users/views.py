@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from .serializers import AuthCustomTokenSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+from django.utils import timezone
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -40,11 +41,11 @@ class UserRegistrationAPIView(APIView):
 	serializer_class = serializers.RegistrationSerializer
 	permission_classes = [AllowAny]
 	
-	def create(self, request, *args, **kwargs):
-		serializer = serializers.RegistrationSerializer(data=request.data)
-		serializer.is_valid(rais_exceprion=True)
-		self.perform_create(serializer)
-		return Response(serializer.data, status=status.HTTP_201_CREATED)
+	# def create(self, request, *args, **kwargs):
+	# 	serializer = serializers.RegistrationSerializer(data=request.data)
+	# 	serializer.is_valid(raise_exception=True)
+	# 	self.perform_create(serializer)
+	# 	return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 	def post(self, request, format=None):
 		serializer = self.serializer_class(data=request.data)
@@ -71,11 +72,15 @@ class UserLoginApiView(ObtainAuthToken):
   
 		user = serializer.validated_data['user']
 		token, created = Token.objects.get_or_create(user=user)
+  
+		user.last_login = timezone.now()
+		user.save(update_fields=['last_login'])
 
 		return Response({
 			'message': "User connected succesfully",
 			'token': token.key,
-			'user_id': user.id,
+			'UID': user.id,
+			'username': user.username,
 		})
   
 class UserDetail(generics.RetrieveAPIView):

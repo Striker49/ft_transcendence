@@ -3,3 +3,4 @@ gunicorn==23.0.0
 djangorestframework==3.15.2
 psycopg2-binary==2.9.6
 django_extensions==3.2.3
+django_debug_toolbar==4.4.6
