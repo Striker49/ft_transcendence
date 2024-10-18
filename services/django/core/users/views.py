@@ -20,10 +20,15 @@ class UserViewSet(viewsets.ModelViewSet):
 	serializer_class = serializers.CustomUserSerializer
 	queryset = models.CustomUser.objects.all()
 	authentication_classes = (TokenAuthentication,)
-	permission_classes = (permissions.UpdateOwnCustomUser,)
+	permission_classes = (permissions.IsAuthenticatedOrCreateOnly, permissions.UpdateOwnUser,)
 	filter_backends = (filters.SearchFilter,)
 	search_fields = ('name', 'email', )
 
+	def get_permissions(self):
+		if self.action == 'create':
+			return [AllowAny()]
+		return [permissions.IsAuthenticatedOrCreateOnly(), permissions.UpdateOwnUser()]
+    
 	def create(self, request, *args, **kwargs):
 		"""User creation function"""
 		serializer = self.get_serializer(data=request.data)
@@ -34,6 +39,8 @@ class UserViewSet(viewsets.ModelViewSet):
 			'user' : serializer.data
 		}
 		return Response(response_data, status=status.HTTP_201_CREATED)
+
+
 
 class UserRegistrationAPIView(APIView):
 	"""Register new users and creates their profile

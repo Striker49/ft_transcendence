@@ -23,11 +23,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('UID__username', 'UID__email')
     queryset = models.UserProfile.objects.all()
+    
+    lookup_field = 'UID'
 
     def get_queryset(self):
         """Get the profiles based on search query or return the logged-in user's profile."""
         user = self.request.user
-        queryset = super().get_queryset()
+        queryset = models.UserProfile.objects.all()
 
         search = self.request.query_params.get('search', None)
         if search:
