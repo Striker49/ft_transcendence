@@ -73,7 +73,9 @@ function updateTheme(theme) {
             ball.material.color.set(0x00ffff);    // Cyan for the ball
             break;
         default:
-            paddleL.material.color.set(0xffffff); // Default white
+            paddleL.material.color.set(0x00ff00); // Green
+            paddleR.material.color.set(0xff0000); // Red
+            ground.material.color.set(0x0369a1);  // Blue
     }
 }
 
