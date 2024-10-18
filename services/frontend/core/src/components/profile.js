@@ -24,11 +24,13 @@ const submitRegistrationForm = async form => {
 		"email": form.email.value,
 		"username": form.username.value,
 		"password": form.password.value,
-		"first_name": form.firstname.value,
-		"last_name": form.lastname.value,
-		"avatar_path": avatarPath(form.avatar.value),
-		"bio": form.bio.value,
-		"lang": form.lang.value
+		"profile": {
+			"first_name": form.firstname.value,
+			"last_name": form.lastname.value,
+			"avatar_path": avatarPath(form.avatar.value),
+			"bio": form.bio.value,
+			"lang": form.lang.value
+		}
 	};
 
 	const headers = new Headers({
@@ -72,6 +74,37 @@ const toggleAvatarSection = isCustom => {
 	}
 };
 
+const getProfileInfo = async () => {
+
+	const token = localStorage.getItem("transcendenceToken");
+	const uid = localStorage.getItem("transcendenceUID");
+
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`
+	});
+
+	const url = "https://localhost/api/profiles/" + 2;
+
+	try {
+		const response = await fetch(url, {
+			method: "GET",
+			headers: headers
+		});
+		if (!response.ok) {
+			const errorResponse = await response.text();
+			console.log(errorResponse);
+			throw new Error(`Response status: ${response.status}`);
+		}
+
+		const json = await response.json();
+		console.log(json);
+		return json;
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
 const defaultForm = () => {
 	return `
 		<div class="container bg-secondary rounded-5 mt-5 p-5">
@@ -81,23 +114,23 @@ const defaultForm = () => {
 					<div class="col border-end border-success pe-4">
 						<div class="mb-4">
 							<label for="email" class="form-label">Email:</label>
-							<input type="email" class="form-control" name="email" id="email" required>
+							<input type="email" class="form-control" id="email" required>
 						</div>
 						<div class="mb-4">
 							<label for="username" class="form-label">Username:</label>
-							<input type="text" class="form-control" name="username" id="username" required>
+							<input type="text" class="form-control" id="username" required>
 						</div>
 						<div class="mb-4">
 							<label for="password" class="form-label">Password:</label>
-							<input type="password" class="form-control" name="password" id="password" required>
+							<input type="password" class="form-control" id="password" required>
 						</div>
 						<div class="mb-4">
 							<label for="firstname" class="form-label">First name:</label>
-							<input type="text" class="form-control" name="firstname" id="firstname">
+							<input type="text" class="form-control" id="firstname">
 						</div>
 						<div class="mb-4">
 							<label for="lastname" class="form-label">Last name:</label>
-							<input type="text" class="form-control" name="lastname" id="lastname">
+							<input type="text" class="form-control" id="lastname">
 						</div>
 					</div>
 					<div class="col ps-4">
@@ -112,12 +145,12 @@ const defaultForm = () => {
 								<img src="/src/assets/avatar/avatar6.jpg" alt="Avatar image 6" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
 							</div>
 							<div id="avatar-section-2" class="d-none">
-								<input type="file" class="form-control" name="avatar," id="avatar">
+								<input type="file" class="form-control" id="avatar">
 							</div>
 						</div>
 						<div class="mb-4">
 							<label for="bio" class="form-label">Bio:</label>
-							<textarea class="form-control" name="bio" id="bio"></textarea>
+							<textarea class="form-control" id="bio"></textarea>
 						</div>
 						<div class="mb-4">
 							<label for="lang" class="form-label">Language:</label>
@@ -128,7 +161,7 @@ const defaultForm = () => {
 							</select>
 						</div>
 						<div class="mb-4">
-							<button type="submit" class="btn btn-secondary">Submit</button>
+							<button type="submit" class="btn btn-secondary">Create profile</button>
 						</div>
 					</div>
 				</form>
@@ -137,37 +170,56 @@ const defaultForm = () => {
 	`;
 };
 
-const updateContent = () => {
-	if (localStorage.getItem("authToken")) {
-		return `
-			<div class="container bg-secondary rounded-5 mt-5 p-5" style="width: 960px;">
-				<div class="row justify-content-center align-items-center text-light bg-dark rounded-5 p-5 h-100 mx-auto">
-					<h2 class="row text-success text-center fw-bold fs-1">Profile</h2>
-					<div class="row mt-3 p-0">
-						<div class="col border-end border-success pe-4">
-							<p>Ziggy Zigg Zigg</p>
-							<p>ziggy@ziggy.com</p>
-							<p>Username: ziggy</p>
-							<p>Password: *****</p>
+export const updateProfile = () => {
+	if (localStorage.getItem("transcendenceToken")) {
+		getProfileInfo().then(profile => {
+			document.querySelector("#profile").innerHTML = `
+				<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+					<div class="row p-0">
+						<div class="col-md-4">
+							<div class="p-4 bg-info rounded-5">
+								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 border-success"></p>
+								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-dark">Ziggy al'Thor</p>
+								<p class="py-3 m-0 border-bottom border-dark">Name: ${profile.first_name} ${profile.last_name}</p>
+								<p class="py-3 m-0 border-bottom border-dark">Email: ziggy@ziggy.com</p>
+								<p class="py-3 m-0 border-bottom border-dark">${profile.bio}</p>
+								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-secondary rounded-5 px-4">Edit profile</button></p>
+							</div>
 						</div>
-						<div class="col ps-4">
-							<p><img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image" width="64px" height="64px" class="border border-5 border-success"></p>
-							<p class="text-break">Bio: My awesome bio</p>
-							<button type="submit" class="btn btn-secondary">Edit profile</button>
+						<div class="col-md-8">
+							<div class="p-4 bg-info rounded-5">
+								<p class="mb-1"><span class="fw-bold">Games won</span><span class="float-end">11/42</span></p>
+								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
+									<div class="progress-bar bg-success" style="width: 25%"></div>
+								</div>
+								<p class="mb-1"><span class="fw-bold">Games lost</span><span class="float-end">2/42</span></p>
+								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
+									<div class="progress-bar bg-danger" style="width: 2%"></div>
+								</div>
+								<p class="mb-1"><span class="fw-bold">Games played</span><span class="float-end">13/42</span></p>
+								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
+									<div class="progress-bar bg-secondary" style="width: 26%"></div>
+								</div>
+								<p class="mb-1"><span class="fw-bold">Perfect games</span><span class="float-end">2/42</span></p>
+								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
+									<div class="progress-bar bg-warning" style="width: 2%"></div>
+								</div>
+								<p class="m-0 text-center fw-bold fs-1 fst-italic">Rank : <span class="text-success" style="font-size: 60px;">1st</span></p>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		`;
+			`;
+		});
 	} else {
-		return defaultForm();
+		document.querySelector("#profile").innerHTML = defaultForm();
 	}
 };
 
 const html = () => {
 	return `
 		<!-- Profile section -->
-		<section id="profile">${updateContent()}</section>
+		<section id="profile"></section>
 	`;
 };
 
@@ -208,7 +260,6 @@ document.addEventListener("submit", e => {
 		submitRegistrationForm(e.target);
 	}
 });
-
 
 // ============ Old Version ==============
 

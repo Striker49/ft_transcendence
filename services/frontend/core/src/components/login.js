@@ -1,8 +1,10 @@
+import { updateProfile } from "./profile.js";
+
 const headers = new Headers({
 	"Content-Type": "application/json"
 });
 
-export const login = async form => {
+const login = async form => {
 	const formData = {
 		email_or_username: form.username.value,
 		password: form.password.value
@@ -24,28 +26,32 @@ export const login = async form => {
 
 		const json = await response.json();
 		console.log(json);
-		localStorage.setItem("authToken", json.token);
+		localStorage.setItem("transcendenceToken", json.token);
+		localStorage.setItem("transcendenceUID", json.user_id);
 
 		// Update Login Section
 		const modalElement = document.querySelector("#loginModal");
 		const modalInstance = bootstrap.Modal.getInstance(modalElement);
 		modalInstance.hide();
 
-		document.querySelector("#login").innerHTML = updateContent();
+		updateLogin();
+		updateProfile();
+
 	} catch (error) {
 		console.error(error.message);
 	}
 };
 
-export const logout = () => {
-	if (localStorage.getItem("authToken")) {
-		localStorage.removeItem("authToken");
-		document.querySelector("#login").innerHTML = updateContent();
+const logout = () => {
+	if (localStorage.getItem("transcendenceToken")) {
+		localStorage.removeItem("transcendenceToken");
+		updateLogin();
+		updateProfile();
 	}
 };
 
-const updateContent = () => {
-	if (localStorage.getItem("authToken")) {
+const loginContent = () => {
+	if (localStorage.getItem("transcendenceToken")) {
 		return `
 			<button type="button" id="logout-btn" class="btn btn-dark position-absolute top-0 end-0 me-3 mt-3">Logout</button>
 		`;
@@ -82,10 +88,29 @@ const updateContent = () => {
 	}
 };
 
+const updateLogin = () => {
+	document.querySelector("#login").innerHTML = loginContent();
+};
+
 const html = () => {
 	return `
-		<section id="login">${updateContent()}</section>
+		<section id="login">${loginContent()}</section>
 	`;
 };
 
 export default html();
+
+// ============ Events ==============
+
+document.addEventListener("click", e => {
+	if (e.target.matches("#logout-btn")) {
+		logout();
+	}
+});
+
+document.addEventListener("submit", e => {
+	if (e.target.matches("#login-form")) {
+		e.preventDefault();
+		login(e.target);
+	}
+});

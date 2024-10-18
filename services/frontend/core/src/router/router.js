@@ -49,10 +49,13 @@ const router = async () => {
 
 	const page = new match.route.page();
 
-	const pathname = window.location.pathname;
-
-	if (!(pathname == "/about" || pathname == "/profile")) {
+	const customBehaviour = await page.getCustomBehaviour();
+	if (!customBehaviour) {
 		document.querySelector("main").innerHTML = await page.getHtml();
+	} else {
+		if (window.location.pathname === "/profile") {
+			page.executeCustomBehaviour();
+		}
 	}
 
 	translateX();

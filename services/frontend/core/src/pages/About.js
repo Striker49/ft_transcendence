@@ -4,6 +4,7 @@ export default class extends Abstract {
 	constructor() {
 		super();
 		this.setTitle("About");
+		this.setCustomBehaviour(true);
 	}
 
 	// async getHtml() {
