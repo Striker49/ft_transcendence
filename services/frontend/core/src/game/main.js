@@ -5,6 +5,7 @@ import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
+import { navigateTo } from '../router/router.js';
 
 // const scene = new THREE.Scene();
 // const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -45,14 +46,39 @@ let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
+let theme;
 let powerUps = false;
-let theme = 'Christmas';
 let state = 0;
 
 let paddleL;
 let paddleR;
 let ground;
 let ball;
+
+function updateTheme(theme) {
+    switch(theme) {
+        case 'Christmas':
+            paddleL.material.color.set(0x00ff00); // Green
+            paddleR.material.color.set(0xff0000); // Red
+            ground.material.color.set(0x0369a1);  // Blue
+            break;
+        case 'Halloween':
+            paddleL.material.color.set(0xff6600); // Orange
+            paddleR.material.color.set(0x8c00ff); // Purple
+            ground.material.color.set(0x564c43);  // Brown
+            break;
+        case 'Winter':
+            paddleL.material.color.set(0x9fffff); // Light Blue
+            paddleR.material.color.set(0x96b8ee); // Light Purple
+            ground.material.color.set(0xffffff);  // White
+            ball.material.color.set(0x00ffff);    // Cyan for the ball
+            break;
+        default:
+            paddleL.material.color.set(0x00ff00); // Green
+            paddleR.material.color.set(0xff0000); // Red
+            ground.material.color.set(0x0369a1);  // Blue
+    }
+}
 
 function startGame() {
     scene.add(light);
@@ -62,6 +88,8 @@ function startGame() {
     scene.add(ground);
     
     updateScore(); // Make sure this function updates the score correctly
+    updateTheme(localStorage.getItem("theme"));
+
     state = 1;
 }
 
@@ -70,8 +98,9 @@ function initGame() {
     scoreP1 = 0;
     scoreP2 = 0;
     numberOfWins = localStorage.getItem("numberOfWins") || 3;
-    console.log('initGame', numberOfWins);
-    theme = localStorage.getItem("theme") || 'none';
+    console.log('initGame now', numberOfWins);
+    console.log('initGame theme', localStorage.getItem("theme"));
+    // theme = localStorage.getItem("theme") || 'none';
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
@@ -90,8 +119,8 @@ function initGame() {
     });
     paddleL.castShadow = true;
     // scene.add(paddleL);
-
-
+    
+    
     //Create right paddle
     paddleR = new Box({
         width: paddleWidth,
@@ -111,7 +140,7 @@ function initGame() {
     });
     paddleR.castShadow = true;
     // scene.add(paddleR);
-
+    
     //Create ball
     ball = new Ball({
         radius: 0.18,
@@ -131,7 +160,7 @@ function initGame() {
     });
     ball.castShadow = true;
     // scene.add(ball);
-
+    
     //Create ground
     ground = new Box({
         width: groundWidth, 
@@ -146,11 +175,12 @@ function initGame() {
     });
     ground.receiveShadow = true;
     // scene.add(ground);
+    frames = 0;
     startGame();
 }
 
 // function initGui() {
-
+    
 //     initGame();
 //     gui = new GUI({ autoPlace: false, width: 300 });  // Adjust the width if needed
 
@@ -192,28 +222,28 @@ function initGame() {
 //         }
 //     }
 
-//     function updateTheme(theme) {
-//         switch(theme) {
-//             case 'Christmas':
-//                 paddleL.material.color.set(0x00ff00); // Green
-//                 paddleR.material.color.set(0xff0000); // Red
-//                 ground.material.color.set(0x0369a1);  // Blue
-//                 break;
-//             case 'Halloween':
-//                 paddleL.material.color.set(0xff6600); // Orange
-//                 paddleR.material.color.set(0x8c00ff); // Purple
-//                 ground.material.color.set(0x564c43);  // Brown
-//                 break;
-//             case 'Winter':
-//                 paddleL.material.color.set(0x9fffff); // Light Blue
-//                 paddleR.material.color.set(0x96b8ee); // Light Purple
-//                 ground.material.color.set(0xffffff);  // White
-//                 ball.material.color.set(0x00ffff);    // Cyan for the ball
-//                 break;
-//             default:
-//                 paddleL.material.color.set(0xffffff); // Default white
-//         }
-//     }
+    // function updateTheme(theme) {
+    //     switch(theme) {
+    //         case 1:
+    //             paddleL.material.color.set(0x00ff00); // Green
+    //             paddleR.material.color.set(0xff0000); // Red
+    //             ground.material.color.set(0x0369a1);  // Blue
+    //             break;
+    //         case 2:
+    //             paddleL.material.color.set(0xff6600); // Orange
+    //             paddleR.material.color.set(0x8c00ff); // Purple
+    //             ground.material.color.set(0x564c43);  // Brown
+    //             break;
+    //         case 3:
+    //             paddleL.material.color.set(0x9fffff); // Light Blue
+    //             paddleR.material.color.set(0x96b8ee); // Light Purple
+    //             ground.material.color.set(0xffffff);  // White
+    //             ball.material.color.set(0x00ffff);    // Cyan for the ball
+    //             break;
+    //         default:
+    //             paddleL.material.color.set(0xffffff); // Default white
+    //     }
+    // }
 
 //     // Adding GUI elements
 //     gui.add({ wins: numberOfWins }, 'wins', 0, 11, 1).onChange((value) => {
@@ -416,7 +446,9 @@ function endGame() {
     // cancelAnimationFrame(animationID);
     state = 0;
     //GoToEndScreen
-    window.location.href = "/endGame";
+    navigateTo("/endGame");
+	// router();
+    // window.location.href = "/endGame";
 }
 
 function removeGameObjects() {

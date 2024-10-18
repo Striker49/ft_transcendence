@@ -35,15 +35,21 @@ const submitForm = async form => {
 
 	// For POST Request
 	// const formData = {
-	// 	email: form.email.value,
-	// 	password: form.password.value
+	// 	email: "ziggy2@ziggy.com",
+	// 	username: "ziggy2",
+	// 	password: "ziggy",
+	// 	profile: 
+	// 	{
+	// 	first_name: "ziggy",
+	// 	last_name: 
+	// 	}
 	// };
 
 	const headers = new Headers({
 		"Content-Type": "application/json"
 	});
 
-	const url = 'https://localhost/api/hello/';
+	const url = 'https://localhost/api/profiles/?search=seb';
 
 	const options = {
 		method: "GET",

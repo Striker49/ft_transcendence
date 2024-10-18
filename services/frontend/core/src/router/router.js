@@ -10,7 +10,7 @@ import Tournament from "../pages/Tournament.js";
 import FetchTest from "../pages/FetchTest.js";
 import { translateX } from "../utils/utils.js";
 
-const navigateTo = url => {
+export const navigateTo = url => {
 	history.pushState(null, null, url);
 	router();
 };

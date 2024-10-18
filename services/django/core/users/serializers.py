@@ -13,7 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
-        fields = ('id','created','email', 'username', 'password')
+        fields = ('id', 'created','email', 'username', 'password', 'last_login')
         extra_kwargs = {
 			'password': {
 				'write_only': True,
@@ -37,10 +37,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             password = validated_data.pop('password')
             instance.set_password(password)
-            instance.save()
-        
-        return super().update(instance, validated_data)
-    
+
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+ 
 class AuthCustomTokenSerializer(serializers.Serializer):
 	email_or_username = serializers.CharField()
 	password = serializers.CharField(label=_("Password"), style={'input_type': 'password'}, trim_whitespace=False)
