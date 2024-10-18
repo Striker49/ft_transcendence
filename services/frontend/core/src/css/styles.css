@@ -42,8 +42,6 @@ footer {
 	bottom: 0;
 }
 
-/* Main sections */
-
 h1 {
 	font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 	font-size: 180px;
@@ -55,4 +53,24 @@ h1 {
 .auto-width-select {
 	width: auto;
 	min-width: 10px;
+}
+
+/* Profile */
+
+#profile img {
+	border-color: orange !important;	
+}
+
+#profile #avatar-section-1 img {
+	cursor: pointer;
+}
+
+/* Shadows */
+
+.box-shadow {
+	box-shadow: 0px 4px 12px rgb(64, 64, 64);
+}
+
+.text-shadow {
+	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
 }

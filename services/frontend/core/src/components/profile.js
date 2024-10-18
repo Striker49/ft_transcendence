@@ -106,66 +106,72 @@ const getProfileInfo = async () => {
 };
 
 const defaultForm = () => {
+
+	const imgSize = "25%";
+
 	return `
-		<div class="container bg-secondary rounded-5 mt-5 p-5">
-			<div class="row justify-content-center align-items-center text-light bg-dark rounded-5 p-5 h-100 mx-auto">
-				<h2 class="text-success text-center fw-bold fs-1">Profile</h2>
-				<form id="registration-form" action="" method="post" class="row mt-3 p-0">
-					<div class="col border-end border-success pe-4">
-						<div class="mb-4">
-							<label for="email" class="form-label">Email:</label>
-							<input type="email" class="form-control" id="email" required>
+		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+			<form id="registration-form" action="" method="post" class="row p-0 text-black fw-bold">
+				<div class="col-md-6">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+						<div class="pb-4 border-bottom border-2 border-dark">
+							<label for="email" class="form-label">Email</label>
+							<input type="email" class="form-control" name="email" id="email" required>
 						</div>
-						<div class="mb-4">
-							<label for="username" class="form-label">Username:</label>
-							<input type="text" class="form-control" id="username" required>
+						<div class="py-4 border-bottom border-2 border-dark">
+							<label for="username" class="form-label">Username</label>
+							<input type="text" class="form-control" name="username" id="username" required>
 						</div>
-						<div class="mb-4">
-							<label for="password" class="form-label">Password:</label>
-							<input type="password" class="form-control" id="password" required>
+						<div class="py-4 border-bottom border-2 border-dark">
+							<label for="password" class="form-label">Password</label>
+							<input type="password" class="form-control" name="password" id="password" required>
 						</div>
-						<div class="mb-4">
-							<label for="firstname" class="form-label">First name:</label>
-							<input type="text" class="form-control" id="firstname">
+						<div class="py-4 border-bottom border-2 border-dark">
+							<label for="firstname" class="form-label">First name</label>
+							<input type="text" class="form-control" name="firstname" id="firstname">
 						</div>
-						<div class="mb-4">
-							<label for="lastname" class="form-label">Last name:</label>
-							<input type="text" class="form-control" id="lastname">
+						<div class="py-4 border-bottom border-2 border-dark">
+							<label for="lastname" class="form-label">Last name</label>
+							<input type="text" class="form-control" name="lastname" id="lastname">
 						</div>
-					</div>
-					<div class="col ps-4">
-						<div class="mb-4">
-							<p><a href="" class="text-decoration-none text-success" id="default-image">Choose Avatar</a> or <a href="" class="text-decoration-none text-success" id="custom-image">Upload Custom Image</a></p>
-							<div id="avatar-section-1">
-								<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="64px" height="64px" class="m-2 border border-5 border-warning d-inline-block" style="cursor: pointer;">
-								<img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
-								<img src="/src/assets/avatar/avatar3.jpg" alt="Avatar image 3" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
-								<img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
-								<img src="/src/assets/avatar/avatar5.jpg" alt="Avatar image 5" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
-								<img src="/src/assets/avatar/avatar6.jpg" alt="Avatar image 6" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
-							</div>
-							<div id="avatar-section-2" class="d-none">
-								<input type="file" class="form-control" id="avatar">
-							</div>
-						</div>
-						<div class="mb-4">
-							<label for="bio" class="form-label">Bio:</label>
-							<textarea class="form-control" id="bio"></textarea>
-						</div>
-						<div class="mb-4">
-							<label for="lang" class="form-label">Language:</label>
-							<select class="form-select" id="lang">
+						<div class="pt-4 pb-2">
+							<label for="lang" class="form-label">Preferred language</label>
+							<select class="form-select" name="lang" id="lang">
 								<option value="en">English</option>
 								<option value="fr">French</option>
 								<option value="nl">Dutch</option>
 							</select>
 						</div>
-						<div class="mb-4">
-							<button type="submit" class="btn btn-secondary">Create profile</button>
+					</div>
+				</div>
+				<div class="col-md-6 mt-4 mt-md-0">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+						<div class="pb-4 border-bottom border-2 border-dark">
+							<p>Avatar</p>
+							<div id="avatar-section-1" class="text-center">
+								<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow border border-4">
+								<img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
+								<img src="/src/assets/avatar/avatar3.jpg" alt="Avatar image 3" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
+								<img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
+								<img src="/src/assets/avatar/avatar5.jpg" alt="Avatar image 5" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
+								<img src="/src/assets/avatar/avatar6.jpg" alt="Avatar image 6" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
+								<a href="" class="text-decoration-none text-black mt-4 d-block fst-italic" id="custom-image">--> &nbsp;&nbsp; Upload custom image</a>
+							</div>
+							<div id="avatar-section-2" class="d-none text-center">
+								<input type="file" class="form-control" name="avatar" id="avatar">
+								<a href="" class="text-decoration-none text-black mt-4 d-block fst-italic" id="default-image">Select default image &nbsp;&nbsp; <--</a>
+							</div>
+						</div>
+						<div class="py-4 border-bottom border-2 border-dark">
+							<label for="bio" class="form-label">Bio</label>
+							<textarea class="form-control" name="bio" id="bio"></textarea>
+						</div>
+						<div class="pt-4 text-center">
+							<button type="submit" class="btn btn-dark rounded-pill px-4">Create profile</button>
 						</div>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 	`;
 };
@@ -175,36 +181,36 @@ export const updateProfile = () => {
 		getProfileInfo().then(profile => {
 			document.querySelector("#profile").innerHTML = `
 				<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
-					<div class="row p-0">
+					<div class="row p-0 text-black">
 						<div class="col-md-4">
-							<div class="p-4 bg-info rounded-5">
-								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 border-success"></p>
-								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-dark">Ziggy al'Thor</p>
-								<p class="py-3 m-0 border-bottom border-dark">Name: ${profile.first_name} ${profile.last_name}</p>
-								<p class="py-3 m-0 border-bottom border-dark">Email: ziggy@ziggy.com</p>
-								<p class="py-3 m-0 border-bottom border-dark">${profile.bio}</p>
-								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-secondary rounded-5 px-4">Edit profile</button></p>
+							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
+								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">Ziggy al'Thor</p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Name</span> : ${profile.first_name} ${profile.last_name}</p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Email</span> : ziggy@ziggy.com</p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${profile.bio} My hammer is but a meager part of my true strength. Beware !</p>
+								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-dark rounded-pill px-4">Edit profile</button></p>
 							</div>
 						</div>
-						<div class="col-md-8">
-							<div class="p-4 bg-info rounded-5">
-								<p class="mb-1"><span class="fw-bold">Games won</span><span class="float-end">11/42</span></p>
-								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
+						<div class="col-md-8 mt-4 mt-md-0">
+							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+								<p class="mb-2"><span class="fw-bold">Games won</span><span class="float-end">11 / 42</span></p>
+								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-success" style="width: 25%"></div>
 								</div>
-								<p class="mb-1"><span class="fw-bold">Games lost</span><span class="float-end">2/42</span></p>
-								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
+								<p class="mb-2"><span class="fw-bold">Games lost</span><span class="float-end">2 / 42</span></p>
+								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-danger" style="width: 2%"></div>
 								</div>
-								<p class="mb-1"><span class="fw-bold">Games played</span><span class="float-end">13/42</span></p>
-								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
-									<div class="progress-bar bg-secondary" style="width: 26%"></div>
+								<p class="mb-2"><span class="fw-bold">Games played</span><span class="float-end">13 / 42</span></p>
+								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
+									<div class="progress-bar bg-info" style="width: 26%"></div>
 								</div>
-								<p class="mb-1"><span class="fw-bold">Perfect games</span><span class="float-end">2/42</span></p>
-								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
+								<p class="mb-2"><span class="fw-bold">Perfect games</span><span class="float-end">2 / 42</span></p>
+								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-warning" style="width: 2%"></div>
 								</div>
-								<p class="m-0 text-center fw-bold fs-1 fst-italic">Rank : <span class="text-success" style="font-size: 60px;">1st</span></p>
+								<p class="m-0 text-center fw-bold fs-1 fst-italic">Rank : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
 							</div>
 						</div>
 					</div>
@@ -235,11 +241,13 @@ document.addEventListener("click", e => {
 		case element.matches("#avatar-section-1 img"):
 			const parent = e.target.parentElement;
 			for (const child of parent.children) {
-				child.classList.add("border-success");
-				child.classList.remove("border-warning");
+				if (child.classList.contains("border")) {
+					child.classList.remove("border-4");
+					child.classList.remove("border");
+				}
 			}
-			e.target.classList.add("border-warning");
-			e.target.classList.remove("border-success");
+			e.target.classList.add("border");
+			e.target.classList.add("border-4");
 			break;
 
 		case element.matches("#custom-image"):
