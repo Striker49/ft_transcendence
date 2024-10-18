@@ -18,11 +18,11 @@ export default class extends Abstract {
 						<class="flex-column" data-bs-theme="dark">
 						<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text">Theme</span>
 						<div class="d-flex justify-content-center">
-							<select class="d-flex justify-content-centerform-select auto-width-select" aria-label="Default select example">
-							<option selected>None</option>
-							<option value="1">Christmas</option>
-							<option value="2">Halloween</option>
-							<option value="3">Winter</option>
+							<select id="theme" class="form-select auto-width-select" aria-label="Winter">
+								<option value="None" ${localStorage.getItem('theme') === 'None' ? 'selected' : ''}>None</option>
+								<option value="Christmas" ${localStorage.getItem('theme') === 'Christmas' ? 'selected' : ''}>Christmas</option>
+								<option value="Halloween" ${localStorage.getItem('theme') === 'Halloween' ? 'selected' : ''}>Halloween</option>
+								<option value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</div>
 					<div class="mt-5 d-flex justify-content-center">
@@ -45,28 +45,29 @@ document.addEventListener("input", (event) => {
 	}
 })
 
-document.addEventListener("input", (event) => {
-	if (event.target.matches("#theme")) {
-		theme = document.getElementById("theme");
-		newTheme = document.getElementById("theme")
-		newTheme.innerHTML = theme.value;
-		console.log('theme', theme);
-		localStorage.setItem("theme", theme.value);
-
-	}
-})
-
-document.addEventListener('click', function (event){
+document.addEventListener("change", (event) => {
 	event.preventDefault();
-	if (event.target.matches("#startBtn")) {
-		// console.log('allo', document.getElementById("winRange").value);
-		// console.log(event.target);
-		// const numberOfWins = document.getElementById("winRange").value;
-		// const theme = document.getElementById("theme").value;
-		
-		// localStorage.setItem("numberOfWins", numberOfWins);
-		// localStorage.setItem("theme", theme);
-		console.log(localStorage);
-		// window.location.href = "/game";
+	if (event.target.matches("#theme")) {
+		const theme = document.getElementById("theme").value;
+		// newTheme = document.getElementById("theme")
+		// newTheme.innerHTML = theme.value;
+		console.log('theme', theme);
+		localStorage.setItem("theme", theme);
+
 	}
 })
+
+// document.addEventListener('click', function (event){
+// 	event.preventDefault();
+// 	if (event.target.matches("#startBtn")) {
+// 		// console.log('allo', document.getElementById("winRange").value);
+// 		// console.log(event.target);
+// 		// const numberOfWins = document.getElementById("winRange").value;
+// 		// const theme = document.getElementById("theme").value;
+		
+// 		// localStorage.setItem("numberOfWins", numberOfWins);
+// 		// localStorage.setItem("theme", theme);
+// 		console.log(localStorage);
+// 		// window.location.href = "/game";
+// 	}
+// })
