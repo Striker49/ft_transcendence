@@ -17,7 +17,7 @@ const loadScript = ( url, isModule ) => {
 	document.body.appendChild(script);
 };
 
-const navigateTo = url => {
+export const navigateTo = url => {
 	history.pushState(null, null, url);
 	router();
 };

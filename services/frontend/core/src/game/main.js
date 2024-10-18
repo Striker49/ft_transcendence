@@ -5,6 +5,7 @@ import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText } from './text.js';
+import { navigateTo } from '../router/router.js';
 
 // const scene = new THREE.Scene();
 // const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -445,7 +446,9 @@ function endGame() {
     // cancelAnimationFrame(animationID);
     state = 0;
     //GoToEndScreen
-    window.location.href = "/endGame";
+    navigateTo("/endGame");
+	// router();
+    // window.location.href = "/endGame";
 }
 
 function removeGameObjects() {
