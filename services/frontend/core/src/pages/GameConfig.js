@@ -11,8 +11,8 @@ export default class extends Abstract {
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
 				<div class="slidecontainer">
-					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" >Number of wins:<span id="demo" style="margin-left: 10px;">3</span></label>
-					<input type="range" class="form-range" min="1" max="11" value="3" id="winRange">
+					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" >Number of wins:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
+					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
 					</div>
 					<div>
 						<class="flex-column" data-bs-theme="dark">

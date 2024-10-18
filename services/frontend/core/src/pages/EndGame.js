@@ -28,6 +28,6 @@ export default class extends Abstract {
 
 document.addEventListener("click", (event) => {
 	if (event.target.matches("#playAgain")) {
-		localStorage.setItem('theme', '');
+		// localStorage.setItem('theme', '');
 	}
 })
