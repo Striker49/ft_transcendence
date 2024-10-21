@@ -35,7 +35,9 @@ const login = async form => {
 		modalInstance.hide();
 
 		updateLogin();
-		updateProfile();
+		if (window.location.pathname === "/profile") {
+			updateProfile();
+		}
 
 	} catch (error) {
 		console.error(error.message);
@@ -46,7 +48,9 @@ const logout = () => {
 	if (localStorage.getItem("transcendenceToken")) {
 		localStorage.removeItem("transcendenceToken");
 		updateLogin();
-		updateProfile();
+		if (window.location.pathname === "/profile") {
+			updateProfile();
+		}
 	}
 };
 

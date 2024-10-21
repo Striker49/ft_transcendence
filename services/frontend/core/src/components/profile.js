@@ -18,33 +18,36 @@ const avatarPath = customURL => {
 	return "/src/assets/avatar/avatar1.jpg";
 };
 
-// const uploadAvatar = url => {
-// 	try {
-// 		const response = await fetch(url, {
-// 			method: "POST",
-// 			body: JSON.stringify(formData),
-// 			headers: headers
-// 		});
-// 		if (!response.ok) {
-// 			const errorResponse = await response.text();
-// 			console.log(errorResponse);
-// 			throw new Error(`Response status: ${response.status}`);
-// 		}
+const uploadAvatar = async avatar => {
 
-// 		if (upload && avatar) {
-// 			uploadAvatar(avatar);
-// 		}
+	const url = "https://localhost/src/assets/avatar/custom/";
 
-// 		const json = await response.json();
-// 		console.log(json);
-// 	} catch (error) {
-// 		console.error(error.message);
-// 	}
-// };
+	const formData = new FormData();
+	formData.append("avatar", avatar);
+
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: formData
+		});
+		if (!response.ok) {
+			const errorResponse = await response.text();
+			console.log(errorResponse);
+			throw new Error(`Response status: ${response.status}`);
+		}
+
+		const json = await response.json();
+		console.log(json);
+	} catch (error) {
+		console.error(error.message);
+	}
+};
 
 const submitRegistrationForm = async form => {
 	
 	const avatar = form.avatar.value;
+
+	const data = new FormData(form);
 
 	const formData = {
 		"email": form.email.value,
@@ -77,9 +80,9 @@ const submitRegistrationForm = async form => {
 			throw new Error(`Response status: ${response.status}`);
 		}
 
-		// if (upload && avatar) {
-		// 	uploadAvatar(avatar);
-		// }
+		if (upload && avatar) {
+			uploadAvatar(data.get("avatar"));
+		}
 
 		const json = await response.json();
 		console.log(json);
@@ -141,7 +144,7 @@ const defaultForm = () => {
 
 	return `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
-			<form id="registration-form" action="" method="post" class="row p-0 text-black fw-bold">
+			<form id="registration-form" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold">
 				<div class="col-md-6">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
 						<div class="pb-4 border-bottom border-2 border-dark">
