@@ -7,6 +7,33 @@
   "profile": "Profil",
 
   "aboutContent": "Ce projet est quelque chose que vous n’avez jamais fait auparavant. Rappelez-vous du début de votre voyage en programmation. Regardez-vous maintenant. C’est le temps de briller !",
+  
+  
+  "login": "Se connecter",
+
+  "logout": "Déconnexion",
+
+  "loggingIn": "Connexion",
+
+  "emailAddress": "Adresse courriel",
+
+  "password": "Mot de passe",
+
+  "close": "Fermer",
+
+  "firstName": "Prénom",
+
+  "lastName": "Nom",
+
+  "chooseAvatar": "Choisir un Avatar",
+
+  "or": "ou",
+
+  "uploadCustomImage": "Téléverser une image",
+
+  "language": "Langue",
+
+  "createProfile": "Créer le profil",
 
 
   "name": "Nom",

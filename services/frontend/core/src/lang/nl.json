@@ -9,11 +9,38 @@
   "aboutContent": "Dit project is nog steeds een kwestie van keuze als het om de toekomst gaat. Groeten over dit moment. Het is jouw tijd om te schitteren!",
 
 
+  "login": "Inloggen",
+
+  "logout": "Uitloggen",
+
+  "loggingIn": "Inloggen",
+
+  "emailAddress": "E-mailadres",
+
+  "password": "Wachtwoord",
+
+  "close": "Sluiten",
+
+  "firstName": "Voornam",
+
+  "lastName": "Achternaam",
+
+  "chooseAvatar": "Kies Avatar",
+
+  "or": "of",
+
+  "uploadCustomImage": "Upload Aangepaste Afbeelding",
+
+  "language": "Taal",
+
+  "createProfile": "Profiel aanmaken",
+
+
   "name": "Naam",
 
   "username": "Gebruikersnaam",
 
-  "email": "Email",
+  "email": "E-mail",
 
   "gamesWon": "Gewonnen spellen",
 

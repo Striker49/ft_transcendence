@@ -9,6 +9,33 @@
   "aboutContent": "This project is something you've never done before. Remember the beginning of your programming journey. Look at yourself now. It's your time to shine!",
 
 
+  "login": "Login",
+
+  "logout": "Logout",
+
+  "loggingIn": "Login",
+
+  "emailAddress": "Emain address",
+
+  "password": "Password",
+
+  "close": "Close",
+
+  "firstName": "First name",
+
+  "lastName": "Last name",
+
+  "chooseAvatar": "Choose Avatar",
+
+  "or": "or",
+
+  "uploadCustomImage": "Upload Custom Image",
+
+  "language": "Language",
+
+  "createProfile": "Create profile",
+
+
   "name": "Name",
 
   "username": "Username",

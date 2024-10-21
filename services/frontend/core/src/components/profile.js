@@ -109,33 +109,33 @@ const defaultForm = () => {
 	return `
 		<div class="container bg-secondary rounded-5 mt-5 p-5">
 			<div class="row justify-content-center align-items-center text-light bg-dark rounded-5 p-5 h-100 mx-auto">
-				<h2 class="text-success text-center fw-bold fs-1">Profile</h2>
+				<h2 data-i18n-key="profile" class="text-success text-center fw-bold fs-1">Profile</h2>
 				<form id="registration-form" action="" method="post" class="row mt-3 p-0">
 					<div class="col border-end border-success pe-4">
 						<div class="mb-4">
-							<label for="email" class="form-label">Email:</label>
+							<label for="email" class="form-label"><span data-i18n-key="email">Email</span>:</label>
 							<input type="email" class="form-control" id="email" required>
 						</div>
 						<div class="mb-4">
-							<label for="username" class="form-label">Username:</label>
+							<label for="username" class="form-label"><span data-i18n-key="username">Username</span>:</label>
 							<input type="text" class="form-control" id="username" required>
 						</div>
 						<div class="mb-4">
-							<label for="password" class="form-label">Password:</label>
+							<label for="password" class="form-label"><span data-i18n-key="password">Password</span>:</label>
 							<input type="password" class="form-control" id="password" required>
 						</div>
 						<div class="mb-4">
-							<label for="firstname" class="form-label">First name:</label>
+							<label for="firstname" class="form-label"><span data-i18n-key="firstName">First name</span>:</label>
 							<input type="text" class="form-control" id="firstname">
 						</div>
 						<div class="mb-4">
-							<label for="lastname" class="form-label">Last name:</label>
+							<label for="lastname" class="form-label"><span data-i18n-key="lastName">Last name</span>:</label>
 							<input type="text" class="form-control" id="lastname">
 						</div>
 					</div>
 					<div class="col ps-4">
 						<div class="mb-4">
-							<p><a href="" class="text-decoration-none text-success" id="default-image">Choose Avatar</a> or <a href="" class="text-decoration-none text-success" id="custom-image">Upload Custom Image</a></p>
+							<p><a href="" class="text-decoration-none text-success" id="default-image"><span data-i18n-key="chooseAvatar">Choose Avatar</span></a> <span data-i18n-key="or">or</span> <a href="" class="text-decoration-none text-success" id="custom-image"><span data-i18n-key="uploadCustomImage">Upload Custom Image</span></a></p>
 							<div id="avatar-section-1">
 								<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="64px" height="64px" class="m-2 border border-5 border-warning d-inline-block" style="cursor: pointer;">
 								<img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="64px" height="64px" class="m-2 border border-5 border-success d-inline-block" style="cursor: pointer;">
@@ -153,7 +153,7 @@ const defaultForm = () => {
 							<textarea class="form-control" id="bio"></textarea>
 						</div>
 						<div class="mb-4">
-							<label for="lang" class="form-label">Language:</label>
+							<label for="lang" class="form-label"><span data-i18n-key="language">Language</span>:</label>
 							<select class="form-select" id="lang">
 								<option value="en">English</option>
 								<option value="fr">French</option>
@@ -161,7 +161,7 @@ const defaultForm = () => {
 							</select>
 						</div>
 						<div class="mb-4">
-							<button type="submit" class="btn btn-secondary">Create profile</button>
+							<button type="submit" data-i18n-key="createProfile" class="btn btn-secondary">Create profile</button>
 						</div>
 					</div>
 				</form>
@@ -188,15 +188,15 @@ export const updateProfile = () => {
 						</div>
 						<div class="col-md-8">
 							<div class="p-4 bg-info rounded-5">
-								<p data-i18n-key="gamesWon" class="mb-1"><span class="fw-bold">Games won</span><span class="float-end">11/42</span></p>
+								<p class="mb-1"><span data-i18n-key="gamesWon" class="fw-bold">Games won</span><span class="float-end">11/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-success" style="width: 25%"></div>
 								</div>
-								<p data-i18n-key="gamesLost" class="mb-1"><span class="fw-bold">Games lost</span><span class="float-end">2/42</span></p>
+								<p class="mb-1"><span data-i18n-key="gamesLost" class="fw-bold">Games lost</span><span class="float-end">2/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-danger" style="width: 2%"></div>
 								</div>
-								<p data-i18n-key="gamesPlayed" class="mb-1"><span class="fw-bold">Games played</span><span class="float-end">13/42</span></p>
+								<p class="mb-1"><span data-i18n-key="gamesPlayed"  class="fw-bold">Games played</span><span class="float-end">13/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-secondary" style="width: 26%"></div>
 								</div>
