@@ -52,6 +52,40 @@
 
   "rank": "Rang",
   
-  "editProfile": "Modifier le profil"
+  "editProfile": "Modifier le profil",
 
+
+  "singleGame": "Mode Solo",
+
+  "onePlayer": "1 Joueur",
+
+  "twoPlayers": "2 Joueurs",
+
+  "instructions": "Instructions",
+
+  "back": "Retour",
+  
+  "tournament": "Tournoi",
+
+
+  "playerOne": "Joueur 1",
+
+  "numberOfWins": "Points pour gagner",
+
+  "theme": "Thème",
+
+  "start": "COMMENCER",
+
+  "none": "Aucun",
+
+  "christmas": "Noël",
+
+  "halloween": "Halloween",
+
+  "winter": "Hiver",
+
+  "ranking": "CLASSEMENT",
+
+  "playAgain": "REJOUER"
+  
   }

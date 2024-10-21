@@ -52,7 +52,40 @@
 
   "rank": "Rang",
 
-  "editProfile": "Wijzig profiel"
+  "editProfile": "Wijzig profiel",
 
+
+  "singleGame": "Enkelspel",
+
+  "onePlayer": "1 Speler",
+
+  "twoPlayers": "2 Spelers",
+
+  "instructions": "Instructies",
+
+  "back": "Terug",
+  
+  "tournament": "Toernooi",
+
+
+  "playerOne": "Speler 1",
+
+  "numberOfWins": "Aantal overwinningen",
+
+  "theme": "Thema",
+
+  "start": "START",
+
+  "none": "Geen",
+
+  "christmas": "Kerstmis",
+
+  "halloween": "Halloween",
+
+  "winter": "Winter",
+
+  "ranking": "RANGLIJST",
+
+  "playAgain": "NOGMAALS SPELEN"
 
   }

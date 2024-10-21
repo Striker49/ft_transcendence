@@ -52,6 +52,42 @@
 
   "rank": "Rank",
 
-  "editProfile": "Edit profile"
+  "editProfile": "Edit profile",
+
+
+  "singleGame": "Single Game",
+
+  "onePlayer": "1 Player",
+
+  "twoPlayers": "2 Players",
+
+  "instructions": "Instructions",
+
+  "back": "Back",
+  
+  "tournament": "Tournament",
+
+
+  "playerOne": "Player 1",
+
+  "numberOfWins": "Number of wins",
+
+  "theme": "Theme",
+
+  "start": "START",
+
+  "none": "None",
+
+  "christmas": "Christmas",
+
+  "halloween": "Halloween",
+
+  "winter": "Winter",
+
+  "ranking": "RANKING",
+
+  "playAgain": "PLAY AGAIN"
+
+
 
   }
