@@ -148,27 +148,27 @@ const defaultForm = () => {
 				<div class="col-md-6">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
 						<div class="pb-4 border-bottom border-2 border-dark">
-							<label for="email" class="form-label">Email</label>
+							<label for="email" class="form-label" data-i18n-key="email">Email</label>
 							<input type="email" class="form-control" name="email" id="email" required>
 						</div>
 						<div class="py-4 border-bottom border-2 border-dark">
-							<label for="username" class="form-label">Username</label>
+							<label for="username" class="form-label" data-i18n-key="username">Username</label>
 							<input type="text" class="form-control" name="username" id="username" required>
 						</div>
 						<div class="py-4 border-bottom border-2 border-dark">
-							<label for="password" class="form-label">Password</label>
+							<label for="password" class="form-label" data-i18n-key="password">Password</label>
 							<input type="password" class="form-control" name="password" id="password" required>
 						</div>
 						<div class="py-4 border-bottom border-2 border-dark">
-							<label for="firstname" class="form-label">First name</label>
+							<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
 							<input type="text" class="form-control" name="firstname" id="firstname">
 						</div>
 						<div class="py-4 border-bottom border-2 border-dark">
-							<label for="lastname" class="form-label">Last name</label>
+							<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
 							<input type="text" class="form-control" name="lastname" id="lastname">
 						</div>
 						<div class="pt-4 pb-2">
-							<label for="lang" class="form-label">Preferred language</label>
+							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
 							<select class="form-select" name="lang" id="lang">
 								<option value="en">English</option>
 								<option value="fr">French</option>
@@ -200,7 +200,7 @@ const defaultForm = () => {
 							<textarea class="form-control" name="bio" id="bio"></textarea>
 						</div>
 						<div class="pt-4 text-center">
-							<button type="submit" class="btn btn-dark rounded-pill px-4">Create profile</button>
+							<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
 						</div>
 					</div>
 				</div>
@@ -219,31 +219,31 @@ export const updateProfile = () => {
 							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
 								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
 								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">Ziggy al'Thor</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Name</span> : ${profile.first_name} ${profile.last_name}</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Email</span> : ziggy@ziggy.com</p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${profile.first_name} ${profile.last_name}</p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ziggy@ziggy.com</p>
 								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${profile.bio} My hammer is but a meager part of my true strength. Beware !</p>
-								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-dark rounded-pill px-4">Edit profile</button></p>
+								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="editProfile">Edit profile</button></p>
 							</div>
 						</div>
 						<div class="col-md-8 mt-4 mt-md-0">
 							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-								<p class="mb-2"><span class="fw-bold">Games won</span><span class="float-end">11 / 42</span></p>
+								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesWon">Games won</span><span class="float-end">11 / 42</span></p>
 								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-success" style="width: 25%"></div>
 								</div>
-								<p class="mb-2"><span class="fw-bold">Games lost</span><span class="float-end">2 / 42</span></p>
+								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesLost">Games lost</span><span class="float-end">2 / 42</span></p>
 								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-danger" style="width: 2%"></div>
 								</div>
-								<p class="mb-2"><span class="fw-bold">Games played</span><span class="float-end">13 / 42</span></p>
+								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPlayed">Games played</span><span class="float-end">13 / 42</span></p>
 								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-info" style="width: 26%"></div>
 								</div>
-								<p class="mb-2"><span class="fw-bold">Perfect games</span><span class="float-end">2 / 42</span></p>
+								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">2 / 42</span></p>
 								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-warning" style="width: 2%"></div>
 								</div>
-								<p class="m-0 text-center fw-bold fs-1 fst-italic">Rank : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
+								<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
 							</div>
 						</div>
 					</div>

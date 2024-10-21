@@ -1,0 +1,91 @@
+{
+  
+  "about": "Over",
+
+  "game": "Spel",
+
+  "profile": "Profiel",
+
+  "aboutContent": "Dit project is nog steeds een kwestie van keuze als het om de toekomst gaat. Groeten over dit moment. Het is jouw tijd om te schitteren!",
+
+
+  "login": "Inloggen",
+
+  "logout": "Uitloggen",
+
+  "loggingIn": "Inloggen",
+
+  "emailAddress": "E-mailadres",
+
+  "password": "Wachtwoord",
+
+  "close": "Sluiten",
+
+  "firstName": "Voornam",
+
+  "lastName": "Achternaam",
+
+  "chooseAvatar": "Kies Avatar",
+
+  "or": "of",
+
+  "uploadCustomImage": "Upload Aangepaste Afbeelding",
+
+  "language": "Taal",
+
+  "createProfile": "Profiel aanmaken",
+
+
+  "name": "Naam",
+
+  "username": "Gebruikersnaam",
+
+  "email": "E-mail",
+
+  "gamesWon": "Gewonnen spellen",
+
+  "gamesLost": "Verloren spellen",
+
+  "gamesPlayed": "Gespeelde spellen",
+
+  "gamesPerfect": "Perfecte spellen",
+
+  "rank": "Rang",
+
+  "editProfile": "Wijzig profiel",
+
+
+  "singleGame": "Enkelspel",
+
+  "onePlayer": "1 Speler",
+
+  "twoPlayers": "2 Spelers",
+
+  "instructions": "Instructies",
+
+  "back": "Terug",
+  
+  "tournament": "Toernooi",
+
+
+  "playerOne": "Speler 1",
+
+  "numberOfWins": "Aantal overwinningen",
+
+  "theme": "Thema",
+
+  "start": "START",
+
+  "none": "Geen",
+
+  "christmas": "Kerstmis",
+
+  "halloween": "Halloween",
+
+  "winter": "Winter",
+
+  "ranking": "RANGLIJST",
+
+  "playAgain": "NOGMAALS SPELEN"
+
+  }

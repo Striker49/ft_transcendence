@@ -25,4 +25,5 @@ document.addEventListener("DOMContentLoaded", e => {
 	`);
 	addScript("/src/router/router.js");
 	addScript("/src/scenes/default.js");
+	addScript("/src/localization.js");
 });
