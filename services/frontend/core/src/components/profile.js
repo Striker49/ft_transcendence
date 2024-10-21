@@ -36,8 +36,8 @@ const uploadAvatar = async avatar => {
 			throw new Error(`Response status: ${response.status}`);
 		}
 
-		const json = await response.json();
-		console.log(json);
+		// const json = await response.json();
+		// console.log(json);
 	} catch (error) {
 		console.error(error.message);
 	}
@@ -109,15 +109,15 @@ const toggleAvatarSection = isCustom => {
 
 const getProfileInfo = async () => {
 
-	const token = localStorage.getItem("transcendenceToken");
-	const uid = localStorage.getItem("transcendenceUID");
+	const token = localStorage.getItem("authToken");
+	const uid = localStorage.getItem("UID");
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
 		"Authorization": `Token ${token}`
 	});
 
-	const url = "https://localhost/api/profiles/";
+	const url = `https://localhost/api/profiles/${uid}`;
 
 	try {
 		const response = await fetch(url, {
@@ -147,27 +147,27 @@ const defaultForm = () => {
 			<form id="registration-form" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold">
 				<div class="col-md-6">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-						<div class="pb-4 border-bottom border-2 border-dark">
+						<div class="pb-2">
 							<label for="email" class="form-label" data-i18n-key="email">Email</label>
 							<input type="email" class="form-control" name="email" id="email" required>
 						</div>
-						<div class="py-4 border-bottom border-2 border-dark">
+						<div class="py-2">
 							<label for="username" class="form-label" data-i18n-key="username">Username</label>
 							<input type="text" class="form-control" name="username" id="username" required>
 						</div>
-						<div class="py-4 border-bottom border-2 border-dark">
+						<div class="py-2 pb-4 border-bottom border-2 border-dark">
 							<label for="password" class="form-label" data-i18n-key="password">Password</label>
 							<input type="password" class="form-control" name="password" id="password" required>
 						</div>
-						<div class="py-4 border-bottom border-2 border-dark">
+						<div class="py-2 pt-4">
 							<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
 							<input type="text" class="form-control" name="firstname" id="firstname">
 						</div>
-						<div class="py-4 border-bottom border-2 border-dark">
+						<div class="py-2">
 							<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
 							<input type="text" class="form-control" name="lastname" id="lastname">
 						</div>
-						<div class="pt-4 pb-2">
+						<div class="pb-2">
 							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
 							<select class="form-select" name="lang" id="lang">
 								<option value="en">English</option>
@@ -210,7 +210,7 @@ const defaultForm = () => {
 };
 
 export const updateProfile = () => {
-	if (localStorage.getItem("transcendenceToken")) {
+	if (localStorage.getItem("authToken")) {
 		getProfileInfo().then(profile => {
 			document.querySelector("#profile").innerHTML = `
 				<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
@@ -218,11 +218,11 @@ export const updateProfile = () => {
 						<div class="col-md-4">
 							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
 								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
-								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">Ziggy al'Thor</p>
+								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${profile.username}</p>
 								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${profile.first_name} ${profile.last_name}</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ziggy@ziggy.com</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${profile.bio} My hammer is but a meager part of my true strength. Beware !</p>
-								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="editProfile">Edit profile</button></p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${profile.email}</p>
+								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${profile.bio}</p>
+								<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
 							</div>
 						</div>
 						<div class="col-md-8 mt-4 mt-md-0">
@@ -291,6 +291,10 @@ document.addEventListener("click", e => {
 		case element.matches("#default-image"):
 			e.preventDefault();
 			toggleAvatarSection(false);
+			break;
+
+		case element.matches("#edit-profile-btn"):
+			e.preventDefault();
 			break;
 	}
 });

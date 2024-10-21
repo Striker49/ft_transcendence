@@ -15,7 +15,7 @@
 
   "loggingIn": "Login",
 
-  "emailAddress": "Emain address",
+  "emailAddress": "Email address",
 
   "password": "Password",
 
@@ -33,7 +33,7 @@
 
   "language": "Language",
 
-  "createProfile": "Create profile",
+  "newUser": "New User ?",
 
 
   "name": "Name",

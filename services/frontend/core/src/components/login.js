@@ -26,8 +26,10 @@ const login = async form => {
 
 		const json = await response.json();
 		console.log(json);
-		localStorage.setItem("transcendenceToken", json.token);
-		localStorage.setItem("transcendenceUID", json.user_id);
+		
+		localStorage.setItem("authToken", json.token);
+		localStorage.setItem("UID", json.UID);
+		localStorage.setItem("username", json.username);
 
 		// Update Login Section
 		const modalElement = document.querySelector("#loginModal");
@@ -45,8 +47,10 @@ const login = async form => {
 };
 
 const logout = () => {
-	if (localStorage.getItem("transcendenceToken")) {
-		localStorage.removeItem("transcendenceToken");
+	if (localStorage.getItem("authToken")) {
+		localStorage.removeItem("authToken");
+		localStorage.removeItem("UID");
+		localStorage.removeItem("username");
 		updateLogin();
 		if (window.location.pathname === "/profile") {
 			updateProfile();
@@ -55,7 +59,7 @@ const logout = () => {
 };
 
 const loginContent = () => {
-	if (localStorage.getItem("transcendenceToken")) {
+	if (localStorage.getItem("authToken")) {
 		return `
 			<button type="button" id="logout-btn" data-i18n-key="logout" class="btn btn-dark position-absolute top-0 end-0 me-3 mt-3">Logout</button>
 		`;
@@ -82,8 +86,8 @@ const loginContent = () => {
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" data-i18n-key="close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="submit"  data-i18n-key="login" class="btn btn-primary" form="login-form">Login</button>
+						<a href="/profile" data-i18n-key="newUser" class="btn btn-secondary" data-bs-dismiss="modal" data-link>New User ?</a>
+						<button type="submit" data-i18n-key="login" class="btn btn-primary" form="login-form">Login</button>
 					</div>
 				</div>
 				</div>
