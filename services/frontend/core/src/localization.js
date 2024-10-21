@@ -18,7 +18,6 @@ document.addEventListener("change", (event) => {
 	if (event.target.matches("#changeLang")) {
 		setLocale(locale);  // Initialize default locale
 		bindLocaleSwitcher(locale);
-
 	}
 });
 

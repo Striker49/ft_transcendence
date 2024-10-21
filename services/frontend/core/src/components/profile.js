@@ -188,11 +188,11 @@ const defaultForm = () => {
 								<img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
 								<img src="/src/assets/avatar/avatar5.jpg" alt="Avatar image 5" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
 								<img src="/src/assets/avatar/avatar6.jpg" alt="Avatar image 6" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
-								<a href="" class="text-decoration-none text-black mt-4 d-block fst-italic" id="custom-image">--> &nbsp;&nbsp; Upload custom image</a>
+								<span class="d-block mt-4 fst-italic">--> &nbsp;&nbsp;<a href="" class="text-decoration-none text-black" id="custom-image" data-i18n-key="uploadCustomImage">Upload custom image</a></span>
 							</div>
 							<div id="avatar-section-2" class="d-none text-center">
 								<input type="file" class="form-control" name="avatar" id="avatar">
-								<a href="" class="text-decoration-none text-black mt-4 d-block fst-italic" id="default-image">Select default image &nbsp;&nbsp; <--</a>
+								<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image">Select default image</a>&nbsp;&nbsp; <--</span>
 							</div>
 						</div>
 						<div class="py-4 border-bottom border-2 border-dark">
@@ -301,42 +301,3 @@ document.addEventListener("submit", e => {
 		submitRegistrationForm(e.target);
 	}
 });
-
-// ============ Old Version ==============
-
-// const headers = new Headers({
-// 	"Content-Type": "application/json"
-// });
-
-// export const submitRegistrationForm = async form => {
-// 	const formData = {
-// 		"email": form.email.value,
-// 		"username": form.username.value,
-// 		"password": form.password.value,
-// 		"first_name": form.firstname.value,
-// 		"last_name": form.lastname.value,
-// 		"avatar_path": form.avatar.value,
-// 		"bio": form.bio.value,
-// 		"lang": form.lang.value
-// 	};
-
-// 	const url = "https://localhost/api/users/registration/";
-
-// 	try {
-// 		const response = await fetch(url, {
-// 			method: "POST",
-// 			body: JSON.stringify(formData),
-// 			headers: headers
-// 		});
-// 		if (!response.ok) {
-// 			const errorResponse = await response.text();
-// 			console.log(errorResponse);
-// 			throw new Error(`Response status: ${response.status}`);
-// 		}
-
-// 		const json = await response.json();
-// 		console.log(json);
-// 	} catch (error) {
-// 		console.error(error.message);
-// 	}
-// };
