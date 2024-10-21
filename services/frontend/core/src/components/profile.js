@@ -114,7 +114,7 @@ const getProfileInfo = async () => {
 		"Authorization": `Token ${token}`
 	});
 
-	const url = "https://localhost/api/profiles/" + 2;
+	const url = "https://localhost/api/profiles/";
 
 	try {
 		const response = await fetch(url, {
