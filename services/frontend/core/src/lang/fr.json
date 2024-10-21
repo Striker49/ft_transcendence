@@ -6,6 +6,25 @@
 
   "profile": "Profil",
 
-  "aboutContent": "Ce projet est quelque chose que vous n’avez jamais fait auparavant. Rappelez-vous du début de votre voyage en programmation. Regardez-vous maintenant. C’est le temps de briller !"
+  "aboutContent": "Ce projet est quelque chose que vous n’avez jamais fait auparavant. Rappelez-vous du début de votre voyage en programmation. Regardez-vous maintenant. C’est le temps de briller !",
+
+
+  "name": "Nom",
+
+  "username": "Nom d'utilisateur",
+
+  "email": "Courriel",
+
+  "gamesWon": "Parties gagnées",
+
+  "gamesLost": "Parties perdues",
+
+  "gamesPlayed": "Parties jouées",
+
+  "gamesPerfect": "Parties parfaites",
+
+  "rank": "Rang",
+  
+  "editProfile": "Modifier le profil"
 
   }

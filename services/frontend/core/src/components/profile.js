@@ -180,31 +180,31 @@ export const updateProfile = () => {
 							<div class="p-4 bg-info rounded-5">
 								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 border-success"></p>
 								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-dark">Ziggy al'Thor</p>
-								<p class="py-3 m-0 border-bottom border-dark">Name: ${profile.first_name} ${profile.last_name}</p>
-								<p class="py-3 m-0 border-bottom border-dark">Email: ziggy@ziggy.com</p>
+								<p class="py-3 m-0 border-bottom border-dark"><span data-i18n-key="name">Name</span>: ${profile.first_name} ${profile.last_name}</p>
+								<p class="py-3 m-0 border-bottom border-dark"><span data-i18n-key="email">Email</span>: ziggy@ziggy.com</p>
 								<p class="py-3 m-0 border-bottom border-dark">${profile.bio}</p>
-								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-secondary rounded-5 px-4">Edit profile</button></p>
+								<p class="m-0 mt-3 text-center"><button type="submit" class="btn btn-secondary rounded-5 px-4"><span data-i18n-key="editProfile">Edit profile</span></button></p>
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="p-4 bg-info rounded-5">
-								<p class="mb-1"><span class="fw-bold">Games won</span><span class="float-end">11/42</span></p>
+								<p data-i18n-key="gamesWon" class="mb-1"><span class="fw-bold">Games won</span><span class="float-end">11/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-success" style="width: 25%"></div>
 								</div>
-								<p class="mb-1"><span class="fw-bold">Games lost</span><span class="float-end">2/42</span></p>
+								<p data-i18n-key="gamesLost" class="mb-1"><span class="fw-bold">Games lost</span><span class="float-end">2/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-danger" style="width: 2%"></div>
 								</div>
-								<p class="mb-1"><span class="fw-bold">Games played</span><span class="float-end">13/42</span></p>
+								<p data-i18n-key="gamesPlayed" class="mb-1"><span class="fw-bold">Games played</span><span class="float-end">13/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-secondary" style="width: 26%"></div>
 								</div>
-								<p class="mb-1"><span class="fw-bold">Perfect games</span><span class="float-end">2/42</span></p>
+								<p class="mb-1"><span data-i18n-key="gamesPerfect" class="fw-bold">Perfect games</span><span class="float-end">2/42</span></p>
 								<div class="progress mb-4" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
 									<div class="progress-bar bg-warning" style="width: 2%"></div>
 								</div>
-								<p class="m-0 text-center fw-bold fs-1 fst-italic">Rank : <span class="text-success" style="font-size: 60px;">1st</span></p>
+								<p data-i18n-key="rank" class="m-0 text-center fw-bold fs-1 fst-italic">Rank : <span class="text-success" style="font-size: 60px;">1st</span></p>
 							</div>
 						</div>
 					</div>
