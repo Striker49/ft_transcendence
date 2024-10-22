@@ -16,7 +16,7 @@ export default class extends Abstract {
 					</ul>
 					</div>
 					<div class="mt-5 d-flex justify-content-center">
-						<a href="/gameConfig" id="playAgain" class="btn btn-primary" data-link><span data-i18n-key="playAgain">PLAY AGAIN</span></a>
+						<a href="/gameConfig" data-i18n-key="playAgain" id="playAgain" class="btn btn-primary" data-link>PLAY AGAIN</a>
 					</div>
 					</div>
 					</div>
