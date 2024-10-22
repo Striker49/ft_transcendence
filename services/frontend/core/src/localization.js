@@ -5,10 +5,24 @@ const supportedLocales = ["en", "nl", "fr"];
 let locale = "en";
 let translations = {};
 
+
+function findSupported(navLang) {
+	console.log("FIND SUPPORTED");
+	for (let i = 0; supportedLocales[i]; i++)
+		if (!navLang.search(supportedLocales[i]))
+		{
+			console.log("NAVLANG:", navLang)
+			console.log("FOUND:", supportedLocales[i])
+			return (supportedLocales[i]);
+		}
+	console.log("Not FOUND");
+	return ("en");
+}
+
 // When the page content is ready...
 document.addEventListener("click", () => {
 	// localStorage.setItem("lang", "fr");
-	// localStorage.removeItem("lang");
+	localStorage.removeItem("lang");
 	console.log("DOMContentLoaded localization");
 	console.log("Local Storage:", localStorage);
 	let newLocale;
@@ -16,12 +30,14 @@ document.addEventListener("click", () => {
 	if (localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
 	else
-		newLocale = navigator.language;
+		newLocale = findSupported(navigator.language);
 //Change html tag "lang" value for the locale if it's different
 	if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
 		document.querySelector("[lang]").setAttribute("lang", newLocale);
 	console.log("Locale:", newLocale);
 	setLocale(newLocale);
+	document.querySelector("[data-i18n-switcher]").value = newLocale;
+	// bindLocaleSwitcher(newLocale);
 	// navLang.innerHTML = locale;
 	// console.log(defaultLocale.value);
 	// console.log(defaultLocale.innerHTML);
@@ -40,6 +56,7 @@ document.addEventListener("change", (event) => {
 function bindLocaleSwitcher(initialValue) {
 	const switcher = document.querySelector("[data-i18n-switcher]");
 	setLocale(switcher.value);
+	// localStorage.setItem("lang", initialValue);
 }
 
 async function setLocale(newLocale) {
