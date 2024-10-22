@@ -20,34 +20,35 @@ function findSupported(navLang) {
 }
 
 // When the page content is ready...
-document.addEventListener("click", () => {
+document.onreadystatechange = () => {
+
 	// localStorage.setItem("lang", "fr");
 	localStorage.removeItem("lang");
 	console.log("DOMContentLoaded localization");
 	console.log("Local Storage:", localStorage);
 	let newLocale;
+
 	//Change locale value for localStorage or the navigator language
 	if (localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
 	else
+	{
 		newLocale = findSupported(navigator.language);
+		localStorage.setItem("lang", newLocale);
+	}
+
 //Change html tag "lang" value for the locale if it's different
 	if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
 		document.querySelector("[lang]").setAttribute("lang", newLocale);
 	console.log("Locale:", newLocale);
 	setLocale(newLocale);
 	document.querySelector("[data-i18n-switcher]").value = newLocale;
-	// bindLocaleSwitcher(newLocale);
-	// navLang.innerHTML = locale;
-	// console.log(defaultLocale.value);
-	// console.log(defaultLocale.innerHTML);
-	// setLocale(locale);  // Initialize default locale
-});
+};
 
 document.addEventListener("change", (event) => {
-	event.preventDefault();
-	console.log("on change localization");
 	if (event.target.matches("#changeLang")) {
+		console.log("on change localization");
+		event.preventDefault();
 		// setLocale(locale);  // Initialize default locale
 		bindLocaleSwitcher(locale);
 	}
@@ -56,25 +57,24 @@ document.addEventListener("change", (event) => {
 function bindLocaleSwitcher(initialValue) {
 	const switcher = document.querySelector("[data-i18n-switcher]");
 	setLocale(switcher.value);
-	// localStorage.setItem("lang", initialValue);
+	document.querySelector("[lang]").setAttribute("lang", switcher.value);
 }
 
 async function setLocale(newLocale) {
-	console.log("setLocale->locale:", locale);
-	console.log("setLocale->newLocale:", newLocale);
+	console.log("old locale:", locale);
+	console.log("trying to switch to:", newLocale);
 	if (newLocale === locale) return;  // Don't reload if locale is the same
 	try {
-		console.log("newLocale:", newLocale)
 		const newTranslations = await fetchTranslationsFor(newLocale);
-
+		
 		// Update the locale and translations
 		locale = newLocale;
-		console.log("translations:", translations);
+		localStorage.setItem("lang", locale);
 		console.log("newtranslations:", newTranslations);
 		translations = newTranslations;
 		// Ensure the page is fully loaded before translating
 		translatePage();
-		console.log("Content has been translated");
+		console.log("Content has been translated to:", locale);
 	} catch (error) {
 		console.error(`Error setting locale: ${error}`);
 	}
@@ -83,7 +83,6 @@ async function setLocale(newLocale) {
 async function fetchTranslationsFor(newLocale) {
 	try {
 		const response = await fetch(`/src/lang/${newLocale}.json`);
-		console.log(response.json);
 		if (!response.ok) {
 			throw new Error(`Failed to load translations for locale: ${newLocale}`);
 		}
@@ -94,7 +93,7 @@ async function fetchTranslationsFor(newLocale) {
 	}
 }
 
-function translatePage() {
+export function translatePage() {
 	document.querySelectorAll("[data-i18n-key]").forEach((element) => {
 		translateElement(element);
 	});
@@ -105,7 +104,6 @@ function translatePage() {
 function translateElement(element) {
 	const key = element.getAttribute("data-i18n-key");
 	const translation = translations[key];
-
 	// Only update the element if the translation exists
 	if (translation) {
 		element.innerText = translation;

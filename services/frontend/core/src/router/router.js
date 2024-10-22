@@ -9,6 +9,7 @@ import Select from "../pages/Select.js";
 import Tournament from "../pages/Tournament.js";
 import FetchTest from "../pages/FetchTest.js";
 import { translateX } from "../utils/utils.js";
+import { translatePage } from "../localization.js";
 
 export const navigateTo = url => {
 	history.pushState(null, null, url);
@@ -59,6 +60,8 @@ const router = async () => {
 	}
 
 	translateX();
+	translatePage();
+
 };
 
 window.addEventListener("popstate", router);
