@@ -102,6 +102,12 @@ export function translatePage() {
 // Replace the inner text of the given HTML element with the translation
 // corresponding to the element's data-i18n-key
 function translateElement(element) {
+	//Checks if we have loaded translations already if not we're 
+	//probably still on the first page
+	if (JSON.stringify(translations) === '{}')
+		return;
+
+	// console.log(translations);
 	const key = element.getAttribute("data-i18n-key");
 	const translation = translations[key];
 	// Only update the element if the translation exists
