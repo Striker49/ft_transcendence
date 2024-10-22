@@ -1,4 +1,5 @@
 import { updateProfile } from "./profile.js";
+import { validateForm } from "../utils/validation.js";
 
 const headers = new Headers({
 	"Content-Type": "application/json"
@@ -29,7 +30,6 @@ const login = async form => {
 		
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);
-		localStorage.setItem("username", json.username);
 
 		// Update Login Section
 		const modalElement = document.querySelector("#loginModal");
@@ -50,7 +50,6 @@ const logout = () => {
 	if (localStorage.getItem("authToken")) {
 		localStorage.removeItem("authToken");
 		localStorage.removeItem("UID");
-		localStorage.removeItem("username");
 		updateLogin();
 		if (window.location.pathname === "/profile") {
 			updateProfile();
@@ -74,14 +73,16 @@ const loginContent = () => {
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<form id="login-form" action="" method="post">
+						<form id="login-form" action="" method="post" novalidate>
 							<div class="mb-3">
 								<label for="login-user" data-i18n-key="emailAddress" class="form-label">Email address</label>
 								<input type="email" name="username" id="login-user" class="form-control" required>
+								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="mb-3">
 								<label for="login-pass" data-i18n-key="password" class="form-label">Password</label>
 								<input type="password" name="password" id="login-pass" class="form-control" required>
+								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 						</form>
 					</div>
@@ -119,6 +120,8 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		login(e.target);
+		if (validateForm(e.target)) {
+			login(e.target);
+		}
 	}
 });

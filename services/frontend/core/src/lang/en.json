@@ -33,6 +33,8 @@
 
   "language": "Language",
 
+  "createProfile": "Create profile",
+
   "newUser": "New User ?",
 
 
@@ -53,6 +55,14 @@
   "rank": "Rank",
 
   "editProfile": "Edit profile",
+
+  "passwordLength": "Password must be 6 and 20 characters",
+
+  "passwordNotOriginal": "Password cannot be password",
+
+  "usernameRequired": "Username is required",
+
+  "validEmail": "Please enter a valid email address",
 
 
   "singleGame": "Single Game",
