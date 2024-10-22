@@ -58,7 +58,7 @@ export default class extends Abstract {
 							</select>
 						</div>
 					<div class="mt-5 d-flex justify-content-center">
-						<a href="/game" id="startBtn" class="btn btn-primary" data-link><span data-i18n-key="start">START</span></a>
+						<a href="/game" data-i18n-key="start" id="startBtn" class="btn btn-primary" data-link>START</a>
 					</div>
 					</div>
 					</div>
