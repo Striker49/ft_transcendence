@@ -42,6 +42,9 @@ eval:
 	docker volume rm $$(docker volume ls -q); \
 	docker network rm $$(docker network ls -q) 2>/dev/null
 
+clean:
+	docker rmi $$(docker images -f "dangling=true" -q)
+
 prune:
 	docker system prune --all --volumes
 

@@ -1,22 +1,38 @@
 // The active locale
-const defaultLocale = "en";
+// const defaultLocale = "en";
 const supportedLocales = ["en", "nl", "fr"];
 
 let locale = "en";
 let translations = {};
 
 // When the page content is ready...
-document.addEventListener("DOMContentLoaded", () => {
-	console.log("enters event");
-	setLocale(defaultLocale);  // Initialize default locale
-	bindLocaleSwitcher(defaultLocale);
+document.addEventListener("click", () => {
+	// localStorage.setItem("lang", "fr");
+	// localStorage.removeItem("lang");
+	console.log("DOMContentLoaded localization");
+	console.log("Local Storage:", localStorage);
+	let newLocale;
+	//Change locale value for localStorage or the navigator language
+	if (localStorage.getItem("lang"))
+		newLocale = localStorage.getItem("lang");
+	else
+		newLocale = navigator.language;
+//Change html tag "lang" value for the locale if it's different
+	if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
+		document.querySelector("[lang]").setAttribute("lang", newLocale);
+	console.log("Locale:", newLocale);
+	setLocale(newLocale);
+	// navLang.innerHTML = locale;
+	// console.log(defaultLocale.value);
+	// console.log(defaultLocale.innerHTML);
+	// setLocale(locale);  // Initialize default locale
 });
 
 document.addEventListener("change", (event) => {
 	event.preventDefault();
 	console.log("on change localization");
 	if (event.target.matches("#changeLang")) {
-		setLocale(locale);  // Initialize default locale
+		// setLocale(locale);  // Initialize default locale
 		bindLocaleSwitcher(locale);
 	}
 });
@@ -27,10 +43,11 @@ function bindLocaleSwitcher(initialValue) {
 }
 
 async function setLocale(newLocale) {
+	console.log("setLocale->locale:", locale);
+	console.log("setLocale->newLocale:", newLocale);
 	if (newLocale === locale) return;  // Don't reload if locale is the same
-	console.log("locale:", locale);
-	console.log("newLocale:", newLocale);
 	try {
+		console.log("newLocale:", newLocale)
 		const newTranslations = await fetchTranslationsFor(newLocale);
 
 		// Update the locale and translations
@@ -49,6 +66,7 @@ async function setLocale(newLocale) {
 async function fetchTranslationsFor(newLocale) {
 	try {
 		const response = await fetch(`/src/lang/${newLocale}.json`);
+		console.log(response.json);
 		if (!response.ok) {
 			throw new Error(`Failed to load translations for locale: ${newLocale}`);
 		}
