@@ -15,7 +15,7 @@
 
   "loggingIn": "Login",
 
-  "emailAddress": "Emain address",
+  "emailAddress": "Email address",
 
   "password": "Password",
 
@@ -35,6 +35,8 @@
 
   "createProfile": "Create profile",
 
+  "newUser": "New User ?",
+
 
   "name": "Name",
 
@@ -53,6 +55,14 @@
   "rank": "Rank",
 
   "editProfile": "Edit profile",
+
+  "passwordLength": "Password must be 6 and 20 characters",
+
+  "passwordNotOriginal": "Password cannot be password",
+
+  "usernameRequired": "Username is required",
+
+  "validEmail": "Please enter a valid email address",
 
 
   "singleGame": "Single Game",

@@ -35,6 +35,8 @@
 
   "createProfile": "Créer le profil",
 
+  "newUser": "Nouvel utilisateur ?",
+
 
   "name": "Nom",
 
@@ -53,6 +55,14 @@
   "rank": "Rang",
   
   "editProfile": "Modifier le profil",
+
+  "passwordLength": "Le mot de passe doit être 6 et 20 caractères",
+
+  "passwordNotOriginal": "Le mot de passe ne peut pas être password",
+
+  "usernameRequired": "Veuillez entrer un nom d'utilisateur",
+
+  "validEmail": "Veuillez entrer une adresse courriel valide",
 
 
   "singleGame": "Jeu Solo",
