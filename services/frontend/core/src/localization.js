@@ -30,7 +30,7 @@ function findSupported(navLang) {
 document.onreadystatechange = () => {
 
 	// localStorage.setItem("lang", "fr");
-	localStorage.removeItem("lang");
+	// localStorage.removeItem("lang");
 	console.debug("DOMContentLoaded localization");
 	console.log("Local Storage:", localStorage);
 	let newLocale;
