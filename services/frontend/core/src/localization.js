@@ -3,20 +3,27 @@
 const supportedLocales = ["en", "nl", "fr"];
 
 let locale = "en";
+let defaultLocale = "en";
 let translations = {};
 
 
 function findSupported(navLang) {
-	console.log("FIND SUPPORTED");
-	for (let i = 0; supportedLocales[i]; i++)
-		if (!navLang.search(supportedLocales[i]))
+	console.debug("FIND IF SUPPORTED LANGUAGE");
+	//Will check if nav languages are supported from top to bottom
+	for (let j = 0; navLang[j]; j++)
+	{
+		for (let i = 0; supportedLocales[i]; i++)
 		{
-			console.log("NAVLANG:", navLang)
-			console.log("FOUND:", supportedLocales[i])
-			return (supportedLocales[i]);
+			if (!navLang[j].split("-")[0].search(supportedLocales[i]))
+			{
+				console.debug("NAVLANG:", navLang[j])
+				console.debug("FOUND:", supportedLocales[i])
+				return (supportedLocales[i]);
+			}
 		}
-	console.log("Not FOUND");
-	return ("en");
+	}
+	console.debug("NO LANGUAGE SUPPORTED");
+	return (defaultLocale);
 }
 
 // When the page content is ready...
@@ -24,7 +31,7 @@ document.onreadystatechange = () => {
 
 	// localStorage.setItem("lang", "fr");
 	localStorage.removeItem("lang");
-	console.log("DOMContentLoaded localization");
+	console.debug("DOMContentLoaded localization");
 	console.log("Local Storage:", localStorage);
 	let newLocale;
 
@@ -33,21 +40,21 @@ document.onreadystatechange = () => {
 		newLocale = localStorage.getItem("lang");
 	else
 	{
-		newLocale = findSupported(navigator.language);
+		newLocale = findSupported(navigator.languages);
 		localStorage.setItem("lang", newLocale);
 	}
 
 //Change html tag "lang" value for the locale if it's different
 	if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
 		document.querySelector("[lang]").setAttribute("lang", newLocale);
-	console.log("Locale:", newLocale);
+	console.info("Locale:", newLocale);
 	setLocale(newLocale);
 	document.querySelector("[data-i18n-switcher]").value = newLocale;
 };
 
 document.addEventListener("change", (event) => {
 	if (event.target.matches("#changeLang")) {
-		console.log("on change localization");
+		console.debug("on change localization");
 		event.preventDefault();
 		// setLocale(locale);  // Initialize default locale
 		bindLocaleSwitcher(locale);
@@ -61,8 +68,8 @@ function bindLocaleSwitcher(initialValue) {
 }
 
 async function setLocale(newLocale) {
-	console.log("old locale:", locale);
-	console.log("trying to switch to:", newLocale);
+	console.info("old locale:", locale);
+	console.info("trying to switch to:", newLocale);
 	if (newLocale === locale) return;  // Don't reload if locale is the same
 	try {
 		const newTranslations = await fetchTranslationsFor(newLocale);
@@ -74,7 +81,7 @@ async function setLocale(newLocale) {
 		translations = newTranslations;
 		// Ensure the page is fully loaded before translating
 		translatePage();
-		console.log("Content has been translated to:", locale);
+		console.info("Content has been translated to:", locale);
 	} catch (error) {
 		console.error(`Error setting locale: ${error}`);
 	}

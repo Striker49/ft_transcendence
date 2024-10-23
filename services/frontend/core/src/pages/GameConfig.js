@@ -35,9 +35,9 @@ export default class extends Abstract {
 
 	async getHtml() {
 		getUserProfile();
-		// console.log("user name: ", json[0].first_name);
-		console.log("local storage: ", localStorage);
-		console.log("token: ", localStorage.transcendenceToken);
+		// console.log("user name: ", userData.username);
+		// console.debug("local storage: ", localStorage);
+		// console.debug("token: ", localStorage.transcendenceToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
