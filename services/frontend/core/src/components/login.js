@@ -1,5 +1,6 @@
 import { updateProfile } from "./profile.js";
 import { validateForm } from "../utils/validation.js";
+import { translatePage } from "../localization.js";
 
 const headers = new Headers({
 	"Content-Type": "application/json"
@@ -99,6 +100,7 @@ const loginContent = () => {
 
 const updateLogin = () => {
 	document.querySelector("#login").innerHTML = loginContent();
+	translatePage();
 };
 
 const html = () => {
