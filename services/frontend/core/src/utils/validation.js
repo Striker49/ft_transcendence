@@ -11,8 +11,9 @@ const printError = (span, langKey, msg) => {
 	if (span) {
 		span.innerHTML = msg;
 		span.setAttribute("data-i18n-key", langKey);
+	} else {
+		console.log(msg);
 	}
-	console.log(msg);
 };
 
 const validateUsername = username => {

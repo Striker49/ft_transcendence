@@ -89,8 +89,10 @@ const submitRegistrationForm = async form => {
 
 		const json = await response.json();
 		console.log(json);
+		alert("Registration successful!");
 	} catch (error) {
 		console.error(error.message);
+		alert(error.message);
 	}
 };
 
