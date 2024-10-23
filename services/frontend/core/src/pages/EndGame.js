@@ -1,5 +1,48 @@
 import Abstract from "./Abstract.js";
 
+const headers = new Headers({
+	"Content-Type": "application/json",
+	"Authorization": localStorage.getItem("transcendenceToken")
+})
+
+// async function sendGameStats() {
+// 	const url = "https://localhost/api/profiles/";
+// 	try {
+// 		const response = await fetch(url, {
+// 			method: "POST",
+// 			headers: headers,
+// 			body: {
+// 				winner: ,
+// 				score: 
+// 			}
+// 		});
+// 		if(!response.ok) { 
+// 			throw new Error(`Response status: ${response.status}`);
+// 		}
+// 		const stats = await response.json();
+// 		console.log("RANKING", stats);
+// 	} catch (error) {
+// 		console.error(error.message);
+// 	}
+// }
+
+async function getRanking() {
+	const url = "https://localhost/api/ranking/";
+	try {
+		const response = await fetch(url, {
+			method: "GET",
+			headers: headers
+		});
+		if(!response.ok) { 
+			throw new Error(`Response status: ${response.status}`);
+		}
+		const ranking = await response.json();
+		console.log("RANKING", ranking);
+	} catch (error) {
+		console.error(error.message);
+	}
+}
+
 export default class extends Abstract {
 	constructor() {
 		super();
@@ -7,6 +50,8 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
+		// sendGameStats();
+		// getRanking();
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
@@ -25,9 +70,3 @@ export default class extends Abstract {
 					`;
 	}
 }
-
-document.addEventListener("click", (event) => {
-	if (event.target.matches("#playAgain")) {
-		// localStorage.setItem('theme', '');
-	}
-})
