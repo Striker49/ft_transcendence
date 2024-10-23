@@ -323,12 +323,12 @@ export const updateProfile = () => {
 							</div>
 							<div class="py-2">
 								<label for="username" class="form-label" data-i18n-key="username">Username</label>
-								<input type="text" class="form-control" name="username" id="username" required>
+								<input type="text" class="form-control" autocomplete="username" name="username" id="username" required>
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="py-2 pb-4 border-bottom border-2 border-dark">
 								<label for="password" class="form-label" data-i18n-key="password">Password</label>
-								<input type="password" class="form-control" name="password" id="password" required>
+								<input type="password" class="form-control" name="password" id="password" autocomplete="new-password" required>
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="py-2 pt-4">

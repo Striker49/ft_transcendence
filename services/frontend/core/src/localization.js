@@ -111,6 +111,7 @@ export function translatePage() {
 function translateElement(element) {
 	//Checks if we have loaded translations already if not we're 
 	//probably still on the first page
+	// console.log(element);
 	if (JSON.stringify(translations) === '{}')
 		return;
 

@@ -55,6 +55,14 @@
 
   "editProfile": "Wijzig profiel",
 
+  "passwordLength": "Wachtwoord moet tussen 6 en 20 tekens zijn",
+
+  "passwordNotOriginal": "Wachtwoord kan niet 'wachtwoor zijn",
+
+  "usernameRequired": "Gebruikersnaam is verplicht",
+
+  "validEmail": "Voer een gelgig e-mailadres in",
+
 
   "singleGame": "Solo Spel",
 

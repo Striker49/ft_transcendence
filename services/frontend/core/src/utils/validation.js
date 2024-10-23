@@ -1,4 +1,6 @@
 // ========== Form validation ==========
+import { translatePage } from "../localization.js"
+
 
 const clearSpan = span => {
 	if (span) {		
@@ -11,6 +13,7 @@ const printError = (span, langKey, msg) => {
 	if (span) {
 		span.innerHTML = msg;
 		span.setAttribute("data-i18n-key", langKey);
+		translatePage();
 	} else {
 		console.log(msg);
 	}
@@ -33,7 +36,7 @@ const validatePassword = password => {
 	const span = password.nextElementSibling;
 
 	if (password.value.length < 6 || password.value.length > 20) {
-		printError(span, "passwordLength", "Password must be 6 and 20 characters");
+		printError(span, "passwordLength", "Password must be between 6 and 20 characters");
 		return false;
 	} else if (password.value === "password") {
 		printError(span, "passwordNotOriginal", "Password cannot be password");

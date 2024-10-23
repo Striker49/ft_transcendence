@@ -77,12 +77,12 @@ const loginContent = () => {
 						<form id="login-form" action="" method="post" novalidate>
 							<div class="mb-3">
 								<label for="login-user" data-i18n-key="emailAddress" class="form-label">Email address</label>
-								<input type="email" name="username" id="login-user" class="form-control" required>
+								<input type="email" name="username" id="login-user" class="form-control" autocomplete="username" required>
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="mb-3">
 								<label for="login-pass" data-i18n-key="password" class="form-label">Password</label>
-								<input type="password" name="password" id="login-pass" class="form-control" required>
+								<input type="password" name="password" id="login-pass" class="form-control" autocomplete="current-password" required>
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 						</form>
