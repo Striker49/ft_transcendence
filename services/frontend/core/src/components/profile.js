@@ -318,7 +318,7 @@ export const updateProfile = () => {
 						<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
 							<div class="pb-2">
 								<label for="email" class="form-label" data-i18n-key="email">Email</label>
-								<input type="email" class="form-control" name="email" id="email" required>
+								<input type="email" class="form-control" name="email" id="email" autocomplete="username" required>
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="py-2">
