@@ -65,6 +65,8 @@ function bindLocaleSwitcher(initialValue) {
 	const switcher = document.querySelector("[data-i18n-switcher]");
 	setLocale(switcher.value);
 	document.querySelector("[lang]").setAttribute("lang", switcher.value);
+	// localStorage.setItem("lang", switcher.value);
+
 }
 
 async function setLocale(newLocale) {
@@ -101,6 +103,7 @@ async function fetchTranslationsFor(newLocale) {
 }
 
 export function translatePage() {
+	console.log("TranslatePage() is called");
 	document.querySelectorAll("[data-i18n-key]").forEach((element) => {
 		translateElement(element);
 	});

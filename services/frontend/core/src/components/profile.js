@@ -1,3 +1,4 @@
+// import { translatePage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 
 let profile;
@@ -266,6 +267,7 @@ const toggleProfileInfo = editMode => {
 			<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
 		`;
 	}
+	// translatePage();
 };
 
 export const updateProfile = () => {
@@ -365,6 +367,7 @@ export const updateProfile = () => {
 			</div>
 		`;
 	}
+	// translatePage();
 };
 
 const html = () => {

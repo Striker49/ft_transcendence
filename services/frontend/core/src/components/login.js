@@ -55,6 +55,7 @@ const logout = () => {
 		if (window.location.pathname === "/profile") {
 			updateProfile();
 		}
+		localStorage.clear();
 	}
 };
 
@@ -100,7 +101,7 @@ const loginContent = () => {
 
 const updateLogin = () => {
 	document.querySelector("#login").innerHTML = loginContent();
-	translatePage();
+	// translatePage();
 };
 
 const html = () => {
