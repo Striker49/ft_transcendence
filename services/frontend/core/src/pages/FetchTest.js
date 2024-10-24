@@ -36,21 +36,21 @@ const submitForm = async form => {
 	// For POST Request
 	const formData = {
 		// email: "a@test.com",
-		email_or_username: "oli",
-		password: "ziggy"
+		// email_or_username: "oli",
+		// password: "ziggy"
 		// profile: 
 		// {
-		// first_name: "tester1",
-		// last_name:  "test",
-		// // bio: "test",
-		// lang: "fr",
-		// avatar_path: "here/or/here"
+		first_name: "tester1",
+		last_name:  "test",
+		// bio: "test",
+		lang: "fr",
+		avatar_path: "here/or/here"
 		// }
 	};
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization":"Token 7e7be82c86ed476c5489fb4c5bb466665de02e8d"
+		// "Authorization":"Token 7e7be82c86ed476c5489fb4c5bb466665de02e8d"
 	});
 
 	const url = 'https://localhost/api/profiles/';

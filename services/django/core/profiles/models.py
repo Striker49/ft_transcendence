@@ -25,7 +25,8 @@ class UserProfile(models.Model):
 
 	class Meta:
 		ordering = ['created']
+		verbose_name = "Profile"
 	
 	def __str__(self):
 		"""Return string representation of our user"""
-		return self.username
+		return self.UID.username

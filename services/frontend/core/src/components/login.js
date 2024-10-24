@@ -28,8 +28,8 @@ const login = async form => {
 
 		const json = await response.json();
 		console.log(json);
-		localStorage.setItem("transcendenceToken", json.token);
-		localStorage.setItem("transcendenceUID", json.UID);
+		localStorage.setItem("authToken", json.token);
+		localStorage.setItem("UID", json.UID);
 
 		// Update Login Section
 		const modalElement = document.querySelector("#loginModal");

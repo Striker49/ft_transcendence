@@ -50,7 +50,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
  
 	class Meta:
 		ordering = ['created']
+		verbose_name = "User"
 	
 	def __str__(self):
 		"""Return string representation of our user"""
-		return self.email
+		return self.username
