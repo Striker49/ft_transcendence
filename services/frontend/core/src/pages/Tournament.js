@@ -14,7 +14,7 @@ export default class extends Abstract {
 						<img src="/src/assets/tournament.png" alt="Tournament diagram" class="w-100">
 					</div>
 					<div class="col-4">
-						<a href="/game" role="button" class="btn btn-success d-block" data-link>Start Game</a>
+						<a href="/game" role="button" data-i18n-key="start" class="btn btn-success d-block" data-link>Start Game</a>
 					</div>	
 				</div>
 			</div>

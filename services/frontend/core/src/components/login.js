@@ -1,4 +1,6 @@
 import { updateProfile } from "./profile.js";
+import { validateForm } from "../utils/validation.js";
+import { translatePage } from "../localization.js";
 
 const headers = new Headers({
 	"Content-Type": "application/json"
@@ -35,7 +37,9 @@ const login = async form => {
 		modalInstance.hide();
 
 		updateLogin();
-		updateProfile();
+		if (window.location.pathname === "/profile") {
+			updateProfile();
+		}
 
 	} catch (error) {
 		console.error(error.message);
@@ -43,43 +47,48 @@ const login = async form => {
 };
 
 const logout = () => {
-	if (localStorage.getItem("transcendenceToken")) {
-		localStorage.removeItem("transcendenceToken");
+	if (localStorage.getItem("authToken")) {
+		localStorage.removeItem("authToken");
+		localStorage.removeItem("UID");
 		updateLogin();
-		updateProfile();
+		if (window.location.pathname === "/profile") {
+			updateProfile();
+		}
 	}
 };
 
 const loginContent = () => {
-	if (localStorage.getItem("transcendenceToken")) {
+	if (localStorage.getItem("authToken")) {
 		return `
-			<button type="button" id="logout-btn" class="btn btn-dark position-absolute top-0 end-0 me-3 mt-3">Logout</button>
+			<button type="button" id="logout-btn" data-i18n-key="logout" class="btn btn-dark position-absolute top-0 end-0 me-3 mt-3">Logout</button>
 		`;
 	} else {
 		return `
-			<button type="button" class="btn btn-dark position-absolute top-0 end-0 me-3 mt-3" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+			<button type="button" data-i18n-key="login" class="btn btn-dark position-absolute top-0 end-0 me-3 mt-3" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
 			<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="login" aria-hidden="true">
 				<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h2 class="modal-title fs-5" id="login">Login</h1>
+						<h2 data-i18n-key="loggingIn" class="modal-title fs-5" id="login">Login</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<form id="login-form" action="" method="post">
+						<form id="login-form" action="" method="post" novalidate>
 							<div class="mb-3">
-								<label for="login-user" class="form-label">Email address</label>
+								<label for="login-user" data-i18n-key="emailAddress" class="form-label">Email address</label>
 								<input type="email" name="username" id="login-user" class="form-control" required>
+								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="mb-3">
-								<label for="login-pass" class="form-label">Password</label>
+								<label for="login-pass" data-i18n-key="password" class="form-label">Password</label>
 								<input type="password" name="password" id="login-pass" class="form-control" required>
+								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary" form="login-form">Login</button>
+						<a href="/profile" data-i18n-key="newUser" class="btn btn-secondary" data-bs-dismiss="modal" data-link>New User ?</a>
+						<button type="submit" data-i18n-key="login" class="btn btn-primary" form="login-form">Login</button>
 					</div>
 				</div>
 				</div>
@@ -90,6 +99,7 @@ const loginContent = () => {
 
 const updateLogin = () => {
 	document.querySelector("#login").innerHTML = loginContent();
+	translatePage();
 };
 
 const html = () => {
@@ -111,6 +121,8 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		login(e.target);
+		if (validateForm(e.target)) {
+			login(e.target);
+		}
 	}
 });

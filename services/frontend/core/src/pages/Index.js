@@ -9,7 +9,7 @@ export default class extends Abstract {
 	async getHtml() {
 		return `
 			<h1>
-				<a id="game-button" class="link-dark link-opacity-75-hover link-underline-opacity-0" href="/select" data-link>GAME</a>
+				<a data-i18n-key="game" id="game-button" class="link-dark link-opacity-75-hover link-underline-opacity-0" href="/select" data-link>GAME</a>
 			</h1>
 		`;
 	}
