@@ -40,8 +40,6 @@ class UserViewSet(viewsets.ModelViewSet):
 		}
 		return Response(response_data, status=status.HTTP_201_CREATED)
 
-
-
 class UserRegistrationAPIView(APIView):
 	"""Register new users and creates their profile
 	"""

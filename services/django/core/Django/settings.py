@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'django_extensions',
     'users.apps.UsersConfig',
+    'game.apps.GameConfig',
     
 ]
 
@@ -138,6 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 CSRF_TRUSTED_ORIGINS = ['https://localhost']
+CSRF_COOKIE_SECURE = True
 
 INTERNAL_IPS = [
     "127.0.0.1",

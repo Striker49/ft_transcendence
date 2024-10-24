@@ -11,6 +11,7 @@ from rest_framework import filters
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from django.db.models import Q
+from rest_framework.exceptions import NotFound
 # Create your views here.
 
 # # Create your views here.
@@ -37,6 +38,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
                 Q(UID__username__exact=search) | 
                 Q(UID__email__exact=search)
             )
+            if not queryset.exists():
+                raise NotFound({"detail":"No UserProfile matches the given query."})
+                
         elif user.is_authenticated:
             # If user is authenticated, include their profile
             queryset = queryset.filter(UID=user)
