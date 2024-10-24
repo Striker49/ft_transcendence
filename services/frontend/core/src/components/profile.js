@@ -34,8 +34,6 @@ const uploadAvatar = async avatar => {
 			body: formData
 		});
 		if (!response.ok) {
-			const errorResponse = await response.text();
-			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
 
@@ -78,8 +76,6 @@ const submitRegistrationForm = async form => {
 			headers: headers
 		});
 		if (!response.ok) {
-			const errorResponse = await response.text();
-			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
 
@@ -89,10 +85,11 @@ const submitRegistrationForm = async form => {
 
 		const json = await response.json();
 		console.log(json);
+
 		alert("Registration successful!");
+
 	} catch (error) {
 		console.error(error.message);
-		alert(error.message);
 	}
 };
 
@@ -127,8 +124,6 @@ const submitProfileForm = async form => {
 			headers: headers
 		});
 		if (!response.ok) {
-			const errorResponse = await response.text();
-			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
 
@@ -165,8 +160,6 @@ const fetchProfileInfo = async () => {
 			headers: headers
 		});
 		if (!response.ok) {
-			const errorResponse = await response.text();
-			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
 

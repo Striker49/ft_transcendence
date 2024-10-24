@@ -2,6 +2,15 @@ import { updateProfile } from "./profile.js";
 import { validateForm } from "../utils/validation.js";
 import { translatePage } from "../localization.js";
 
+const getCustomErrorMessage = statusCode => {
+	switch (Number(statusCode)) {
+		case 400:
+			return "Unable to log in with provided credentials.";
+		case 404:
+			return "User does not exist.";
+	}
+};
+
 const headers = new Headers({
 	"Content-Type": "application/json"
 });
@@ -21,16 +30,16 @@ const login = async form => {
 			headers: headers
 		});
 		if (!response.ok) {
-			// const errorResponse = await response.text();
-			console.log(errorResponse);
 			throw new Error(`Response status: ${response.status}`);
 		}
-
+		
 		const json = await response.json();
 		console.log(json);
-		localStorage.setItem("transcendenceToken", json.token);
-		localStorage.setItem("transcendenceUID", json.UID);
+		console.log("Response status: ", response.status);
 
+		localStorage.setItem("authToken", json.token);
+		localStorage.setItem("UID", json.UID);
+		
 		// Update Login Section
 		const modalElement = document.querySelector("#loginModal");
 		const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -43,13 +52,20 @@ const login = async form => {
 
 	} catch (error) {
 		console.error(error.message);
+		if (error.message.includes("Response status:")) {
+			// Client-side errors
+			const statusCode = error.message.split("Response status: ")[1];
+			alert(getCustomErrorMessage(statusCode));
+		} else {
+			// Server-side errors
+			alert("Something wrong with server");
+		}
 	}
 };
 
 const logout = () => {
 	if (localStorage.getItem("authToken")) {
-		localStorage.removeItem("authToken");
-		localStorage.removeItem("UID");
+		localStorage.clear();
 		updateLogin();
 		if (window.location.pathname === "/profile") {
 			updateProfile();
@@ -75,8 +91,8 @@ const loginContent = () => {
 					<div class="modal-body">
 						<form id="login-form" action="" method="post" novalidate>
 							<div class="mb-3">
-								<label for="login-user" data-i18n-key="emailAddress" class="form-label">Email address</label>
-								<input type="email" name="username" id="login-user" class="form-control" required>
+								<label for="login-user" data-i18n-key="emailorusername" class="form-label">Email or username</label>
+								<input type="text" name="username" id="login-user" class="form-control" required>
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="mb-3">
