@@ -7,6 +7,8 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from profiles.serializers import UserProfileSerializer
 from profiles.models import UserProfile
+from game.models import GameStats
+from game.serializers import GameStatsSerializer
 
 class CustomUserSerializer(serializers.ModelSerializer):
     """serialises a user profile object"""
@@ -78,24 +80,28 @@ class AuthCustomTokenSerializer(serializers.Serializer):
 		return super().validate(attrs)
 
 class RegistrationSerializer(serializers.ModelSerializer):
+	"""serilizes json for user registration"""
+	profile=UserProfileSerializer(required=False)
+	game=GameStatsSerializer(required=False)
 
-    profile=UserProfileSerializer(required=False)
-    
-    class Meta:
-        model = CustomUser
-        fields = ('email', 'username', 'password', 'profile')
-        extra_kwargs = {
+	class Meta:
+		model = CustomUser
+		fields = ('email', 'username', 'password', 'profile', 'game')
+		extra_kwargs = {
 			'password': {
 				'write_only': True,
 				'style': {'input_type': 'password'}
 			}
 		}
-        
-    def create(self, validated_data):
-        profile_data = validated_data.pop('profile', None)
-        
-        user = CustomUser.objects.create_user(**validated_data)
-        if profile_data:
-            UserProfile.objects.create(UID=user, **profile_data)
-        
-        return user
+		
+	def create(self, validated_data):
+		profile_data = validated_data.pop('profile', None)
+		game_stats = validated_data.pop('game', None)
+		user = CustomUser.objects.create_user(**validated_data)
+		
+		if profile_data:
+			UserProfile.objects.create(UID=user, **profile_data)
+		if game_stats:
+			GameStats.objects.create(UID=user, **game_stats)
+		
+		return user
