@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'users.apps.UsersConfig',
     'game.apps.GameConfig',
+    'corsheaders',
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -145,3 +147,14 @@ INTERNAL_IPS = [
     "127.0.0.1",
     "localhost",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = False  # Use this for development only
+
+# OR to specify:
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:8080",  # Frontend URL
+    "https://frontend:8080",
+    
+]
+
+CORS_ALLOW_CREDENTIALS = True
