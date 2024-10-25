@@ -3,7 +3,8 @@ from game import views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('', views.GameViewSet)
+router.register('stats', views.GameViewSet, basename='game-stats')
+router.register('played', views.PlayedGamesViewSet, basename='game-played')
 
 urlpatterns = [
 	path('ranking/', views.GamesRanking.as_view(), name="game-ranking"),
