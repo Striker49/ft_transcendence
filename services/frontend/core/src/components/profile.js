@@ -1,3 +1,4 @@
+import { translatePage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 
 let profile;
@@ -261,102 +262,111 @@ const toggleProfileInfo = editMode => {
 	}
 };
 
-export const updateProfile = () => {
-	if (localStorage.getItem("authToken")) {
-		fetchProfileInfo().then(info => {
-			profile = info;
-			document.querySelector("#profile").innerHTML = `
-				<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
-					<div class="row p-0 text-black">
-						<div class="col-md-4">
-							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5" id="profile-info">
-								<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
-								<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${profile.username}</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${profile.first_name} ${profile.last_name}</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${profile.email}</p>
-								<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${profile.bio}</p>
-								<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
-							</div>
+const displayEditMode = () => {
+	document.querySelector("#profile").innerHTML = `
+		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+			<form id="registration-form" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
+				<div class="col-md-6">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+						<div class="pb-2">
+							<label for="email" class="form-label" data-i18n-key="email">Email</label>
+							<input type="email" class="form-control" name="email" id="email" required>
+							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 						</div>
-						<div class="col-md-8 mt-4 mt-md-0">
-							<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesWon">Games won</span><span class="float-end">11 / 42</span></p>
-								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
-									<div class="progress-bar bg-success" style="width: 25%"></div>
-								</div>
-								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesLost">Games lost</span><span class="float-end">2 / 42</span></p>
-								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
-									<div class="progress-bar bg-danger" style="width: 2%"></div>
-								</div>
-								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPlayed">Games played</span><span class="float-end">13 / 42</span></p>
-								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
-									<div class="progress-bar bg-info" style="width: 26%"></div>
-								</div>
-								<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">2 / 42</span></p>
-								<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
-									<div class="progress-bar bg-warning" style="width: 2%"></div>
-								</div>
-								<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
-							</div>
+						<div class="py-2">
+							<label for="username" class="form-label" data-i18n-key="username">Username</label>
+							<input type="text" class="form-control" name="username" id="username" required>
+							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
+						</div>
+						<div class="py-2 pb-4 border-bottom border-2 border-dark">
+							<label for="password" class="form-label" data-i18n-key="password">Password</label>
+							<input type="password" class="form-control" name="password" id="password" required>
+							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
+						</div>
+						<div class="py-2 pt-4">
+							<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
+							<input type="text" class="form-control" name="firstname" id="firstname">
+						</div>
+						<div class="py-2">
+							<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
+							<input type="text" class="form-control" name="lastname" id="lastname">
+						</div>
+						<div class="pb-2">
+							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
+							<select class="form-select" name="lang" id="lang">
+								<option value="en">English</option>
+								<option value="fr">French</option>
+								<option value="nl">Dutch</option>
+							</select>
 						</div>
 					</div>
 				</div>
-			`;
+				<div class="col-md-6 mt-4 mt-md-0">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+						${addAvatarSection()}
+						<div class="py-4 border-bottom border-2 border-dark">
+							<label for="bio" class="form-label">Bio</label>
+							<textarea class="form-control" name="bio" id="bio"></textarea>
+						</div>
+						<div class="pt-4 text-center">
+							<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	`;
+};
+
+const displayUserProfile = info => {
+	document.querySelector("#profile").innerHTML = `
+		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+			<div class="row p-0 text-black">
+				<div class="col-md-4">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5" id="profile-info">
+						<p class="text-center my-1"><img src="${info.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
+						<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${info.username}</p>
+						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${info.first_name} ${info.last_name}</p>
+						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${info.email}</p>
+						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${info.bio}</p>
+						<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
+					</div>
+				</div>
+				<div class="col-md-8 mt-4 mt-md-0">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesWon">Games won</span><span class="float-end">11 / 42</span></p>
+						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
+							<div class="progress-bar bg-success" style="width: 25%"></div>
+						</div>
+						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesLost">Games lost</span><span class="float-end">2 / 42</span></p>
+						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
+							<div class="progress-bar bg-danger" style="width: 2%"></div>
+						</div>
+						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPlayed">Games played</span><span class="float-end">13 / 42</span></p>
+						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
+							<div class="progress-bar bg-info" style="width: 26%"></div>
+						</div>
+						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">2 / 42</span></p>
+						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
+							<div class="progress-bar bg-warning" style="width: 2%"></div>
+						</div>
+						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+};
+
+export const updateProfile = () => {
+	if (localStorage.getItem("authToken")) {
+		fetchProfileInfo().then(info => {
+			displayUserProfile(info);
+			translatePage();
+			profile = info;
 		});
 	} else {
-		document.querySelector("#profile").innerHTML = `
-			<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
-				<form id="registration-form" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
-					<div class="col-md-6">
-						<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-							<div class="pb-2">
-								<label for="email" class="form-label" data-i18n-key="email">Email</label>
-								<input type="email" class="form-control" name="email" id="email" required>
-								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
-							</div>
-							<div class="py-2">
-								<label for="username" class="form-label" data-i18n-key="username">Username</label>
-								<input type="text" class="form-control" name="username" id="username" required>
-								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
-							</div>
-							<div class="py-2 pb-4 border-bottom border-2 border-dark">
-								<label for="password" class="form-label" data-i18n-key="password">Password</label>
-								<input type="password" class="form-control" name="password" id="password" required>
-								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
-							</div>
-							<div class="py-2 pt-4">
-								<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
-								<input type="text" class="form-control" name="firstname" id="firstname">
-							</div>
-							<div class="py-2">
-								<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
-								<input type="text" class="form-control" name="lastname" id="lastname">
-							</div>
-							<div class="pb-2">
-								<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
-								<select class="form-select" name="lang" id="lang">
-									<option value="en">English</option>
-									<option value="fr">French</option>
-									<option value="nl">Dutch</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 mt-4 mt-md-0">
-						<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-							${addAvatarSection()}
-							<div class="py-4 border-bottom border-2 border-dark">
-								<label for="bio" class="form-label">Bio</label>
-								<textarea class="form-control" name="bio" id="bio"></textarea>
-							</div>
-							<div class="pt-4 text-center">
-								<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		`;
+		displayEditMode();
 	}
 };
 

@@ -54,9 +54,9 @@ const router = async () => {
 	if (!customBehaviour) {
 		document.querySelector("main").innerHTML = await page.getHtml();
 	} else {
-		if (window.location.pathname === "/profile") {
+		// if (window.location.pathname === "/profile") {
 			page.executeCustomBehaviour();
-		}
+		// }
 	}
 
 	translateX();
