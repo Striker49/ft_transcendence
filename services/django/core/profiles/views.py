@@ -49,7 +49,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 			# If user is authenticated, include their profile
 			queryset = queryset.filter(UID=user)
 			
-		limit = int(self.request.query_params.get('limit', 10))
-		queryset = models.UserProfile.objects.all()[:limit]
+		queryset = models.UserProfile.objects.all()
 
 		return queryset

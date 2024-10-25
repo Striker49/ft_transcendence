@@ -140,7 +140,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-CSRF_TRUSTED_ORIGINS = ['https://localhost']
+CSRF_TRUSTED_ORIGINS = ['https://localhost',
+                        "http://frontend:8080",
+                        "https://frontend:8080"]
 CSRF_COOKIE_SECURE = True
 
 INTERNAL_IPS = [
@@ -153,8 +155,8 @@ CORS_ALLOW_ALL_ORIGINS = False  # Use this for development only
 # OR to specify:
 CORS_ALLOWED_ORIGINS = [
     "https://localhost:8080",  # Frontend URL
-    "https://frontend:8080",
-    
+    "http://frontend:8080",
+    "https://frontend:8080"  
 ]
 
 CORS_ALLOW_CREDENTIALS = True
