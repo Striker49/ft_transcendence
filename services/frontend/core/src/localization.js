@@ -27,7 +27,7 @@ function findSupported(navLang) {
 }
 
 // When the page content is ready...
-document.onreadystatechange = () => {
+document.addEventListener("DOMContentLoaded", (event) => {
 
 	// localStorage.setItem("lang", "fr");
 	// localStorage.removeItem("lang");
@@ -48,9 +48,11 @@ document.onreadystatechange = () => {
 	if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
 		document.querySelector("[lang]").setAttribute("lang", newLocale);
 	console.info("Locale:", newLocale);
+	requestAnimationFrame( () => {
 	setLocale(newLocale);
 	document.querySelector("[data-i18n-switcher]").value = newLocale;
-};
+	});
+});
 
 document.addEventListener("change", (event) => {
 	if (event.target.matches("#changeLang")) {
