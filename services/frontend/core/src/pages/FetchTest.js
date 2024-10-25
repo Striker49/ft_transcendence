@@ -40,20 +40,23 @@ const submitForm = async form => {
 		// password: "ziggy"
 		// profile: 
 		// {
-		first_name: "tester1",
-		last_name:  "test",
+		// first_name: "tester1",
+		// last_name:  "test",
 		// bio: "test",
-		lang: "fr",
-		avatar_path: "here/or/here"
+		// lang: "fr",
+		// avatar_path: "here/or/here"
 		// }
+			"user1_ID": 9,
+			"user2_ID": 36,
+			"type": "friends"
 	};
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		// "Authorization":"Token 7e7be82c86ed476c5489fb4c5bb466665de02e8d"
+		"Authorization":"Token 588a50a183ad19345040db08b3c2951d9f68c0d7"
 	});
 
-	const url = 'https://localhost/api/profiles/';
+	const url = 'https://localhost/api/profiles/friendship/';
 
 	const options = {
 		method: "GET",
