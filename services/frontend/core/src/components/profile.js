@@ -1,4 +1,5 @@
 // import { translatePage } from "../localization.js";
+import { translatePage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 
 let profile;
@@ -304,6 +305,7 @@ export const updateProfile = () => {
 					</div>
 				</div>
 			`;
+			translatePage();
 		});
 	} else {
 		document.querySelector("#profile").innerHTML = `

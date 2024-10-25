@@ -29,10 +29,6 @@ function findSupported(navLang) {
 // When the page content is ready...
 document.addEventListener("DOMContentLoaded", (event) => {
 
-	// localStorage.setItem("lang", "fr");
-	// localStorage.removeItem("lang");
-	console.debug("DOMContentLoaded localization");
-	console.log("Local Storage:", localStorage);
 	let newLocale;
 
 	//Change locale value for localStorage or the navigator language
