@@ -44,6 +44,8 @@
 
   "email": "Email",
 
+  "emailorusername": "Email or username",
+
   "gamesWon": "Games won",
 
   "gamesLost": "Games lost",
@@ -56,7 +58,7 @@
 
   "editProfile": "Edit profile",
 
-  "passwordLength": "Password must be 6 and 20 characters",
+  "passwordLength": "Password must be 6 and 256 characters",
 
   "passwordNotOriginal": "Password cannot be password",
 
