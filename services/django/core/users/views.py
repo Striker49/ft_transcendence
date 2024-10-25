@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from . import serializers, models, permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -40,10 +41,12 @@ class UserViewSet(viewsets.ModelViewSet):
 		}
 		return Response(response_data, status=status.HTTP_201_CREATED)
 
+
 class UserRegistrationAPIView(APIView):
 	"""Register new users and creates their profile
 	"""
 	serializer_class = serializers.RegistrationSerializer
+	authentication_classes = (TokenAuthentication,)
 	permission_classes = [AllowAny]
 	
 	# def create(self, request, *args, **kwargs):
@@ -68,6 +71,8 @@ class UserLoginApiView(ObtainAuthToken):
 	"""Handle creating user authentication tokens
 	"""
 	renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = [AllowAny]
 	serializer_class = AuthCustomTokenSerializer
  
 	def post(self, request, *args, **kwargs):
