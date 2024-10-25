@@ -29,9 +29,13 @@ class GameStats(models.Model):
 	@property
 	def rank(self):
 		total_players = GameStats.objects.count()
+		if self.wins == 0 and self.losses == 0:
+			return None
+		if total_players == 1:
+			return 1
 		rank = GameStats.objects.filter(Q(wins__gt=self.wins) | 
 			(Q(wins=self.wins) & Q(losses__lt=self.losses))).count()
-		return rank + 1 if rank <= total_players and (self.wins != 0 and self.losses != 0) else None
+		return rank + 1
 
 
 	def __str__(self):

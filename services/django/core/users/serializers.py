@@ -95,13 +95,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
 		}
 		
 	def create(self, validated_data):
-		profile_data = validated_data.pop('profile', None)
-		game_stats = validated_data.pop('game', None)
+		profile_data = validated_data.pop('profile', {})
+		game_stats_data = validated_data.pop('game', {})
 		user = CustomUser.objects.create_user(**validated_data)
-		
-		if profile_data:
-			UserProfile.objects.create(UID=user, **profile_data)
-		if game_stats:
-			GameStats.objects.create(UID=user, **game_stats)
+		UserProfile.objects.create(UID=user, **profile_data)
+		GameStats.objects.create(UID=user, **game_stats_data)
 		
 		return user
