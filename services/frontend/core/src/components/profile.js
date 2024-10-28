@@ -80,8 +80,8 @@ const submitRegistrationForm = async form => {
 		"username": form.username.value,
 		"password": form.password.value,
 		"profile": {
-			"first_name": form.firstname.value,
-			"last_name": form.lastname.value,
+			"first_name": form.first_name.value,
+			"last_name": form.last_name.value,
 			"avatar_path": avatarPath(avatar),
 			"bio": form.bio.value,
 			"lang": form.lang.value
@@ -223,6 +223,7 @@ const fetchProfileInfo = async () => {
 		const json = await response.json();
 		console.log(json);
 		return json;
+
 	} catch (error) {
 		console.error(error.message);
 	}

@@ -34,6 +34,8 @@ const login = async form => {
 		}
 		
 		const json = await response.json();
+
+		console.log("======= Login Form =======");
 		console.log(json);
 		console.log("Response status: ", response.status);
 
