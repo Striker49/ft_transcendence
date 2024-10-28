@@ -360,6 +360,7 @@ function endGame() {
     // scene.remove.apply(scene, scene.children);
     // cancelAnimationFrame(animationID);
     state = 0;
+    // sendGameStats();
     //GoToEndScreen
     navigateTo("/endGame");
 	// router();
@@ -379,3 +380,32 @@ function removeGameObjects() {
     currentText.geometry.dispose();
     scene.remove(currentText);
 }
+
+
+// const headers = new Headers({
+// 	"Content-Type": "application/json",
+// 	"Authorization": "Token " + localStorage.getItem("authToken")
+// })
+
+// async function sendGameStats() {
+// 	const url = "https://localhost/api/game/played/";
+//     console.log(localStorage.getItem("authToken"));
+// 	try {
+// 		const response = await fetch(url, {
+// 			method: "POST",
+// 			headers: headers,
+// 			body: JSON.stringify({
+// 				player1_UID: localStorage.getItem("UID"), 
+// 				score_player1: scoreP1,
+// 				score_player2: scoreP2
+// 			})
+// 		});
+// 		if(!response.ok) { 
+// 			throw new Error(`Response status: ${response.status}`);
+// 		}
+// 		const stats = await response.json();
+// 		console.log("RANKING", stats);
+// 	} catch (error) {
+// 		console.error(error.message);
+// 	}
+// }

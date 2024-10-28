@@ -2,18 +2,19 @@ import Abstract from "./Abstract.js";
 
 const headers = new Headers({
 	"Content-Type": "application/json",
-	"Authorization": localStorage.getItem("transcendenceToken")
+	"Authorization": localStorage.getItem("authToken")
 })
 
 // async function sendGameStats() {
-// 	const url = "https://localhost/api/profiles/";
+// 	const url = "https://localhost/api/game/played/";
 // 	try {
 // 		const response = await fetch(url, {
 // 			method: "POST",
 // 			headers: headers,
 // 			body: {
-// 				winner: ,
-// 				score: 
+// 				player1_UID: , 
+// 				score_player1: ,
+// 				score_player2: 
 // 			}
 // 		});
 // 		if(!response.ok) { 
@@ -26,22 +27,22 @@ const headers = new Headers({
 // 	}
 // }
 
-async function getRanking() {
-	const url = "https://localhost/api/ranking/";
-	try {
-		const response = await fetch(url, {
-			method: "GET",
-			headers: headers
-		});
-		if(!response.ok) { 
-			throw new Error(`Response status: ${response.status}`);
-		}
-		const ranking = await response.json();
-		console.log("RANKING", ranking);
-	} catch (error) {
-		console.error(error.message);
-	}
-}
+// async function getRanking() {
+// 	const url = "https://localhost/api/game/ranking/";
+// 	try {
+// 		const response = await fetch(url, {
+// 			method: "GET",
+// 			headers: headers
+// 		});
+// 		if(!response.ok) { 
+// 			throw new Error(`Response status: ${response.status}`);
+// 		}
+// 		const ranking = await response.json();
+// 		console.log("RANKING", ranking);
+// 	} catch (error) {
+// 		console.error(error.message);
+// 	}
+// }
 
 export default class extends Abstract {
 	constructor() {

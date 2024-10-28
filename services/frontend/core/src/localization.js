@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	let newLocale;
 
-	//Change locale value for localStorage or the navigator language
-	if (localStorage.getItem("lang"))
+	//Change locale value for localStorage if valid or the navigator language
+	if (localStorage.getItem("lang") && findSupported(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
 	else
 	{
