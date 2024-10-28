@@ -1,8 +1,32 @@
 import { translatePage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 
-let profile;
-let upload = false; 
+let upload = false;
+let userProfile = {
+	UID: "",
+	id: "",
+	first_name: "",
+	last_name: "",
+	avatar_path: "",
+	bio: "",
+	lang: "",
+	username: "",
+	email: ""
+};
+
+const clearUserProfile = () => {
+	for (let [key, value] of Object.entries(userProfile)) {
+		value = "";
+	}
+};
+
+const printUserProfile = () => {
+	console.log("======= User Profile - Start ======");
+	for (const [key, value] of Object.entries(userProfile)) {
+		console.log(key, " : ", value);
+	}
+	console.log("======= User Profile - End ======");
+};
 
 const avatarPath = customURL => {
 
@@ -94,53 +118,85 @@ const submitRegistrationForm = async form => {
 	}
 };
 
-const submitProfileForm = async form => {
+const handleFetch = async (url, method, formData, headers) => {
+
+	const response = await fetch(url, {
+		method: method,
+		body: JSON.stringify(formData),
+		headers: headers
+	});
+
+	if (!response.ok) {
+		throw new Error(`Response status: ${response.status}`);
+	}
+	return response.json();
+};
+
+const submitEditForm = async form => {
+
+	const formData = new FormData(form);
+
+	const formAvatar = {};
+	const formProfiles = {};
+	const formUsers = {};
+
+	for (const [key, value] of formData.entries()) {
+	
+		switch (key) {
+
+			case "email": case "username":
+				// if (value !== userProfile[key]) {
+					formUsers[key] = value;
+				// }
+				break;
+
+			case "avatar":
+				formAvatar[key] = value;
+				break;
+
+			default:
+				// if (value !== userProfile[key]) {
+					formProfiles[key] = value;
+				// }
+		}
+	}
 
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
 
-	const avatar = form.avatar.value;
-
-	const data = new FormData(form);
-
-	const formData = {
-		"first_name": form.firstname.value,
-		"last_name": form.lastname.value,
-		"avatar_path": avatarPath(avatar),
-		"bio": form.bio.value,
-		"lang": form.lang.value
-	};
-
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization": `Token ${token}`
+		"Authorization": `Token ${token}`,
 	});
 
-	const url = `https://localhost/api/profiles/${uid}/`;
+	const avatar_path = avatarPath(form.avatar.value);	// Temporary. Will manage uploads later on
+	formProfiles.avatar_path = avatar_path;
+
+	// const urlAvatar = "https://localhost/api/upload";
+	const urlProfiles = `https://localhost/api/profiles/${uid}/`;
+	const urlUsers = `https://localhost/api/users/${uid}/`;
 
 	try {
-		const response = await fetch(url, {
-			method: "PATCH",
-			body: JSON.stringify(formData),
-			headers: headers
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
 
-		if (upload && avatar) {
-			uploadAvatar(data.get("avatar"));
-		}
+		const json_users = await handleFetch(urlUsers, "PATCH", formUsers, headers);
+		// const json_avatar = await handleFetch(urlAvatar, "POST", formAvatar, headers);
+		const json_profiles = await handleFetch(urlProfiles, "PATCH", formProfiles, headers);
 
-		const json = await response.json();
-		console.log(json);
-		profile = json;
+		console.log("======= Submitted Edit Form =======");
+		console.log(json_users);
+		console.log(json_profiles);
 
-		toggleProfileInfo(false);
+		Object.assign(userProfile, json_profiles);
+
+		displayUserProfile();
 
 	} catch (error) {
 		console.error(error.message);
 	}
+
+	// if (upload && avatar) {
+	// 	uploadAvatar(data.get("avatar"));
+	// }
 };
 
 const fetchProfileInfo = async () => {
@@ -213,90 +269,78 @@ const addAvatarSection = () => {
 };
 
 const setSelectedLanguage = option => {
-	if (option === profile.lang) {
+	if (option === userProfile.lang) {
 		return "selected";
 	}
 	return "";
 };
 
-const toggleProfileInfo = editMode => {
-	if (editMode) {
-		document.querySelector("#profile-info").innerHTML = `
-			<form action="" method="post" enctype="multipart/form-data" class="fw-bold" id="edit-profile-form">
-				${addAvatarSection()}
-				<div class="py-2 pt-4">
-					<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
-					<input type="text" class="form-control" name="firstname" id="firstname" value="${profile.first_name}">
-				</div>
-				<div class="py-2">
-					<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
-					<input type="text" class="form-control" name="lastname" id="lastname" value="${profile.last_name}">
-				</div>
-				<div class="py-2">
-					<label for="bio" class="form-label">Bio</label>
-					<textarea class="form-control" name="bio" id="bio">${profile.bio}</textarea>
-				</div>
-				<div class="py-4 pt-2 border-bottom border-2 border-dark">
-					<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
-					<select class="form-select" name="lang" id="lang">
-						<option value="en" ${setSelectedLanguage("en")}>English</option>
-						<option value="fr" ${setSelectedLanguage("fr")}>French</option>
-						<option value="nl" ${setSelectedLanguage("nl")}>Dutch</option>
-					</select>
-				</div>
-				<div class="pt-4 text-center fw-normal">
-					<button type="button" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
-					<button type="submit" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="save">Save</button>
-				</div>
-			</form>
+const displayButtons = isEditMode => {
+	if (isEditMode) {
+		return `
+			<button type="button" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
+			<button type="submit" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="save">Save</button>
 		`;
 	} else {
-		document.querySelector("#profile-info").innerHTML = `
-			<p class="text-center my-1"><img src="${profile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
-			<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${profile.username}</p>
-			<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${profile.first_name} ${profile.last_name}</p>
-			<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${profile.email}</p>
-			<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${profile.bio}</p>
-			<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
+		return `
+			<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
 		`;
 	}
 };
 
-const displayEditMode = () => {
+const displayFormID = isEditMode => {
+	if (isEditMode) {
+		return "edit-form";
+	} else {
+		return "registration-form";
+	}
+};
+
+const displayPassword = isEditMode => {
+	if (isEditMode) {
+		return "";
+	} else {
+		return `
+			<div class="py-2">
+				<label for="password" class="form-label" data-i18n-key="password">Password</label>
+				<input type="password" class="form-control" name="password" id="password" required>
+				<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
+			</div>
+		`;
+	}
+};
+
+const displayProfileForm = isEditMode => {
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
-			<form id="registration-form" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
+			<form id="${displayFormID(isEditMode)}" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
 				<div class="col-md-6">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
 						<div class="pb-2">
 							<label for="email" class="form-label" data-i18n-key="email">Email</label>
-							<input type="email" class="form-control" name="email" id="email" required>
+							<input type="email" class="form-control" name="email" id="email" value="${userProfile.email}" required>
 							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 						</div>
 						<div class="py-2">
 							<label for="username" class="form-label" data-i18n-key="username">Username</label>
-							<input type="text" class="form-control" name="username" id="username" required>
+							<input type="text" class="form-control" name="username" id="username" value="${userProfile.username}" required>
 							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 						</div>
-						<div class="py-2 pb-4 border-bottom border-2 border-dark">
-							<label for="password" class="form-label" data-i18n-key="password">Password</label>
-							<input type="password" class="form-control" name="password" id="password" required>
-							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
-						</div>
-						<div class="py-2 pt-4">
+						${displayPassword(isEditMode)}
+						<div class="py-2 border-top border-2 border-dark">
 							<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
-							<input type="text" class="form-control" name="firstname" id="firstname">
+							<input type="text" class="form-control" name="first_name" id="first_name" value="${userProfile.first_name}">
 						</div>
 						<div class="py-2">
 							<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
-							<input type="text" class="form-control" name="lastname" id="lastname">
+							<input type="text" class="form-control" name="last_name" id="last_name" value="${userProfile.last_name}">
 						</div>
 						<div class="pb-2">
 							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
 							<select class="form-select" name="lang" id="lang">
-								<option value="en">English</option>
-								<option value="fr">French</option>
-								<option value="nl">Dutch</option>
+								<option value="en" ${setSelectedLanguage("en")}>English</option>
+								<option value="fr" ${setSelectedLanguage("fr")}>French</option>
+								<option value="nl" ${setSelectedLanguage("nl")}>Dutch</option>
 							</select>
 						</div>
 					</div>
@@ -306,29 +350,30 @@ const displayEditMode = () => {
 						${addAvatarSection()}
 						<div class="py-4 border-bottom border-2 border-dark">
 							<label for="bio" class="form-label">Bio</label>
-							<textarea class="form-control" name="bio" id="bio"></textarea>
+							<textarea class="form-control" name="bio" id="bio">${userProfile.bio}</textarea>
 						</div>
 						<div class="pt-4 text-center">
-							<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
+							${displayButtons(isEditMode)}
 						</div>
 					</div>
 				</div>
 			</form>
 		</div>
 	`;
+	translatePage();
 };
 
-const displayUserProfile = info => {
+const displayUserProfile = () => {
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
 			<div class="row p-0 text-black">
 				<div class="col-md-4">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5" id="profile-info">
-						<p class="text-center my-1"><img src="${info.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
-						<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${info.username}</p>
-						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${info.first_name} ${info.last_name}</p>
-						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${info.email}</p>
-						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${info.bio}</p>
+						<p class="text-center my-1"><img src="${userProfile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
+						<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${userProfile.username}</p>
+						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${userProfile.first_name} ${userProfile.last_name}</p>
+						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
+						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
 						<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
 					</div>
 				</div>
@@ -356,17 +401,18 @@ const displayUserProfile = info => {
 			</div>
 		</div>
 	`;
+	translatePage();
 };
 
 export const updateProfile = () => {
 	if (localStorage.getItem("authToken")) {
 		fetchProfileInfo().then(info => {
-			displayUserProfile(info);
-			translatePage();
-			profile = info;
+			userProfile = info;
+			displayUserProfile();
 		});
 	} else {
-		displayEditMode();
+		clearUserProfile();
+		displayProfileForm(false);
 	}
 };
 
@@ -410,12 +456,13 @@ document.addEventListener("click", e => {
 
 		case element.matches("#edit-profile-btn"):
 			e.preventDefault();
-			toggleProfileInfo(true);
+			displayProfileForm(true);
+			translatePage();
 			break;
 
-		case element.matches(`#profile-info button[type="button"]`):
+		case element.matches(`#profile button[type="button"]`):
 			e.preventDefault();
-			toggleProfileInfo(false);
+			displayUserProfile();
 			break;
 	}
 });
@@ -431,9 +478,11 @@ document.addEventListener("submit", e => {
 				submitRegistrationForm(element);
 			}
 			break;
-		case element.matches("#edit-profile-form"):
+		case element.matches("#edit-form"):
 			e.preventDefault();
-			submitProfileForm(element);
+			if (validateForm(element)) {
+				submitEditForm(element);
+			}
 			break;
 	}
 });

@@ -35,9 +35,8 @@ const submitForm = async form => {
 
 	// For POST Request
 	const formData = {
-		// email: "a@test.com",
-		email_or_username: "oli",
-		password: "ziggy"
+		email: "oroy@oroy.com",
+		username: "oroy"
 		// profile: 
 		// {
 		// first_name: "tester1",
@@ -50,14 +49,14 @@ const submitForm = async form => {
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization":"Token 7e7be82c86ed476c5489fb4c5bb466665de02e8d"
+		"Authorization": `Token ${localStorage.getItem("authToken")}`
 	});
 
-	const url = 'https://localhost/api/profiles/';
+	const url = `https://localhost/api/users/${localStorage.getItem("UID")}/`;
 
 	const options = {
-		method: "GET",
-		// body: JSON.stringify(formData),
+		method: "PATCH",
+		body: JSON.stringify(formData),
 		headers: headers
 	};
 
@@ -71,7 +70,6 @@ const submitForm = async form => {
 
 		const data = await response.json();
 		console.log(data);
-		console.log(data.username)
 	} catch (error) {
 		console.error(error.message);
 	}
