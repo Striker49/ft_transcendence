@@ -20,3 +20,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'username',
             'email',
             )
+
+class UserFriendshipSerializer(serializers.ModelSerializer):
+	"""serialises a UserFriendship object"""
+
+	friendship_id = serializers.ReadOnlyField(source='id')
+	user1_username = serializers.ReadOnlyField(source='user1_ID.username')
+	user2_username = serializers.ReadOnlyField(source='user2_ID.username')
+
+	class Meta:
+		model = models.UserFriendship
+		fields = (
+			'friendship_id',
+			'user1_ID',
+			'user1_username',
+			'user2_ID',
+			'user2_username',
+			'type',
+		)
