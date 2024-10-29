@@ -1,4 +1,6 @@
 // ========== Form validation ==========
+import { translatePage } from "../localization.js"
+
 
 const clearSpan = span => {
 	if (span) {		
@@ -11,6 +13,7 @@ const printError = (span, langKey, msg) => {
 	if (span) {
 		span.innerHTML = msg;
 		span.setAttribute("data-i18n-key", langKey);
+		translatePage();
 	} else {
 		console.log(msg);
 	}

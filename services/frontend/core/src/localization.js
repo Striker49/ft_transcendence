@@ -27,16 +27,12 @@ function findSupported(navLang) {
 }
 
 // When the page content is ready...
-document.onreadystatechange = () => {
+document.addEventListener("DOMContentLoaded", (event) => {
 
-	// localStorage.setItem("lang", "fr");
-	localStorage.removeItem("lang");
-	console.debug("DOMContentLoaded localization");
-	console.log("Local Storage:", localStorage);
 	let newLocale;
 
-	//Change locale value for localStorage or the navigator language
-	if (localStorage.getItem("lang"))
+	//Change locale value for localStorage if valid or the navigator language
+	if (localStorage.getItem("lang") && findSupported(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
 	else
 	{
@@ -48,9 +44,11 @@ document.onreadystatechange = () => {
 	if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
 		document.querySelector("[lang]").setAttribute("lang", newLocale);
 	console.info("Locale:", newLocale);
+	requestAnimationFrame( () => {
 	setLocale(newLocale);
 	document.querySelector("[data-i18n-switcher]").value = newLocale;
-};
+	});
+});
 
 document.addEventListener("change", (event) => {
 	if (event.target.matches("#changeLang")) {
@@ -65,6 +63,8 @@ function bindLocaleSwitcher(initialValue) {
 	const switcher = document.querySelector("[data-i18n-switcher]");
 	setLocale(switcher.value);
 	document.querySelector("[lang]").setAttribute("lang", switcher.value);
+	// localStorage.setItem("lang", switcher.value);
+
 }
 
 async function setLocale(newLocale) {
@@ -101,6 +101,7 @@ async function fetchTranslationsFor(newLocale) {
 }
 
 export function translatePage() {
+	console.log("TranslatePage() is called");
 	document.querySelectorAll("[data-i18n-key]").forEach((element) => {
 		translateElement(element);
 	});
@@ -111,6 +112,7 @@ export function translatePage() {
 function translateElement(element) {
 	//Checks if we have loaded translations already if not we're 
 	//probably still on the first page
+	// console.log(element);
 	if (JSON.stringify(translations) === '{}')
 		return;
 

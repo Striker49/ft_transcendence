@@ -65,3 +65,4 @@ class UserFriendship(models.Model):
 	def __str__(self):
 		"""Return string representation of our user"""
 		return self.user1_ID.username + " + " + self.user2_ID.username
+

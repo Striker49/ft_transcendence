@@ -1,6 +1,6 @@
 {
   
-  "about": "Over",
+  "about": "Informatie",
 
   "game": "SPEL",
 
@@ -56,9 +56,14 @@
 
   "editProfile": "Wijzig profiel",
 
-  "cancel": "Cancel",
+  "passwordLength": "Wachtwoord moet tussen 6 en 20 tekens zijn",
 
-  "save": "Save",
+  "passwordNotOriginal": "Wachtwoord kan niet 'wachtwoor zijn",
+
+  "usernameRequired": "Gebruikersnaam is verplicht",
+
+  "validEmail": "Voer een gelgig e-mailadres in",
+
 
   "singleGame": "Solo Spel",
 

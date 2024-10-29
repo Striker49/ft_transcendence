@@ -1,10 +1,8 @@
 import Abstract from "./Abstract.js";
 
-let userData;
-
 const headers = new Headers({
 	"Content-Type": "application/json",
-	"Authorization": localStorage.getItem("authToken")
+	"Authorization": "Token " + localStorage.getItem("authToken")
 })
 
 const options = {
@@ -21,6 +19,7 @@ async function getUserProfile() {
 		}
 		const userData = await response.json();
 		console.log("USER DATA", userData);
+		return userData;
 	} catch (error) {
 		console.error(error.message);
 		// userData = {first_name: "Guest"};
@@ -34,14 +33,14 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
-		getUserProfile();
-		// console.log("user name: ", userData.username);
+		const userData = await getUserProfile();
+		console.log("user name: ", userData[0].username);
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.authToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-				<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-i18n-key="playerOne">${userData != null ? userData.username : ""}</span>
+				<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-i18n-key="playerOne">${userData ? userData[0].username : "Player 1"}</span>
 				<div class="slidecontainer">
 					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
 					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">

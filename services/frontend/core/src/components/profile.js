@@ -319,6 +319,7 @@ const displayButtons = isEditMode => {
 			<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
 		`;
 	}
+	// translatePage();
 };
 
 const displayFormID = isEditMode => {
@@ -494,6 +495,7 @@ export const updateProfile = () => {
 		clearUserProfile();
 		displayProfileForm(false);
 	}
+	// translatePage();
 };
 
 const html = () => {
