@@ -37,7 +37,8 @@ const login = async form => {
 
 		console.log("======= Login Form =======");
 		console.log(json);
-		console.log("Response status: ", response.status);
+		localStorage.setItem("authToken", json.token);
+		localStorage.setItem("UID", json.UID);
 
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);

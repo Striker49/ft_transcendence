@@ -7,11 +7,13 @@ class GameStatsSerializer(serializers.ModelSerializer):
 	win_percentage = serializers.ReadOnlyField()
 	total_games = serializers.ReadOnlyField()
 	rank = serializers.ReadOnlyField()
+	username = serializers.ReadOnlyField(source='UID.username')
 
 	class Meta:
 		model = models.GameStats
 		fields = (
 			'UID',
+			'username',
 			'wins',
 			'losses',
 			'total_games',
@@ -41,4 +43,25 @@ class RankingSerializer(serializers.ModelSerializer):
 		)
 		extra_kwargs = {
 		'wins': {'required': False},
+		}
+  
+class PlayedGamesSerializer(serializers.ModelSerializer):
+	"""serialises a playedgame object"""
+
+	game_id = serializers.ReadOnlyField(source='id')
+ 
+	class Meta:
+		model = models.PlayedGames
+		fields = (
+			'game_id',
+			'created',
+			'player1_UID',
+			'player2_UID',
+			'username_player2',
+			'score_player1',
+			'score_player2',
+		)
+		extra_kwargs = {
+		'player2_UID': {'required': False},
+		'username_player2': {'required': False},
 		}

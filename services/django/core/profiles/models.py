@@ -25,7 +25,43 @@ class UserProfile(models.Model):
 
 	class Meta:
 		ordering = ['created']
+		verbose_name = "Profile"
 	
 	def __str__(self):
 		"""Return string representation of our user"""
-		return self.username
+		return self.UID.username
+
+FRIENDSHIP_TYPES = [
+	('pending_first_second', 'Pending first to second'),
+	('pending_second_first', 'Pending second to first'),
+	('friends', 'Friends'),
+	('block_first_second', 'Blocked first to second'),
+	('block_second_first', 'blocker second to first'),
+	('block_both', 'Blocked both'),
+]
+
+class UserFriendship(models.Model):
+	"""Database model for users un the system"""
+	user1_ID=models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               on_delete=models.SET_NULL, 
+                               related_name="user1",
+                               null=True)
+	user2_ID=models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               on_delete=models.CASCADE, 
+                               related_name="user2", 
+                               null=True, 
+                               blank=True)
+	type=models.CharField(choices=FRIENDSHIP_TYPES)
+
+	class Meta:
+		ordering = ['user1_ID']
+		verbose_name = "Friendship"
+  
+	def save(self, *args, **kwargs):
+		if self.user1_ID.id >self.user2_ID.id:
+			self.user1_ID, self.user2_ID = self.user2_ID, self.user1_ID
+		super().save(*args, **kwargs)
+	
+	def __str__(self):
+		"""Return string representation of our user"""
+		return self.user1_ID.username + " + " + self.user2_ID.username

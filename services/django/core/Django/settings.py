@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG", default=0)
 # bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'users.apps.UsersConfig',
     'game.apps.GameConfig',
+    'corsheaders',
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -138,10 +140,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-CSRF_TRUSTED_ORIGINS = ['https://localhost']
+CSRF_TRUSTED_ORIGINS = ['https://localhost',
+                        "http://frontend:8080",
+                        "https://frontend:8080"]
 CSRF_COOKIE_SECURE = True
 
 INTERNAL_IPS = [
     "127.0.0.1",
     "localhost",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = False  # Use this for development only
+
+# OR to specify:
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:8080",  # Frontend URL
+    "http://frontend:8080",
+    "https://frontend:8080"  
+]
+
+CORS_ALLOW_CREDENTIALS = True

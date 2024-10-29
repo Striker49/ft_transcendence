@@ -550,9 +550,9 @@ document.addEventListener("submit", e => {
 	switch (true) {
 		case element.matches("#registration-form"):
 			e.preventDefault();
-			if (validateForm(element)) {
+			// if (validateForm(element)) {
 				submitRegistrationForm(element);
-			}
+			// }
 			break;
 		case element.matches("#edit-form"):
 			e.preventDefault();

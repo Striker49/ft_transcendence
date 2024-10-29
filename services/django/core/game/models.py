@@ -12,7 +12,10 @@ class GameStats(models.Model):
 	wins=models.PositiveIntegerField(default=0)
 	losses=models.PositiveIntegerField(default=0)
 	last_played=models.DateTimeField(blank=True, null=True)
- 
+
+	class Meta:
+		verbose_name = "Game Stat"
+  
 	@property
 	def win_percentage(self):
 		if self.total_games > 0:
@@ -26,8 +29,39 @@ class GameStats(models.Model):
 	@property
 	def rank(self):
 		total_players = GameStats.objects.count()
+		if self.wins == 0 and self.losses == 0:
+			return None
+		if total_players == 1:
+			return 1
 		rank = GameStats.objects.filter(Q(wins__gt=self.wins) | 
-            (Q(wins=self.wins) & Q(losses__lt=self.losses))).count()
-		return rank + 1 if rank <= total_players and (self.wins is not 0 and self.losses is not 0) else None
+			(Q(wins=self.wins) & Q(losses__lt=self.losses))).count()
+		return rank + 1
 
 
+	def __str__(self):
+		"""Return string representation of our user"""
+		return self.UID.username
+
+
+class PlayedGames(models.Model):
+	"""Database model for users un the system"""
+	created = models.DateTimeField(auto_now_add=True)
+	player1_UID=models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               on_delete=models.SET_NULL, 
+                               related_name="player1_games",
+                               null=True)
+	player2_UID=models.ForeignKey(settings.AUTH_USER_MODEL, 
+                               on_delete=models.CASCADE, 
+                               related_name="player2_games", 
+                               null=True, 
+                               blank=True)
+	username_player2=models.CharField(max_length=256, blank=True, null=True)
+	score_player1=models.PositiveIntegerField(default=0)
+	score_player2=models.PositiveIntegerField(default=0)
+ 
+	class Meta:
+		indexes = [
+			models.Index(fields=['player1_UID', 'player2_UID']),
+		]
+		verbose_name = "Game played"
+		verbose_name_plural = "Games Played"

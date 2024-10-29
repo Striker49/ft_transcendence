@@ -35,24 +35,28 @@ const submitForm = async form => {
 
 	// For POST Request
 	const formData = {
-		email: "oroy@oroy.com",
-		username: "oroy"
+		// email: "a@test.com",
+		// email_or_username: "oli",
+		// password: "ziggy"
 		// profile: 
 		// {
 		// first_name: "tester1",
 		// last_name:  "test",
-		// // bio: "test",
+		// bio: "test",
 		// lang: "fr",
 		// avatar_path: "here/or/here"
 		// }
+			"user1_ID": 9,
+			"user2_ID": 36,
+			"type": "friends"
 	};
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization": `Token ${localStorage.getItem("authToken")}`
+		"Authorization":"Token 588a50a183ad19345040db08b3c2951d9f68c0d7"
 	});
 
-	const url = `https://localhost/api/game/stats`;
+	const url = 'https://localhost/api/profiles/friendship/';
 
 	const options = {
 		method: "GET",
