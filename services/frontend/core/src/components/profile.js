@@ -122,7 +122,7 @@ const handleFetch = async (url, method, body, headers) => {
 
 	const response = await fetch(url, {
 		method: method,
-		body: body,
+		body: JSON.stringify(body),
 		headers: headers
 	});
 
@@ -178,9 +178,9 @@ const submitEditForm = async form => {
 
 	try {
 
-		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
+		const json_users = await handleFetch(urlUsers, "PATCH", formUsers, headers);
 		// const json_avatar = await handleFetch(urlAvatar, "POST", formAvatar, headers);
-		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
+		const json_profiles = await handleFetch(urlProfiles, "PATCH", formProfiles, headers);
 
 		console.log("======= Submitted Edit Form =======");
 		console.log(json_users);
@@ -241,15 +241,13 @@ const fetchUserStats = async () => {
 	const url = `https://localhost/api/game/stats`;
 
 	try {
-		// const response = await fetch(url, {
-		// 	method: "GET",
-		// 	headers: headers
-		// });
-		// if (!response.ok) {
-		// 	throw new Error(`Response status: ${response.status}`);
-		// }
-
-		const json = await handleFetch(url, "GET", "", headers);
+		const response = await fetch(url, {
+			method: "GET",
+			headers: headers
+		});
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
 
 		console.log("======= User Stats =======");
 		console.log(json);

@@ -52,11 +52,11 @@ const submitForm = async form => {
 		"Authorization": `Token ${localStorage.getItem("authToken")}`
 	});
 
-	const url = `https://localhost/api/users/${localStorage.getItem("UID")}/`;
+	const url = `https://localhost/api/game/stats`;
 
 	const options = {
-		method: "PATCH",
-		body: JSON.stringify(formData),
+		method: "GET",
+		// body: JSON.stringify(formData),
 		headers: headers
 	};
 
