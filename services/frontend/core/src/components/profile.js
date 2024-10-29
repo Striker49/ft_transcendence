@@ -118,11 +118,11 @@ const submitRegistrationForm = async form => {
 	}
 };
 
-const handleFetch = async (url, method, formData, headers) => {
+const handleFetch = async (url, method, body, headers) => {
 
 	const response = await fetch(url, {
 		method: method,
-		body: JSON.stringify(formData),
+		body: body,
 		headers: headers
 	});
 
@@ -178,9 +178,9 @@ const submitEditForm = async form => {
 
 	try {
 
-		const json_users = await handleFetch(urlUsers, "PATCH", formUsers, headers);
+		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
 		// const json_avatar = await handleFetch(urlAvatar, "POST", formAvatar, headers);
-		const json_profiles = await handleFetch(urlProfiles, "PATCH", formProfiles, headers);
+		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
 
 		console.log("======= Submitted Edit Form =======");
 		console.log(json_users);
@@ -222,6 +222,38 @@ const fetchProfileInfo = async () => {
 
 		const json = await response.json();
 		console.log(json);
+		return json;
+
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+const fetchUserStats = async () => {
+
+	const token = localStorage.getItem("authToken");
+
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+
+	const url = `https://localhost/api/game/stats`;
+
+	try {
+		// const response = await fetch(url, {
+		// 	method: "GET",
+		// 	headers: headers
+		// });
+		// if (!response.ok) {
+		// 	throw new Error(`Response status: ${response.status}`);
+		// }
+
+		const json = await handleFetch(url, "GET", "", headers);
+
+		console.log("======= User Stats =======");
+		console.log(json);
+
 		return json;
 
 	} catch (error) {
@@ -364,6 +396,42 @@ const displayProfileForm = isEditMode => {
 	translatePage();
 };
 
+const updateStat = (selector, stat) => {
+	selector.querySelector("span.float-end").innerHTML = `${stat} / 42`;
+	selector.querySelector("div.progress").setAttribute("aria-valuenow", stat);
+	selector.querySelector("div.progress-bar").style.width = `${Math.min(stat / 42, 100)}%`;
+};
+
+const updateUserStats = async () => {
+
+	const userStats = await fetchUserStats();
+
+	if (userStats) {
+
+		updateStat(document.querySelector("#gamesWon"), userStats.wins);
+		updateStat(document.querySelector("#gamesWon"), userStats.lost);
+		updateStat(document.querySelector("#gamesWon"), userStats.total_games);
+		// updateStat(document.querySelector("#gamesPerfect"), userStats.perfect);
+
+		// const gamesWon = document.querySelector("#gamesWon");
+		// const gamesLost = document.querySelector("#gamesLost");
+		// const gamesPlayed = document.querySelector("#gamesPlayed");
+		// const gamesPerfect = document.querySelector("#gamesPerfect");
+
+		// gamesWon.querySelector("span.float-end").innerHTML = `${userStats.wins} / 42`;
+		// gamesWon.querySelector("div.progress").setAttribute("aria-valuenow", userStats.wins);
+		// gamesWon.querySelector("div.progress-bar").style.width = `${Math.min(userStats.wins / 42, 100)}%`;
+
+		// gamesLost.querySelector("span.float-end").innerHTML = `${userStats.lost} / 42`;
+		// gamesLost.querySelector("div.progress").setAttribute("aria-valuenow", userStats.lost);
+		// gamesLost.querySelector("div.progress-bar").style.width = `${Math.min(userStats.lost / 42, 100)}%`;
+
+		// gamesLost.querySelector("span.float-end").innerHTML = `${userStats.total_games} / 42`;
+		// gamesLost.querySelector("div.progress").setAttribute("aria-valuenow", userStats.total_games);
+		// gamesLost.querySelector("div.progress-bar").style.width = `${Math.min(userStats.total_games / 42, 100)}%`;
+	}
+};
+
 const displayUserProfile = () => {
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
@@ -380,21 +448,29 @@ const displayUserProfile = () => {
 				</div>
 				<div class="col-md-8 mt-4 mt-md-0">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesWon">Games won</span><span class="float-end">11 / 42</span></p>
-						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="11" aria-valuemin="0" aria-valuemax="42">
-							<div class="progress-bar bg-success" style="width: 25%"></div>
+						<div id="gamesWon">
+							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesWon">Games won</span><span class="float-end">0 / 42</span></p>
+							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-success"></div>
+							</div>
 						</div>
-						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesLost">Games lost</span><span class="float-end">2 / 42</span></p>
-						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
-							<div class="progress-bar bg-danger" style="width: 2%"></div>
+						<div id="gamesLost">
+							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesLost">Games lost</span><span class="float-end">0 / 42</span></p>
+							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-danger"></div>
+							</div>
 						</div>
-						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPlayed">Games played</span><span class="float-end">13 / 42</span></p>
-						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="13" aria-valuemin="0" aria-valuemax="42">
-							<div class="progress-bar bg-info" style="width: 26%"></div>
+						<div id="gamesPlayed">
+							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPlayed">Games played</span><span class="float-end">0 / 42</span></p>
+							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-info"></div>
+							</div>
 						</div>
-						<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">2 / 42</span></p>
-						<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="2" aria-valuemin="0" aria-valuemax="42">
-							<div class="progress-bar bg-warning" style="width: 2%"></div>
+						<div id="gamesPerfect">
+							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">0 / 42</span></p>
+							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-warning"></div>
+							</div>
 						</div>
 						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
 					</div>
@@ -410,6 +486,7 @@ export const updateProfile = () => {
 		fetchProfileInfo().then(info => {
 			userProfile = info;
 			displayUserProfile();
+			updateUserStats();
 		});
 	} else {
 		clearUserProfile();
