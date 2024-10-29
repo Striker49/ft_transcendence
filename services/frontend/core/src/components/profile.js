@@ -248,6 +248,8 @@ const fetchUserStats = async () => {
 		if (!response.ok) {
 			throw new Error(`Response status: ${response.status}`);
 		}
+		
+		const json = await response.json();
 
 		console.log("======= User Stats =======");
 		console.log(json);
@@ -406,9 +408,11 @@ const updateUserStats = async () => {
 
 	if (userStats) {
 
+		console.log(userStats.wins);
+
 		updateStat(document.querySelector("#gamesWon"), userStats.wins);
-		updateStat(document.querySelector("#gamesWon"), userStats.lost);
-		updateStat(document.querySelector("#gamesWon"), userStats.total_games);
+		updateStat(document.querySelector("#gamesLost"), userStats.losses);
+		updateStat(document.querySelector("#gamesPlayed"), userStats.total_games);
 		// updateStat(document.querySelector("#gamesPerfect"), userStats.perfect);
 
 		// const gamesWon = document.querySelector("#gamesWon");
@@ -550,9 +554,9 @@ document.addEventListener("submit", e => {
 	switch (true) {
 		case element.matches("#registration-form"):
 			e.preventDefault();
-			// if (validateForm(element)) {
+			if (validateForm(element)) {
 				submitRegistrationForm(element);
-			// }
+			}
 			break;
 		case element.matches("#edit-form"):
 			e.preventDefault();
