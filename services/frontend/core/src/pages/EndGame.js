@@ -5,44 +5,24 @@ const headers = new Headers({
 	"Authorization": localStorage.getItem("authToken")
 })
 
-// async function sendGameStats() {
-// 	const url = "https://localhost/api/game/played/";
-// 	try {
-// 		const response = await fetch(url, {
-// 			method: "POST",
-// 			headers: headers,
-// 			body: {
-// 				player1_UID: , 
-// 				score_player1: ,
-// 				score_player2: 
-// 			}
-// 		});
-// 		if(!response.ok) { 
-// 			throw new Error(`Response status: ${response.status}`);
-// 		}
-// 		const stats = await response.json();
-// 		console.log("RANKING", stats);
-// 	} catch (error) {
-// 		console.error(error.message);
-// 	}
-// }
 
-// async function getRanking() {
-// 	const url = "https://localhost/api/game/ranking/";
-// 	try {
-// 		const response = await fetch(url, {
-// 			method: "GET",
-// 			headers: headers
-// 		});
-// 		if(!response.ok) { 
-// 			throw new Error(`Response status: ${response.status}`);
-// 		}
-// 		const ranking = await response.json();
-// 		console.log("RANKING", ranking);
-// 	} catch (error) {
-// 		console.error(error.message);
-// 	}
-// }
+async function getRanking() {
+	const url = "https://localhost/api/game/ranking/";
+	try {
+		const response = await fetch(url, {
+			method: "GET",
+			headers: headers
+		});
+		if(!response.ok) { 
+			throw new Error(`Response status: ${response.status}`);
+		}
+		const ranking = await response.json();
+		console.log("RANKING", ranking);
+		return (ranking);
+	} catch (error) {
+		console.error(error.message);
+	}
+}
 
 export default class extends Abstract {
 	constructor() {
@@ -51,14 +31,16 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
-		// sendGameStats();
-		// getRanking();
+		const ranking = await getRanking();
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-					<span data-i18n-key="ranking" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text">RANKING</span>
+					<span style="font-size: 30px;"data-i18n-key="ranking" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-" role="text">RANKING</span>
 					<div class="d-flex justify-content-center">
 					<ul>
+						<li style="font-size: 25px;"><span data-i18n-key="rank">Rank 1 </span>---><span class="fw-bold">${ranking ? ranking[0].username : "N/A"}</span></li>
+						<li style="font-size: 25px;"><span data-i18n-key="rank">Rank 2 </span>---><span class="fw-bold">${ranking && ranking.length > 1 ? ranking[1].username : "N/A"}</span></li>
+						<li style="font-size: 25px;"><span data-i18n-key="rank">Rank 3 </span>---><span class="fw-bold">${ranking && ranking.length > 2 ? ranking[2].username : "N/A"}</span></li>
 					</ul>
 					</div>
 					<div class="mt-5 d-flex justify-content-center">
