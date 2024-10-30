@@ -8,6 +8,7 @@ class GameStatsSerializer(serializers.ModelSerializer):
 	total_games = serializers.ReadOnlyField()
 	rank = serializers.ReadOnlyField()
 	username = serializers.ReadOnlyField(source='UID.username')
+	last_played = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
 	class Meta:
 		model = models.GameStats
@@ -18,6 +19,7 @@ class GameStatsSerializer(serializers.ModelSerializer):
 			'losses',
 			'total_games',
 			'win_percentage',
+			'perfect_games',
 			'rank',
 			'last_played',
 		)
@@ -49,6 +51,7 @@ class PlayedGamesSerializer(serializers.ModelSerializer):
 	"""serialises a playedgame object"""
 
 	game_id = serializers.ReadOnlyField(source='id')
+	created = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
  
 	class Meta:
 		model = models.PlayedGames

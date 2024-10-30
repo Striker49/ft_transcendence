@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users import views
+from django.conf import settings
+from django.conf.urls.static import static
 import debug_toolbar
 
 urlpatterns = [
@@ -26,4 +28,4 @@ urlpatterns = [
     path('api/hello/', views.hello),
     path('api/profiles/', include('profiles.urls')),
     path('api/game/', include('game.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
