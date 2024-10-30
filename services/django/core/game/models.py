@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from django.utils import timezone, dateformat
 from django.conf import settings
 from django.db.models import Q
 
@@ -11,9 +11,11 @@ class GameStats(models.Model):
 	UID=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	wins=models.PositiveIntegerField(default=0)
 	losses=models.PositiveIntegerField(default=0)
+	perfect_games=models.PositiveIntegerField(default=0)
 	last_played=models.DateTimeField(blank=True, null=True)
 
 	class Meta:
+		ordering = ['id']
 		verbose_name = "Game Stat"
   
 	@property
@@ -40,7 +42,7 @@ class GameStats(models.Model):
 
 	def __str__(self):
 		"""Return string representation of our user"""
-		return self.UID.username
+		return self.UID.__str__()
 
 
 class PlayedGames(models.Model):
@@ -60,8 +62,20 @@ class PlayedGames(models.Model):
 	score_player2=models.PositiveIntegerField(default=0)
  
 	class Meta:
+		ordering = ['created']
 		indexes = [
 			models.Index(fields=['player1_UID', 'player2_UID']),
 		]
 		verbose_name = "Game played"
 		verbose_name_plural = "Games Played"
+
+	def __str__(self):
+		"""Return string representation of our user"""
+		formated_date = dateformat.format(timezone.localtime(timezone.now()), 'Y-m-d H:i:s',)
+		if self.player2_UID:
+			opponent = self.player2_UID.username
+		elif self.username_player2:
+			opponent = self.username_player2
+		else:
+			opponent = "AI"
+		return  self.player1_UID.username + " vs " + opponent + " (" + formated_date.__str__() + ")"

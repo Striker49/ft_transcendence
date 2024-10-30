@@ -12,6 +12,9 @@ LANGUAGES = [
 	('nl', 'Dutch'),
 ]
 
+def upload_to(instance, filename):
+    return 'images/{filename}'.format(filename=filename)
+
 class UserProfile(models.Model):
 	"""Database model for users un the system"""
 	created = models.DateTimeField(auto_now_add=True)
@@ -19,6 +22,7 @@ class UserProfile(models.Model):
 	first_name=models.CharField(max_length=255, blank=True)
 	last_name=models.CharField(max_length=255, blank=True)
 	avatar_path=models.CharField(max_length=255, blank=True)
+	image_url=models.ImageField(upload_to=upload_to, blank=True, null=True)
 	bio=models.TextField(editable=True, blank=True)
 	
 	lang= models.CharField(max_length=2, choices=LANGUAGES, default='en')
@@ -29,7 +33,7 @@ class UserProfile(models.Model):
 	
 	def __str__(self):
 		"""Return string representation of our user"""
-		return self.UID.username
+		return self.UID.__str__()
 
 FRIENDSHIP_TYPES = [
 	('pending_first_second', 'Pending first to second'),
@@ -43,7 +47,7 @@ FRIENDSHIP_TYPES = [
 class UserFriendship(models.Model):
 	"""Database model for users un the system"""
 	user1_ID=models.ForeignKey(settings.AUTH_USER_MODEL, 
-                               on_delete=models.SET_NULL, 
+                               on_delete=models.CASCADE, 
                                related_name="user1",
                                null=True)
 	user2_ID=models.ForeignKey(settings.AUTH_USER_MODEL, 

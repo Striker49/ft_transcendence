@@ -1,16 +1,13 @@
-from django.shortcuts import render
-from rest_framework import viewsets
 from game import serializers, models, permissions
+from rest_framework import filters, status, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework import filters, status
-from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.exceptions import MethodNotAllowed, NotFound
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
-from django.db.models import Q
-from rest_framework.exceptions import NotFound
-from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 class GameViewSet(viewsets.ModelViewSet):
@@ -96,6 +93,8 @@ class PlayedGamesViewSet(viewsets.ModelViewSet):
 		player1_stats = get_object_or_404(models.GameStats, UID=instance.player1_UID)
 		if player1_stats:
 			if instance.score_player1 > instance.score_player2:
+				if instance.score_player2 == 0:
+					player1_stats.perfect_games += 1
 				player1_stats.wins += 1
 			else:
 				player1_stats.losses += 1
@@ -105,6 +104,8 @@ class PlayedGamesViewSet(viewsets.ModelViewSet):
 		if instance.player2_UID:
 			player2_stats = get_object_or_404(models.GameStats, UID=instance.player2_UID)
 			if instance.score_player2 > instance.score_player1:
+				if instance.score_player1 == 0:
+					player2_stats.perfect_games += 1
 				player2_stats.wins += 1
 			else:
 				player2_stats.losses += 1

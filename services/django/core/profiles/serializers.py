@@ -6,6 +6,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='UID.username')
     email = serializers.ReadOnlyField(source='UID.email')
     UID = serializers.ReadOnlyField(source='UID.id')
+    image_url = serializers.ImageField(required=False)
     
     class Meta:
         model = models.UserProfile
@@ -13,7 +14,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'UID',
             'id',
             'first_name', 
-            'last_name', 
+            'last_name',
+            'image_url',
             'avatar_path',
             'bio',
             'lang',

@@ -25,7 +25,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", default=0)
-# bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -143,6 +142,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 CSRF_TRUSTED_ORIGINS = ['https://localhost',
                         "http://frontend:8080",
                         "https://frontend:8080"]
+
 CSRF_COOKIE_SECURE = True
 
 INTERNAL_IPS = [
@@ -152,11 +152,16 @@ INTERNAL_IPS = [
 
 CORS_ALLOW_ALL_ORIGINS = False  # Use this for development only
 
-# OR to specify:
 CORS_ALLOWED_ORIGINS = [
-    "https://localhost:8080",  # Frontend URL
+    "https://localhost:8080", 
     "http://frontend:8080",
     "https://frontend:8080"  
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+#media handling
+
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'mediafiles')
+
+MEDIA_URL = '/api/backend-media/'
