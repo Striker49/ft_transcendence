@@ -34,3 +34,35 @@ export function createText(callback, scoreP1, scoreP2) {
 		callback(text);
 	});
 }
+
+export function createWinnerText(callback, winnerWord, nameWinner) {
+
+	const loader = new FontLoader();
+
+	let textWinner = `WINNER\n${nameWinner}`;
+
+	loader.load('/src/fonts/helvetiker_regular.typeface.json', function (font) {
+		const geometry = new TextGeometry(textWinner, {
+			font: font,
+			size: 2,
+			depth: 1,
+			height: 0.25,
+			curveSegments: 3,
+			bevelEnabled: false,
+			bevelThickness: 0.25,
+			bevelSize: 0.28,
+			bevelOffset: -0.1,
+			bevelSegments: 20
+		});
+		geometry.computeBoundingBox();
+		const centerOffset = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
+		const material2 = new THREE.MeshStandardMaterial({ color: 0xffd700 });
+		const winnerText = new THREE.Mesh(geometry, material2);
+		// winnerText.position.y = -2;
+		winnerText.position.x = centerOffset;
+		winnerText.position.z = -2;
+		winnerText.rotation.x = -1.5;
+		
+		callback(winnerText);
+	});
+}

@@ -1,19 +1,13 @@
 import * as THREE from 'three'
 import { scene, camera, renderer, controls } from "../threejs/base.js";
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
-import { createText } from './text.js';
+import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
 
-// const scene = new THREE.Scene();
-// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// camera.position.set(0, 9, 0);
-// scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
-// const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = -1;
 light.position.y = 3;
 light.castShadow = true;
@@ -22,26 +16,16 @@ light.shadow.camera.right = 50;
 light.shadow.camera.top = 50;
 light.shadow.camera.bottom = -50;
 light.shadow.mapSize.set(9192, 9192);
-// scene.add(light, light2);
-
-// const renderer = new THREE.WebGLRenderer({
-//     alpha: true,
-//     antialias: true,
-//     canvas: document.querySelector('#bg')
-// });
 renderer.shadowMap.enabled = true;
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// document.body.appendChild(renderer.domElement);
 
-// To move the scene around with the mouse
-// const controls = new OrbitControls(camera, renderer.domElement);
 
 //Seting variable value
 //<----need to fetch player name-------->
 let isStarted = false;
 let speed = 0.15;
-let text, currentText;
+let text, currentText, winnerText;
 let scoreP1, scoreP2;
+let nameP1, nameP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
@@ -93,8 +77,17 @@ function startGame() {
     state = 1;
 }
 
-function initGame() {
+function getUsername(queryName) {
+    let username = "No name";
+    const params = new URLSearchParams(window.location.search);
+    if (params.get(queryName))
+        username = params.get(queryName);
+    return (username);
+}
 
+function initGame() {
+    nameP1 = getUsername("username");
+    nameP2 = getUsername("username2");
     scoreP1 = 0;
     scoreP2 = 0;
     numberOfWins = localStorage.getItem("numberOfWins") || 3;
@@ -328,7 +321,7 @@ export function resetBallPosition(ball, winner) {
     frames = 0;
     updateScore();
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
-        endGame();
+        endGame(winner);
 }
 
 //Generates a number between 0.06 and 0.1 and -0.1 and -0.06
@@ -355,14 +348,48 @@ export const updateGameScene = () => {
     }
 }
 
-function endGame() {
+let winnerWord = "WINNER";
+// nameP1 = "Gargamel"
+
+function showWinner(winnerName) {
+    createWinnerText(function (text2) {
+        winnerText = text2;
+        scene.add(winnerText);
+    }, winnerWord, winnerName);
+}
+
+function insertButton() {
+    const div = document.createElement('div');
+    div.setAttribute('class', "mt-5 d-flex justify-content-center");
+    const button = document.createElement('a');
+    button.setAttribute('href', '/endGame');
+    button.setAttribute('data-i18n-key', 'ranking');
+    button.setAttribute('class', 'btn btn-primary');
+    button.setAttribute('id', 'ranking');
+    button.setAttribute('data-link', 'true');
+    button.innerHTML = "Ranking";
+    const body = document.querySelector("main");
+    body.appendChild(div);
+    div.appendChild(button);
+    console.log("body", body);
+}
+
+function endGame(winner) {
+    const winnerName = (winner == 2 ? nameP1 : nameP2);
+    console.log("winner", winner);
+    console.log("nameP1", nameP1);
+    console.log("nameP2", nameP2);
+    console.log("winnerName", winnerName);
     removeGameObjects();
     // scene.remove.apply(scene, scene.children);
     // cancelAnimationFrame(animationID);
     state = 0;
+    updateScore();
+    showWinner(winnerName);
     sendGameStats();
+    insertButton();
     //GoToEndScreen
-    navigateTo("/endGame");
+    // navigateTo("/endGame");
 	// router();
     // window.location.href = "/endGame";
 }
@@ -376,9 +403,6 @@ function removeGameObjects() {
     scene.remove(paddleR);
     ground.kill();
     scene.remove(ground);
-    currentText.material.dispose();
-    currentText.geometry.dispose();
-    scene.remove(currentText);
 }
 
 
@@ -411,3 +435,12 @@ async function sendGameStats() {
 		console.error(error.message);
 	}
 }
+
+document.addEventListener('click', (event) => {
+    if (event.target.matches("#ranking"))
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
+})
