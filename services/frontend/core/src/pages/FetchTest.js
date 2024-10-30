@@ -53,10 +53,10 @@ const submitForm = async form => {
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization":"Token 588a50a183ad19345040db08b3c2951d9f68c0d7"
+		"Authorization":"Token 14dad9f3042f23c6952fff339973f73f2cef38cc"
 	});
 
-	const url = 'https://localhost/api/profiles/friendship/';
+	const url = 'https://localhost/api/game/stats/';
 
 	const options = {
 		method: "GET",

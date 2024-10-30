@@ -69,10 +69,33 @@ h1 {
 	cursor: pointer;
 }
 
+#games-history .row {
+	border-bottom: 1px solid white;
+	padding: 12px 0;
+	margin: 0 6px;
+	font-style: italic;
+}
+
+#games-history .row:last-child {
+	border-bottom: 0;
+}
+
+#games-history .col {
+	margin: 0;
+}
+
+#games-history .col.status {
+	font-weight: bold;
+}
+
 /* Shadows */
 
 .box-shadow {
 	box-shadow: 0px 4px 12px rgb(64, 64, 64);
+}
+
+.box-shadow-inset {
+	box-shadow: inset 0px 4px 12px black;
 }
 
 .text-shadow {

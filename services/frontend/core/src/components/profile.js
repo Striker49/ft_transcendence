@@ -120,12 +120,16 @@ const submitRegistrationForm = async form => {
 
 const handleFetch = async (url, method, body, headers) => {
 
-	const response = await fetch(url, {
+	const options = {
 		method: method,
-		body: JSON.stringify(body),
 		headers: headers
-	});
+	};
 
+	if (method === "POST" || method === "PUT" || method == "PATCH") {
+		options.body = body;
+	}
+
+	const response = await fetch(url, options);
 	if (!response.ok) {
 		throw new Error(`Response status: ${response.status}`);
 	}
@@ -178,9 +182,9 @@ const submitEditForm = async form => {
 
 	try {
 
-		const json_users = await handleFetch(urlUsers, "PATCH", formUsers, headers);
-		// const json_avatar = await handleFetch(urlAvatar, "POST", formAvatar, headers);
-		const json_profiles = await handleFetch(urlProfiles, "PATCH", formProfiles, headers);
+		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
+		// const json_avatar = await handleFetch(urlAvatar, "POST", JSON.stringify(formAvatar), headers);
+		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
 
 		console.log("======= Submitted Edit Form =======");
 		console.log(json_users);
@@ -212,20 +216,59 @@ const fetchProfileInfo = async () => {
 	const url = `https://localhost/api/profiles/${uid}`;
 
 	try {
-		const response = await fetch(url, {
-			method: "GET",
-			headers: headers
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-
-		const json = await response.json();
+		const json = await handleFetch(url, "GET", "", headers);
+		console.log("======= Profile Info =======");
 		console.log(json);
 		return json;
-
 	} catch (error) {
 		console.error(error.message);
+	}
+};
+
+const fetchGamesHistory = async () => {
+
+	const token = localStorage.getItem("authToken");
+
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+
+	const url = `https://localhost/api/game/played`;
+
+	try {
+		const json = await handleFetch(url, "GET", "", headers);
+		console.log("======= Games History =======");
+		console.log(json);
+		return json;
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+const listGamesHistory = async () => {
+
+	const gamesHistory = await fetchGamesHistory();
+
+	if (gamesHistory) {
+
+		const gamesHistoryDiv = document.querySelector("#games-history");
+
+		gamesHistory.forEach(game => {
+
+			const date = game.created.substring(0, 10);
+			const player2 = game.username_player2 || "CPU";
+			const status = game.score_player1 > game.score_player2 ? "Won" : "Lost";
+
+			gamesHistoryDiv.innerHTML += `
+				<div class="row">
+					<p class="col date">${date}</p>
+					<p class="col vs">vs. ${player2}</p>
+					<p class="col score">Score: ${game.score_player1} to ${game.score_player2}</p>
+					<p class="col status">${status}</p>
+				</div>
+			`;
+		});
 	}
 };
 
@@ -241,23 +284,34 @@ const fetchUserStats = async () => {
 	const url = `https://localhost/api/game/stats`;
 
 	try {
-		const response = await fetch(url, {
-			method: "GET",
-			headers: headers
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-		
-		const json = await response.json();
-
+		const json = await handleFetch(url, "GET", "", headers);
 		console.log("======= User Stats =======");
 		console.log(json);
-
 		return json;
-
 	} catch (error) {
 		console.error(error.message);
+	}
+};
+
+const updateStat = (selector, stat) => {
+	selector.querySelector("span.float-end").innerHTML = `${stat} / 42`;
+	selector.querySelector("div.progress").setAttribute("aria-valuenow", stat);
+	selector.querySelector("div.progress-bar").style.transition = "width 1s ease";
+	selector.querySelector("div.progress-bar").style.width = `${Math.min((stat / 42) * 100, 100)}%`;
+};
+
+const updateUserStats = async () => {
+
+	const userStats = await fetchUserStats();
+
+	if (userStats) {
+
+		updateStat(document.querySelector("#gamesWon"), userStats[0].wins);
+		updateStat(document.querySelector("#gamesLost"), userStats[0].losses);
+		updateStat(document.querySelector("#gamesPlayed"), userStats[0].total_games);
+		// updateStat(document.querySelector("#gamesPerfect"), userStats[0].perfect);
+
+		document.querySelector("#rank").innerHTML = userStats[0].rank;
 	}
 };
 
@@ -319,7 +373,6 @@ const displayButtons = isEditMode => {
 			<button type="submit" class="btn btn-dark rounded-pill px-4" data-i18n-key="createProfile">Create profile</button>
 		`;
 	}
-	// translatePage();
 };
 
 const displayFormID = isEditMode => {
@@ -397,90 +450,58 @@ const displayProfileForm = isEditMode => {
 	translatePage();
 };
 
-const updateStat = (selector, stat) => {
-	selector.querySelector("span.float-end").innerHTML = `${stat} / 42`;
-	selector.querySelector("div.progress").setAttribute("aria-valuenow", stat);
-	selector.querySelector("div.progress-bar").style.width = `${Math.min(stat / 42, 100)}%`;
-};
-
-const updateUserStats = async () => {
-
-	const userStats = await fetchUserStats();
-
-	if (userStats) {
-
-		console.log(userStats.wins);
-
-		updateStat(document.querySelector("#gamesWon"), userStats.wins);
-		updateStat(document.querySelector("#gamesLost"), userStats.losses);
-		updateStat(document.querySelector("#gamesPlayed"), userStats.total_games);
-		// updateStat(document.querySelector("#gamesPerfect"), userStats.perfect);
-
-		// const gamesWon = document.querySelector("#gamesWon");
-		// const gamesLost = document.querySelector("#gamesLost");
-		// const gamesPlayed = document.querySelector("#gamesPlayed");
-		// const gamesPerfect = document.querySelector("#gamesPerfect");
-
-		// gamesWon.querySelector("span.float-end").innerHTML = `${userStats.wins} / 42`;
-		// gamesWon.querySelector("div.progress").setAttribute("aria-valuenow", userStats.wins);
-		// gamesWon.querySelector("div.progress-bar").style.width = `${Math.min(userStats.wins / 42, 100)}%`;
-
-		// gamesLost.querySelector("span.float-end").innerHTML = `${userStats.lost} / 42`;
-		// gamesLost.querySelector("div.progress").setAttribute("aria-valuenow", userStats.lost);
-		// gamesLost.querySelector("div.progress-bar").style.width = `${Math.min(userStats.lost / 42, 100)}%`;
-
-		// gamesLost.querySelector("span.float-end").innerHTML = `${userStats.total_games} / 42`;
-		// gamesLost.querySelector("div.progress").setAttribute("aria-valuenow", userStats.total_games);
-		// gamesLost.querySelector("div.progress-bar").style.width = `${Math.min(userStats.total_games / 42, 100)}%`;
-	}
-};
-
 const displayUserProfile = () => {
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
 			<div class="row p-0 text-black">
-				<div class="col-md-4">
-					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5" id="profile-info">
-						<p class="text-center my-1"><img src="${userProfile.avatar_path}" alt="Avatar image" width="128px" height="128px" class="border border-5 box-shadow"></p>
-						<p class="text-center py-3 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${userProfile.username}</p>
-						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${userProfile.first_name} ${userProfile.last_name}</p>
-						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
-						<p class="py-3 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
-						<p class="m-0 mt-3 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
+				<div class="col-md-5">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 h-100" id="profile-info">
+						<p class="text-center my-1"><img src="${userProfile.avatar_path}" alt="Avatar image" width="40%" height="40%" class="border border-5 box-shadow"></p>
+						<p class="text-center py-4 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${userProfile.username}</p>
+						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${userProfile.first_name} ${userProfile.last_name}</p>
+						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
+						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
+						<p class="m-0 mt-4 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
 					</div>
 				</div>
-				<div class="col-md-8 mt-4 mt-md-0">
+				<div class="col-md-7 mt-4 mt-md-0">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-						<div id="gamesWon">
+						<div id="gamesWon" class="mb-3">
 							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesWon">Games won</span><span class="float-end">0 / 42</span></p>
-							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
-								<div class="progress-bar bg-success"></div>
+							<div class="progress bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-success" style="width: 0%;"></div>
 							</div>
 						</div>
-						<div id="gamesLost">
+						<div id="gamesLost" class="mb-3">
 							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesLost">Games lost</span><span class="float-end">0 / 42</span></p>
-							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
-								<div class="progress-bar bg-danger"></div>
+							<div class="progress bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-danger" style="width: 0%;"></div>
 							</div>
 						</div>
-						<div id="gamesPlayed">
+						<div id="gamesPlayed" class="mb-3">
 							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPlayed">Games played</span><span class="float-end">0 / 42</span></p>
-							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
-								<div class="progress-bar bg-info"></div>
+							<div class="progress bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-info" style="width: 0%;"></div>
 							</div>
 						</div>
-						<div id="gamesPerfect">
+						<div id="gamesPerfect" class="mb-3">
 							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">0 / 42</span></p>
-							<div class="progress mb-4 bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
-								<div class="progress-bar bg-warning"></div>
+							<div class="progress bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
+								<div class="progress-bar bg-warning" style="width: 0%;"></div>
 							</div>
 						</div>
-						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" style="font-size: 60px; ">1st</span></p>
+						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" id="rank" style="font-size: 60px; "></span></p>
+					</div>
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 mt-4">
+						<p class="mb-2 fw-bold">Games history</p>
+						<div class="bg-dark rounded-5 p-2 box-shadow text-white text-center" id="games-history"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	`;
+	updateUserStats();
+	listGamesHistory();
 	translatePage();
 };
 
@@ -489,13 +510,11 @@ export const updateProfile = () => {
 		fetchProfileInfo().then(info => {
 			userProfile = info;
 			displayUserProfile();
-			updateUserStats();
 		});
 	} else {
 		clearUserProfile();
 		displayProfileForm(false);
 	}
-	// translatePage();
 };
 
 const html = () => {
