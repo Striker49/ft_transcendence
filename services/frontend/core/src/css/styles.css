@@ -69,6 +69,10 @@ h1 {
 	cursor: pointer;
 }
 
+#games-history {
+	max-height: 150px;
+}
+
 #games-history .row {
 	border-bottom: 1px solid white;
 	padding: 12px 0;
@@ -100,4 +104,22 @@ h1 {
 
 .text-shadow {
 	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
+}
+
+/* Custom Scrollbar */
+
+/* Custom Scrollbar using CSS */
+.custom-scrollbar-css {
+	overflow-y: scroll;
+}
+  
+/* scrollbar width */
+.custom-scrollbar-css::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* scrollbar handle */
+.custom-scrollbar-css::-webkit-scrollbar-thumb {
+	border-radius: 1rem;
+	background-color: orange;
 }

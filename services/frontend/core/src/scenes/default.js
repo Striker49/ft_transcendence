@@ -13,7 +13,7 @@ const ambientLight = new THREE.AmbientLight(0xFFFFFF);
 const gridHelper = new THREE.GridHelper(200, 50);
 
 // Torus Object
-const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 );
+const geometry = new THREE.TorusGeometry( 12, 2, 16, 100 );
 const material = new THREE.MeshStandardMaterial( { color: 0xFF6347 } );
 const torus = new THREE.Mesh( geometry, material );
 

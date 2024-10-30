@@ -254,6 +254,7 @@ const listGamesHistory = async () => {
 
 		const gamesHistoryDiv = document.querySelector("#games-history");
 
+		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
 
 			const date = game.created.substring(0, 10);
@@ -269,6 +270,12 @@ const listGamesHistory = async () => {
 				</div>
 			`;
 		});
+	} else {
+		document.querySelector("#games-history").innerHTML = `
+			<div class="row">
+				<p>No games done yet.</p>
+			</div>
+		`;
 	}
 };
 
@@ -461,7 +468,10 @@ const displayUserProfile = () => {
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${userProfile.first_name} ${userProfile.last_name}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
-						<p class="m-0 mt-4 text-center"><button type="button" class="btn btn-dark rounded-pill px-4" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button></p>
+						<p class="m-0 mt-4 text-center">
+							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
+							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
+						</p>
 					</div>
 				</div>
 				<div class="col-md-7 mt-4 mt-md-0">
@@ -490,11 +500,11 @@ const displayUserProfile = () => {
 								<div class="progress-bar bg-warning" style="width: 0%;"></div>
 							</div>
 						</div>
-						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-warning text-shadow" id="rank" style="font-size: 60px; "></span></p>
+						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-shadow" id="rank" style="font-size: 60px; color: orange"></span></p>
 					</div>
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 mt-4">
 						<p class="mb-2 fw-bold">Games history</p>
-						<div class="bg-dark rounded-5 p-2 box-shadow text-white text-center" id="games-history"></div>
+						<div class="bg-dark rounded-5 p-2 box-shadow text-white text-center custom-scrollbar-css" id="games-history"></div>
 					</div>
 				</div>
 			</div>
