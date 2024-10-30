@@ -78,3 +78,14 @@ h1 {
 .text-shadow {
 	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
 }
+
+.column {
+	float: left;
+	width: 40%;
+}
+
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
