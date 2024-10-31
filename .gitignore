@@ -7,7 +7,6 @@ __init__*
 .venv/
 
 # Django
-migrations/
 static
 
 # Build files

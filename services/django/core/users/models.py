@@ -49,9 +49,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	REQUIRED_FIELDS = ['email',]
  
 	class Meta:
-		ordering = ['created']
+		ordering = ['id']
 		verbose_name = "User"
 	
 	def __str__(self):
 		"""Return string representation of our user"""
-		return self.username
+		return self.username + "    (UID:" + self.id.__str__() + ") "

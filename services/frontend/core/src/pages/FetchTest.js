@@ -56,7 +56,7 @@ const submitForm = async form => {
 		"Authorization":"Token 588a50a183ad19345040db08b3c2951d9f68c0d7"
 	});
 
-	const url = 'https://localhost/api/profiles/friendship/';
+	const url = 'https://localhost/api/backend-media/images/avatar1.jpg';
 
 	const options = {
 		method: "GET",

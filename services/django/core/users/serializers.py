@@ -12,6 +12,7 @@ from game.serializers import GameStatsSerializer
 
 class CustomUserSerializer(serializers.ModelSerializer):
     """serialises a user profile object"""
+    created = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     
     class Meta:
         model = CustomUser
