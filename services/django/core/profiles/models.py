@@ -22,7 +22,6 @@ class UserProfile(models.Model):
 	first_name=models.CharField(max_length=255, blank=True)
 	last_name=models.CharField(max_length=255, blank=True)
 	avatar_path=models.CharField(max_length=255, blank=True)
-	image_url=models.ImageField(upload_to=upload_to, blank=True, null=True)
 	bio=models.TextField(editable=True, blank=True)
 	
 	lang= models.CharField(max_length=2, choices=LANGUAGES, default='en')
@@ -69,4 +68,13 @@ class UserFriendship(models.Model):
 	def __str__(self):
 		"""Return string representation of our user"""
 		return self.user1_ID.username + " + " + self.user2_ID.username
+
+class UserCustomAvatar(models.Model):
+	"""Database model for users avatar in the system"""
+	UID=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	image_url=models.ImageField(upload_to=upload_to, blank=True, null=True)
+
+	def __str__(self):
+		"""Return string representation of our user"""
+		return self.UID.__str__()
 
