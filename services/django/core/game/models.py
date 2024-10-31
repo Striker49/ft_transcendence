@@ -79,3 +79,6 @@ class PlayedGames(models.Model):
 		else:
 			opponent = "AI"
 		return  self.player1_UID.username + " vs " + opponent + " (" + formated_date.__str__() + ")"
+
+	def formatted_created(self):
+		return self.created.strftime("%Y-%m-%d %H:%M:%S")

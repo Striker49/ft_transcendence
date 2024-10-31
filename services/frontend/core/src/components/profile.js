@@ -6,93 +6,91 @@ let profile;
 let upload = false; 
 
 const avatarPath = customURL => {
-
-	if (!upload) {
-
-		const avatars = document.querySelector("#avatar-section-1");
-
-		for (const avatar of avatars.children) {
-			if (avatar.classList.contains("border")) {
-				return avatar.getAttribute("src");
-			}
-		}
-
-	} else if (customURL) {
-		return customURL;
-	}
-	return "/src/assets/avatar/avatar1.jpg";
+    if (!upload) {
+        const avatars = document.querySelector("#avatar-section-1");
+        for (const avatar of avatars.children) {
+            if (avatar.classList.contains("border")) {
+                return avatar.getAttribute("src");
+            }
+        }
+    } else if (customURL) {
+        // =========== Custom avatar url ============
+        return `https://localhost/api/media/images/${customURL}/`;
+    }
+    return "/src/assets/avatar/avatar1.jpg";
 };
 
 const uploadAvatar = async avatar => {
+    // ========== API for upload ===========
+    const url = "https://localhost/api/profiles/avatar/";
+    const formData = new FormData();
+    formData.append("image_url", avatar);
+    console.log(formData.get("image_url"));
+	const token = localStorage.getItem("authToken");
 
-	const url = "https://localhost/src/assets/avatar/custom/";
+	const headers = new Headers({
+		"Authorization": `Token ${token}`
+	});
 
-	const formData = new FormData();
-	formData.append("avatar", avatar);
-
-	try {
-		const response = await fetch(url, {
-			method: "POST",
-			body: formData
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-
-		// const json = await response.json();
-		// console.log(json);
-	} catch (error) {
-		console.error(error.message);
-	}
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData,
+			headers: headers
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        console.log("Image Upload Successful");
+    } catch (error) {
+        console.error(error.message);
+    }
 };
 
 const submitRegistrationForm = async form => {
-	
-	const avatar = form.avatar.value;
-
-	const data = new FormData(form);
-
-	const formData = {
-		"email": form.email.value,
-		"username": form.username.value,
-		"password": form.password.value,
-		"profile": {
-			"first_name": form.firstname.value,
-			"last_name": form.lastname.value,
-			"avatar_path": avatarPath(avatar),
-			"bio": form.bio.value,
-			"lang": form.lang.value
-		}
-	};
-
-	const headers = new Headers({
-		"Content-Type": "application/json"
-	});
-
-	const url = "https://localhost/api/users/registration/";
-
-	try {
-		const response = await fetch(url, {
-			method: "POST",
-			body: JSON.stringify(formData),
-			headers: headers
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-
-		if (upload && avatar) {
-			uploadAvatar(data.get("avatar"));
-		}
-
-		const json = await response.json();
-		console.log(json);
-
-		alert("Registration successful!");
-
-	} catch (error) {
-		console.error(error.message);
-	}
+    const data = new FormData(form);
+    console.log("========= Avatar =========");
+    console.log("Custom avatar name : ", data.get("avatar").name);
+    console.log("Custom avatar size : ", data.get("avatar").size);
+    const avatar = avatarPath(data.get("avatar").name);
+    console.log("Avatar Path : ", avatar);
+	console.log (form.first_name.value);
+    const formData = {
+        "email": form.email.value,
+        "username": form.username.value,
+        "password": form.password.value,
+        "profile": {
+            "first_name": form.first_name.value,
+            "last_name": form.last_name.value,
+            "avatar_path": avatar,
+            "bio": form.bio.value,
+            "lang": form.lang.value
+        }
+    };
+    const headers = new Headers({
+        "Content-Type": "application/json"
+    });
+    const url = "https://localhost/api/users/registration/";
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: headers
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        // ======== Upload if custom avatar =========
+        if (upload && data.get("avatar").size > 0) {
+            uploadAvatar(data.get("avatar"));
+			upload = false;
+        }
+        const json = await response.json();
+        console.log(json);
+        alert("Registration successful!");
+    } catch (error) {
+        console.error(error.message);
+    }
 };
 
 const submitProfileForm = async form => {
@@ -100,14 +98,14 @@ const submitProfileForm = async form => {
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
 
-	const avatar = form.avatar.value;
-
-	const data = new FormData(form);
+	
+	const data = new FormData(form);	
+	const avatar = avatarPath(data.get("avatar").name);
 
 	const formData = {
-		"first_name": form.firstname.value,
-		"last_name": form.lastname.value,
-		"avatar_path": avatarPath(avatar),
+		"first_name": form.first_name.value,
+		"last_name": form.last_name.value,
+		"avatar_path": avatar,
 		"bio": form.bio.value,
 		"lang": form.lang.value
 	};
@@ -129,9 +127,11 @@ const submitProfileForm = async form => {
 			throw new Error(`Response status: ${response.status}`);
 		}
 
-		if (upload && avatar) {
-			uploadAvatar(data.get("avatar"));
-		}
+		// ======== Upload if custom avatar =========
+        if (upload && data.get("avatar").size > 0) {
+            uploadAvatar(data.get("avatar"));
+			upload = false;
+        }
 
 		const json = await response.json();
 		console.log(json);
@@ -226,12 +226,12 @@ const toggleProfileInfo = editMode => {
 			<form action="" method="post" enctype="multipart/form-data" class="fw-bold" id="edit-profile-form">
 				${addAvatarSection()}
 				<div class="py-2 pt-4">
-					<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
-					<input type="text" class="form-control" name="firstname" id="firstname" value="${profile.first_name}">
+					<label for="first_name" class="form-label" data-i18n-key="firstName">First name</label>
+					<input type="text" class="form-control" name="first_name" id="first_name" value="${profile.first_name}">
 				</div>
 				<div class="py-2">
-					<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
-					<input type="text" class="form-control" name="lastname" id="lastname" value="${profile.last_name}">
+					<label for="last_name" class="form-label" data-i18n-key="lastName">Last name</label>
+					<input type="text" class="form-control" name="last_name" id="last_name" value="${profile.last_name}">
 				</div>
 				<div class="py-2">
 					<label for="bio" class="form-label">Bio</label>
@@ -329,12 +329,12 @@ export const updateProfile = () => {
 								<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 							</div>
 							<div class="py-2 pt-4">
-								<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
-								<input type="text" class="form-control" name="firstname" id="firstname">
+								<label for="first_name" class="form-label" data-i18n-key="firstName">First name</label>
+								<input type="text" class="form-control" name="first_name" id="first_name">
 							</div>
 							<div class="py-2">
-								<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
-								<input type="text" class="form-control" name="lastname" id="lastname">
+								<label for="last_name" class="form-label" data-i18n-key="lastName">Last name</label>
+								<input type="text" class="form-control" name="last_name" id="last_name">
 							</div>
 							<div class="pb-2">
 								<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>

@@ -156,7 +156,7 @@ class UserCustomAvatarViewSet(viewsets.ModelViewSet):
 			existing_avatar.delete()
 		new_avatar = serializer.save(UID=user)
 		profile = get_object_or_404(models.UserProfile, UID=user)
-		profile.avatar_path = new_avatar.image_url
+		profile.avatar_path = self.request.build_absolute_uri(new_avatar.image_url.url)
 		profile.save()
   
 	def create(self, request, *args, **kwargs):
