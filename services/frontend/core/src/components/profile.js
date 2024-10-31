@@ -29,93 +29,91 @@ const printUserProfile = () => {
 };
 
 const avatarPath = customURL => {
-
-	if (!upload) {
-
-		const avatars = document.querySelector("#avatar-section-1");
-
-		for (const avatar of avatars.children) {
-			if (avatar.classList.contains("border")) {
-				return avatar.getAttribute("src");
-			}
-		}
-
-	} else if (customURL) {
-		return customURL;
-	}
-	return "/src/assets/avatar/avatar1.jpg";
+    if (!upload) {
+        const avatars = document.querySelector("#avatar-section-1");
+        for (const avatar of avatars.children) {
+            if (avatar.classList.contains("border")) {
+                return avatar.getAttribute("src");
+            }
+        }
+    } else if (customURL) {
+        // =========== Custom avatar url ============
+        return `https://localhost/api/media/images/${customURL}/`;
+    }
+    return "/src/assets/avatar/avatar1.jpg";
 };
 
 const uploadAvatar = async avatar => {
-
-	const url = "https://localhost/src/assets/avatar/custom/";
-
+	// ========== API for upload ===========
+	const url = "https://localhost/api/profiles/avatar/";
 	const formData = new FormData();
-	formData.append("avatar", avatar);
+	formData.append("image_url", avatar);
+	console.log(formData.get("image_url"));
+	const token = localStorage.getItem("authToken");
+
+	const headers = new Headers({
+		"Authorization": `Token ${token}`
+	});
 
 	try {
 		const response = await fetch(url, {
 			method: "POST",
-			body: formData
+			body: formData,
+			headers: headers
 		});
 		if (!response.ok) {
 			throw new Error(`Response status: ${response.status}`);
 		}
-
-		// const json = await response.json();
-		// console.log(json);
+		console.log("Image upload successful");
 	} catch (error) {
 		console.error(error.message);
 	}
 };
 
 const submitRegistrationForm = async form => {
-	
-	const avatar = form.avatar.value;
-
-	const data = new FormData(form);
-
-	const formData = {
-		"email": form.email.value,
-		"username": form.username.value,
-		"password": form.password.value,
-		"profile": {
-			"first_name": form.first_name.value,
-			"last_name": form.last_name.value,
-			"avatar_path": avatarPath(avatar),
-			"bio": form.bio.value,
-			"lang": form.lang.value
-		}
-	};
-
-	const headers = new Headers({
-		"Content-Type": "application/json"
-	});
-
-	const url = "https://localhost/api/users/registration/";
-
-	try {
-		const response = await fetch(url, {
-			method: "POST",
-			body: JSON.stringify(formData),
-			headers: headers
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-
-		if (upload && avatar) {
-			uploadAvatar(data.get("avatar"));
-		}
-
-		const json = await response.json();
-		console.log(json);
-
-		alert("Registration successful!");
-
-	} catch (error) {
-		console.error(error.message);
-	}
+    const data = new FormData(form);
+    console.log("========= Avatar =========");
+    console.log("Custom avatar name : ", data.get("avatar").name);
+    console.log("Custom avatar size : ", data.get("avatar").size);
+    const avatar = avatarPath(data.get("avatar").name);
+    console.log("Avatar Path : ", avatar);
+	console.log (form.first_name.value);
+    const formData = {
+        "email": form.email.value,
+        "username": form.username.value,
+        "password": form.password.value,
+        "profile": {
+            "first_name": form.first_name.value,
+            "last_name": form.last_name.value,
+            "avatar_path": avatar,
+            "bio": form.bio.value,
+            "lang": form.lang.value
+        }
+    };
+    const headers = new Headers({
+        "Content-Type": "application/json"
+    });
+    const url = "https://localhost/api/users/registration/";
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: headers
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        // ======== Upload if custom avatar =========
+        if (upload && data.get("avatar").size > 0) {
+            uploadAvatar(data.get("avatar"));
+			upload = false;
+        }
+        const json = await response.json();
+        console.log(json);
+        alert("Registration successful!");
+    } catch (error) {
+        console.error(error.message);
+    }
 };
 
 const handleFetch = async (url, method, body, headers) => {
@@ -173,8 +171,8 @@ const submitEditForm = async form => {
 		"Authorization": `Token ${token}`,
 	});
 
-	const avatar_path = avatarPath(form.avatar.value);	// Temporary. Will manage uploads later on
-	formProfiles.avatar_path = avatar_path;
+	const avatar = avatarPath(data.get("avatar").name);
+	formProfiles.avatar_path = avatar;
 
 	// const urlAvatar = "https://localhost/api/upload";
 	const urlProfiles = `https://localhost/api/profiles/${uid}/`;
@@ -190,6 +188,12 @@ const submitEditForm = async form => {
 		console.log(json_users);
 		console.log(json_profiles);
 
+		// ======== Upload if custom avatar =========
+        if (upload && data.get("avatar").size > 0) {
+            uploadAvatar(data.get("avatar"));
+			upload = false;
+        }
+
 		Object.assign(userProfile, json_profiles);
 
 		displayUserProfile();
@@ -197,10 +201,6 @@ const submitEditForm = async form => {
 	} catch (error) {
 		console.error(error.message);
 	}
-
-	// if (upload && avatar) {
-	// 	uploadAvatar(data.get("avatar"));
-	// }
 };
 
 const fetchProfileInfo = async () => {
