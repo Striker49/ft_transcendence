@@ -59,7 +59,7 @@ h1 {
 	min-width: 10px;
 }
 
-/* Profile */
+/* ========= Profile ========= */
 
 #profile img {
 	border-color: orange !important;	
@@ -92,21 +92,7 @@ h1 {
 	font-weight: bold;
 }
 
-/* Shadows */
-
-.box-shadow {
-	box-shadow: 0px 4px 12px rgb(64, 64, 64);
-}
-
-.box-shadow-inset {
-	box-shadow: inset 0px 4px 12px black;
-}
-
-.text-shadow {
-	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
-}
-
-/* Custom Scrollbar */
+/* ========= Custom Scrollbar ========= */
 
 /* Custom Scrollbar using CSS */
 .custom-scrollbar-css {
@@ -122,4 +108,26 @@ h1 {
 .custom-scrollbar-css::-webkit-scrollbar-thumb {
 	border-radius: 1rem;
 	background-color: orange;
+}
+
+/* ========= Utils ========= */
+
+/* Shadows */
+
+.box-shadow {
+	box-shadow: 0px 4px 12px rgb(64, 64, 64);
+}
+
+.box-shadow-inset {
+	box-shadow: inset 0px 4px 12px black;
+}
+
+.text-shadow {
+	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
+}
+
+/* Borders */
+
+.border-orange {
+	border: 1px solid orange !important;	
 }

@@ -5,9 +5,9 @@ export default `
 			<button type="button" class="btn-close float-end m-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 		<div class="offcanvas-body container">
-			<div id="current-user" class="row">
+			<div class="row user-snippet">
 				<div class="col-4">
-					<img src="/src/assets/avatar/avatar1.jpg" alt="User avatar" width="64px" height="64px">
+					<img src="/src/assets/avatar/avatar1.jpg" alt="User avatar" width="64px" height="64px" class="border-orange">
 				</div>
 				<div class="col-8">
 					<h4>Ziggy al'Thor</h4>
@@ -15,8 +15,25 @@ export default `
 				</div>
 			</div>
 			<input type="text" class="w-100" placeholder="Search">
-			<div class="row">
-
+			<div class="box-shadow-inset">
+				<div class="row user-snippet">
+					<div class="col-4">
+						<img src="/src/assets/avatar/avatar2.jpg" alt="User avatar" width="64px" height="64px" class="border-orange">
+					</div>
+					<div class="col-8">
+						<h4>Ziggy al'Thor</h4>
+						<p>Rank: 1st</p>
+					</div>
+				</div>
+				<div class="row user-snippet">
+					<div class="col-4">
+						<img src="/src/assets/avatar/avatar3.jpg" alt="User avatar" width="64px" height="64px" class="border-orange">
+					</div>
+					<div class="col-8">
+						<h4>Ziggy al'Thor</h4>
+						<p>Rank: 1st</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
