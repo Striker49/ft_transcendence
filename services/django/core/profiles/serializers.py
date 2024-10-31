@@ -6,7 +6,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='UID.username')
     email = serializers.ReadOnlyField(source='UID.email')
     UID = serializers.ReadOnlyField(source='UID.id')
-    image_url = serializers.ImageField(required=False)
     
     class Meta:
         model = models.UserProfile
@@ -15,7 +14,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'id',
             'first_name', 
             'last_name',
-            'image_url',
             'avatar_path',
             'bio',
             'lang',
@@ -39,4 +37,17 @@ class UserFriendshipSerializer(serializers.ModelSerializer):
 			'user2_ID',
 			'user2_username',
 			'type',
+		)
+  
+class UserCustomAvatarSerializer(serializers.ModelSerializer):
+	"""serialises a UserFriendship object"""
+
+	image_url = serializers.ImageField(required=False)
+	UID = serializers.ReadOnlyField(source='UID.id')
+
+	class Meta:
+		model = models.UserCustomAvatar
+		fields = (
+			'UID',
+			'image_url',
 		)
