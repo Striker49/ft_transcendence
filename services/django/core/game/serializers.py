@@ -66,5 +66,5 @@ class PlayedGamesSerializer(serializers.ModelSerializer):
 		)
 		extra_kwargs = {
 		'player2_UID': {'required': False},
-		'username_player2': {'required': False},
+		'username_player2': {'required': False}
 		}

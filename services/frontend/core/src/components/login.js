@@ -71,7 +71,6 @@ const logout = () => {
 		if (window.location.pathname === "/profile") {
 			updateProfile();
 		}
-		localStorage.clear();
 	}
 };
 
