@@ -54,6 +54,7 @@ services:
       context: ./services/nginx
       dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     volumes:
+      - ./services/nginx/core/config:/etc/nginx/conf.d
       - ./services/django:/code
     ports:
       - "443:443"
