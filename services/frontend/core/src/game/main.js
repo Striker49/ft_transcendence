@@ -412,6 +412,8 @@ const headers = new Headers({
 })
 
 async function sendGameStats() {
+    if (!localStorage.getItem("authToken"))
+		return;
 	const url = "https://localhost/api/game/played/";
     console.log(localStorage.getItem("authToken"));
 	try {

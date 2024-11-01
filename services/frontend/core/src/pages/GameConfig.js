@@ -11,6 +11,8 @@ const options = {
 };
 
 async function getUserProfile() {
+	if (!localStorage.getItem("authToken"))
+		return;
 	const uid = localStorage.getItem("UID");
 	const url = `https://localhost/api/profiles/${uid}`;
 	try {
@@ -23,7 +25,6 @@ async function getUserProfile() {
 		return userData;
 	} catch (error) {
 		console.error(error.message);
-		// userData = {first_name: "Guest"};
 	}
 }
 

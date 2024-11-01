@@ -1,5 +1,18 @@
 import Abstract from "./Abstract.js";
 
+
+const validateTourneyUsername = (username, isValid) => {
+
+	const span = username.nextElementSibling;
+
+	if (username.value === "") {
+		printError(span, "usernameRequired", "Username is required");
+		return false;
+	}
+	clearSpan(span);
+	return isValid;
+};
+
 const headers = new Headers({
 	"Content-Type": "application/json",
 	"Authorization": "Token " + localStorage.getItem("authToken")
@@ -11,8 +24,10 @@ const options = {
 };
 
 async function getUserProfile() {
+	if (!localStorage.getItem("authToken"))
+		return;
 	const uid = localStorage.getItem("UID");
-	const url = `https://localhost/api/profiles/${uid}`;
+	const url = `https://localhost/api/profiles/${uid}/`;
 	try {
 		const response = await fetch(url, options);
 		if(!response.ok) { 
@@ -46,23 +61,23 @@ export default class extends Abstract {
 				<form action="" method="post" enctype="multipart/form-data" class="fw-bold" id="tourney-config-form">
 				<div class="column p-5 py-2 pt-4">
 					<label for="player1" class="form-label"><span data-i18n-key="player">Player</span> 1</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player1" id="player1">
 					<label for="player3" class="form-label pt-4"><span data-i18n-key="player">Player</span> 3</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player3" id="player3">
 					<label for="player5" class="form-label pt-4"><span data-i18n-key="player">Player</span> 5</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player5" id="player5">
 					<label for="player7" class="form-label pt-4"><span data-i18n-key="player">Player</span> 7</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player7" id="player7">
 				</div>
 				<div class="column p-5 py-2 pt-4">
 					<label for="player2" class="form-label"><span data-i18n-key="player">Player</span> 2</label>
-					<input type="text" class="form-control" name="lastname" id="lastname">
+					<input type="text" class="form-control" name="player2" id="player2">
 					<label for="player4" class="form-label pt-4"><span data-i18n-key="player">Player</span> 4</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player4" id="player4">
 					<label for="player6" class="form-label pt-4"><span data-i18n-key="player">Player</span> 6</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player6" id="player6">
 					<label for="player8" class="form-label pt-4"><span data-i18n-key="player">Player</span> 8</label>
-					<input type="text" class="form-control" name="firstname" id="firstname">
+					<input type="text" class="form-control" name="player8" id="player8">
 				</div>
 			</form>
 				<div class="p-5">
@@ -111,4 +126,14 @@ document.addEventListener("change", (event) => {
 	}
 })
 
-// document.addEventListener("s")
+
+document.addEventListener("click", (event) => {
+	if (event.target.matches("#startBtn"))
+	{
+		event.preventDefault();
+		if (validateTourneyUsername())
+			console.log("names are OK");
+		else
+			console.log("names are NOT OK");
+	}
+})

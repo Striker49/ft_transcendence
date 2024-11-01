@@ -59,7 +59,11 @@ const submitRegistrationForm = async form => {
 		"profile": {
 			"first_name": form.firstname.value,
 			"last_name": form.lastname.value,
-			"avatar_path": avatarPath(avatar),
+			"avatar_path": avatarPath(
+				
+
+				
+			),
 			"bio": form.bio.value,
 			"lang": form.lang.value
 		}
