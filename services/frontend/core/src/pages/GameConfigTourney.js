@@ -1,17 +1,35 @@
 import Abstract from "./Abstract.js";
 
 
-const validateTourneyUsername = (username, isValid) => {
+// const validateTourneyUsername = (username, isValid) => {
 
-	const span = username.nextElementSibling;
+// 	const span = username.nextElementSibling;
 
-	if (username.value === "") {
-		printError(span, "usernameRequired", "Username is required");
-		return false;
-	}
-	clearSpan(span);
-	return isValid;
-};
+// 	if (username.value === "") {
+// 		printError(span, "usernameRequired", "Username is required");
+// 		return false;
+// 	}
+// 	clearSpan(span);
+// 	return isValid;
+// };
+
+// const validateForm = form => {
+
+// 	const inputs = form.elements;
+// 	let isValid = true;
+	
+// 	for (let i = 0; i < inputs.length; ++i) {
+// 		if (inputs[i].name === "email" || inputs[i].type === "email") {
+// 			isValid = validateEmail(inputs[i], isValid);
+// 		} else if (inputs[i].name === "password" || inputs[i].type === "password") {
+// 			isValid = validatePassword(inputs[i], isValid);
+// 		} else if (inputs[i].name === "username") {
+// 			isValid = validateUsername(inputs[i], isValid);
+// 		}
+// 	}
+// 	return isValid;
+// };
+
 
 const headers = new Headers({
 	"Content-Type": "application/json",
@@ -127,13 +145,13 @@ document.addEventListener("change", (event) => {
 })
 
 
-document.addEventListener("click", (event) => {
-	if (event.target.matches("#startBtn"))
-	{
-		event.preventDefault();
-		if (validateTourneyUsername())
-			console.log("names are OK");
-		else
-			console.log("names are NOT OK");
-	}
-})
+// document.addEventListener("click", (event) => {
+// 	if (event.target.matches("#startBtn"))
+// 	{
+// 		event.preventDefault();
+// 		if (validateForm())
+// 			console.log("names are OK");
+// 		else
+// 			console.log("names are NOT OK");
+// 	}
+// })

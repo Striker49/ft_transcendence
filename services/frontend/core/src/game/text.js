@@ -39,7 +39,8 @@ export function createWinnerText(callback, winnerWord, nameWinner) {
 
 	const loader = new FontLoader();
 
-	let textWinner = `WINNER\n${nameWinner}`;
+	let textWinner = `${winnerWord}\n${nameWinner}`;
+	console.log(textWinner);
 
 	loader.load('/src/fonts/helvetiker_regular.typeface.json', function (font) {
 		const geometry = new TextGeometry(textWinner, {

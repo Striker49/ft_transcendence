@@ -57,6 +57,7 @@ class PlayedGamesSerializer(serializers.ModelSerializer):
 		model = models.PlayedGames
 		fields = (
 			'game_id',
+			'created',
 			'player1_UID',
 			'player2_UID',
 			'username_player2',

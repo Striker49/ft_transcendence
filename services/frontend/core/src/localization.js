@@ -112,7 +112,6 @@ export function translatePage() {
 function translateElement(element) {
 	//Checks if we have loaded translations already if not we're 
 	//probably still on the first page
-	// console.log(element);
 	if (JSON.stringify(translations) === '{}')
 		return;
 	if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
@@ -126,4 +125,16 @@ function translateElement(element) {
 	} else {
 		console.warn(`Translation key "${key}" not found.`);
 	}
+}
+
+export function getTranslatedWord(wordKey) {
+	console.log("getTranslatedWord", wordKey);
+	const translations = {
+		en: { winner: "WINNER"},
+		fr: { winner: "GAGNANT"},
+		nl: { winner: "WINNAAR"},
+	}
+
+	const currentLang = localStorage.getItem("lang") || "en";
+	return (translations[currentLang][wordKey] || wordKey);
 }

@@ -5,6 +5,7 @@ import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
+import { getTranslatedWord } from '../localization.js';
 
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
@@ -348,10 +349,9 @@ export const updateGameScene = () => {
     }
 }
 
-let winnerWord = "WINNER";
-// nameP1 = "Gargamel"
 
 function showWinner(winnerName) {
+    let winnerWord = getTranslatedWord("winner");
     createWinnerText(function (text2) {
         winnerText = text2;
         scene.add(winnerText);
@@ -361,25 +361,33 @@ function showWinner(winnerName) {
 function insertButton() {
     const div = document.createElement('div');
     div.setAttribute('class', "mt-5 d-flex justify-content-center");
-    const button = document.createElement('a');
-    button.setAttribute('href', '/endGame');
-    button.setAttribute('data-i18n-key', 'ranking');
-    button.setAttribute('class', 'btn btn-primary');
-    button.setAttribute('id', 'ranking');
-    button.setAttribute('data-link', 'true');
-    button.innerHTML = "Ranking";
+    const rankingButton = document.createElement('a');
+    rankingButton.setAttribute('href', '/endGame');
+    rankingButton.setAttribute('data-i18n-key', 'ranking');
+    rankingButton.setAttribute('class', 'btn btn-primary');
+    rankingButton.setAttribute('id', 'ranking');
+    rankingButton.setAttribute('data-link', 'true');
+    rankingButton.innerHTML = "Ranking";
+    const playAgainButton = document.createElement('a');
+    playAgainButton.setAttribute('href', '/gameConfig');
+    playAgainButton.setAttribute('data-i18n-key', 'playAgain');
+    playAgainButton.setAttribute('class', 'btn btn-primary');
+    playAgainButton.setAttribute('id', 'playAgain');
+    playAgainButton.setAttribute('data-link', 'true');
+    playAgainButton.innerHTML = "Play Again";
     const body = document.querySelector("main");
     body.appendChild(div);
-    div.appendChild(button);
-    console.log("body", body);
+    div.appendChild(rankingButton);
+    div.appendChild(playAgainButton);
+    console.debug("body", body);
 }
 
 function endGame(winner) {
     const winnerName = (winner == 2 ? nameP1 : nameP2);
-    console.log("winner", winner);
-    console.log("nameP1", nameP1);
-    console.log("nameP2", nameP2);
-    console.log("winnerName", winnerName);
+    console.debug("winner", winner);
+    console.debug("nameP1", nameP1);
+    console.debug("nameP2", nameP2);
+    console.debug("winnerName", winnerName);
     removeGameObjects();
     // scene.remove.apply(scene, scene.children);
     // cancelAnimationFrame(animationID);
@@ -403,6 +411,15 @@ function removeGameObjects() {
     scene.remove(paddleR);
     ground.kill();
     scene.remove(ground);
+    currentText.material.dispose();
+    currentText.geometry.dispose();
+    scene.remove(currentText);
+    if (winnerText)
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
 }
 
 
@@ -415,7 +432,7 @@ async function sendGameStats() {
     if (!localStorage.getItem("authToken"))
 		return;
 	const url = "https://localhost/api/game/played/";
-    console.log(localStorage.getItem("authToken"));
+    console.debug(localStorage.getItem("authToken"));
 	try {
 		const response = await fetch(url, {
 			method: "POST",
