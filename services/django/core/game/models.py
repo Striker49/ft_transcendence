@@ -57,6 +57,7 @@ class PlayedGames(models.Model):
                                related_name="player2_games", 
                                null=True, 
                                blank=True)
+	username_player1=models.CharField(max_length=256, blank=True, null=True)
 	username_player2=models.CharField(max_length=256, blank=True, null=True)
 	score_player1=models.PositiveIntegerField(default=0)
 	score_player2=models.PositiveIntegerField(default=0)
@@ -78,7 +79,12 @@ class PlayedGames(models.Model):
 			opponent = self.username_player2
 		else:
 			opponent = "AI"
-		return  self.player1_UID.username + " vs " + opponent + " (" + formated_date.__str__() + ")"
+		return  self.username_player1.__str__() + " vs " + opponent + " (" + formated_date.__str__() + ")"
 
 	def formatted_created(self):
 		return self.created.strftime("%Y-%m-%d %H:%M:%S")
+
+	def save(self, *args, **kwargs):
+		if self.player1_UID:
+			self.username_player1 = self.player1_UID.username
+		super().save(*args, **kwargs)
