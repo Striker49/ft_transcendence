@@ -51,6 +51,7 @@ class PlayedGamesSerializer(serializers.ModelSerializer):
 	"""serialises a playedgame object"""
 
 	game_id = serializers.ReadOnlyField(source='id')
+	created = serializers.ReadOnlyField(source='formatted_created')
  
 	class Meta:
 		model = models.PlayedGames

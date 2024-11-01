@@ -164,4 +164,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'mediafiles')
 
-MEDIA_URL = '/api/backend-media/'
+MEDIA_URL = '/api/media/'
