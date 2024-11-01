@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
 	"""Manager for users"""
@@ -47,7 +48,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email',]
- 
+	
+	def formatted_created(self):
+		local_created = timezone.localtime(self.created)
+		return local_created.strftime("%Y-%m-%d %H:%M:%S")
+
 	class Meta:
 		ordering = ['id']
 		verbose_name = "User"

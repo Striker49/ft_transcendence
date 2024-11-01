@@ -39,6 +39,9 @@ class GameStats(models.Model):
 			(Q(wins=self.wins) & Q(losses__lt=self.losses))).count()
 		return rank + 1
 
+	def formatted_created(self):
+		local_created = timezone.localtime(self.created)
+		return local_created.strftime("%Y-%m-%d %H:%M:%S")
 
 	def __str__(self):
 		"""Return string representation of our user"""
@@ -82,7 +85,8 @@ class PlayedGames(models.Model):
 		return  self.username_player1.__str__() + " vs " + opponent + " (" + formated_date.__str__() + ")"
 
 	def formatted_created(self):
-		return self.created.strftime("%Y-%m-%d %H:%M:%S")
+		local_created = timezone.localtime(self.created)
+		return local_created.strftime("%Y-%m-%d %H:%M:%S")
 
 	def save(self, *args, **kwargs):
 		if self.player1_UID:

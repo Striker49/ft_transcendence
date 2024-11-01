@@ -8,7 +8,8 @@ class GameStatsSerializer(serializers.ModelSerializer):
 	total_games = serializers.ReadOnlyField()
 	rank = serializers.ReadOnlyField()
 	username = serializers.ReadOnlyField(source='UID.username')
-	last_played = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+	last_played = serializers.ReadOnlyField(source='formatted_created')
+	perfect_games = serializers.ReadOnlyField()
 
 	class Meta:
 		model = models.GameStats
