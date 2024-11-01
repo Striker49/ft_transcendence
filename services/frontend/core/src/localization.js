@@ -7,21 +7,23 @@ let defaultLocale = "en";
 let translations = {};
 
 
+function cycleSupportedLang(language) {
+	for (let i = 0; supportedLocales[i]; i++)
+	{
+		if (!language.split("-")[0].search(supportedLocales[i]))
+		{
+			console.debug("NAVLANG:", language)
+			console.debug("FOUND:", supportedLocales[i])
+			return (supportedLocales[i]);
+		}
+	}
+}
+
 function findSupported(navLang) {
 	console.debug("FIND IF SUPPORTED LANGUAGE");
 	//Will check if nav languages are supported from top to bottom
 	for (let j = 0; navLang[j]; j++)
-	{
-		for (let i = 0; supportedLocales[i]; i++)
-		{
-			if (!navLang[j].split("-")[0].search(supportedLocales[i]))
-			{
-				console.debug("NAVLANG:", navLang[j])
-				console.debug("FOUND:", supportedLocales[i])
-				return (supportedLocales[i]);
-			}
-		}
-	}
+		cycleSupportedLang(navLang[j]);
 	console.debug("NO LANGUAGE SUPPORTED");
 	return (defaultLocale);
 }
@@ -32,7 +34,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	let newLocale;
 
 	//Change locale value for localStorage if valid or the navigator language
-	if (localStorage.getItem("lang") && findSupported(localStorage.getItem("lang")) === localStorage.getItem("lang"))
+	if (localStorage.getItem("lang") && cycleSupportedLang(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
 	else
 	{
