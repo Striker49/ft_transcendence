@@ -1,3 +1,4 @@
+import { login } from "./login.js";
 import { translatePage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 
@@ -44,30 +45,31 @@ const avatarPath = customURL => {
 };
 
 const uploadAvatar = async avatar => {
-	// ========== API for upload ===========
-	const url = "https://localhost/api/profiles/avatar/";
-	const formData = new FormData();
-	formData.append("image_url", avatar);
-	console.log(formData.get("image_url"));
-	const token = localStorage.getItem("authToken");
 
-	const headers = new Headers({
-		"Authorization": `Token ${token}`
-	});
+    const url = "https://localhost/api/profiles/avatar/";
 
-	try {
-		const response = await fetch(url, {
-			method: "POST",
-			body: formData,
-			headers: headers
-		});
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-		console.log("Image upload successful");
-	} catch (error) {
-		console.error(error.message);
-	}
+    const formData = new FormData();
+    formData.append("image_url", avatar);
+    console.log(formData.get("image_url"));
+
+    const token = localStorage.getItem("authToken");
+    const headers = new Headers({
+        "Authorization": `Token ${token}`
+    });
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData,
+            headers: headers
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        console.log("Image Upload Successful");
+    } catch (error) {
+        console.error(error.message);
+    }
 };
 
 const submitRegistrationForm = async form => {
@@ -103,6 +105,9 @@ const submitRegistrationForm = async form => {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
+
+		login();
+
         // ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
             uploadAvatar(data.get("avatar"));
@@ -134,15 +139,15 @@ const handleFetch = async (url, method, body, headers) => {
 	return response.json();
 };
 
-const submitEditForm = async form => {
+const submitProfileForm = async form => {
 
-	const formData = new FormData(form);
+	const data = new FormData(form);
 
 	const formAvatar = {};
 	const formProfiles = {};
 	const formUsers = {};
 
-	for (const [key, value] of formData.entries()) {
+	for (const [key, value] of data.entries()) {
 	
 		switch (key) {
 
@@ -184,7 +189,7 @@ const submitEditForm = async form => {
 		// const json_avatar = await handleFetch(urlAvatar, "POST", JSON.stringify(formAvatar), headers);
 		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
 
-		console.log("======= Submitted Edit Form =======");
+		console.log("======= Submitted Profile Form =======");
 		console.log(json_users);
 		console.log(json_profiles);
 
@@ -592,7 +597,7 @@ document.addEventListener("submit", e => {
 		case element.matches("#edit-form"):
 			e.preventDefault();
 			if (validateForm(element)) {
-				submitEditForm(element);
+				submitProfileForm(element);
 			}
 			break;
 	}

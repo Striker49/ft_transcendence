@@ -15,7 +15,7 @@ const headers = new Headers({
 	"Content-Type": "application/json"
 });
 
-const login = async form => {
+export const login = async form => {
 	const formData = {
 		email_or_username: form.username.value,
 		password: form.password.value
