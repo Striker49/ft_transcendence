@@ -13,6 +13,8 @@ fi
 
 # python manage.py flush --no-input
 python manage.py makemigrations users
+python manage.py makemigrations profiles
+python manage.py makemigrations game
 python manage.py makemigrations
 python manage.py migrate --noinput
 
