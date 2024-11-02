@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+__init__*
+.venv/
+
+# Django
+static
+
+# Build files
+dist/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS
+.DS_Store
+
+# Environment
+.env
+secrets
+test
+
+# Editor files
+.vscode/
+.code
+
+# Django migrations
+migrations/
