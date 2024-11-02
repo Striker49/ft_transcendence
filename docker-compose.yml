@@ -35,7 +35,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: python manage.py runserver 0.0.0.0:8000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/hello"]
       interval: 10s
