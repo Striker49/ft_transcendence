@@ -13,7 +13,7 @@ const ambientLight = new THREE.AmbientLight(0xFFFFFF);
 const gridHelper = new THREE.GridHelper(200, 50);
 
 // Torus Object
-const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 );
+const geometry = new THREE.TorusGeometry( 50, 6, 16, 100 );
 const material = new THREE.MeshStandardMaterial( { color: 0xFF6347 } );
 const torus = new THREE.Mesh( geometry, material );
 
@@ -60,9 +60,9 @@ const onWindowResize = () => {
 };
 
 const updateMainScene = () => {
-	torus.rotation.x += 0.01;
-	torus.rotation.y += 0.005;
-	torus.rotation.z += 0.01;
+	torus.rotation.x += 0.001;
+	torus.rotation.y += 0.002;
+	torus.rotation.z += 0.001;
 };
 
 // Animation Loop
