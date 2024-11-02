@@ -118,3 +118,7 @@ h1 {
 .flag:hover {
     background-color: #f1f1f1;
 }
+
+#ranking, #playAgain {
+    margin: 0 10px;
+}

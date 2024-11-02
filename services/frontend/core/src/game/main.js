@@ -40,8 +40,17 @@ let paddleR;
 let ground;
 let ball;
 
+const textureLoader = new THREE.TextureLoader();
+const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+
 function updateTheme(theme) {
     switch(theme) {
+        case 'Custom':
+            paddleL.material.color.set(0x00ff00); // Green
+            paddleR.material.color.set(0xff0000); // Red
+            ground.material.map = customTexture; // 
+            ground.material.color.set(0xffffff); // Reset color to avoid tinting
+            break;
         case 'Christmas':
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
@@ -63,6 +72,7 @@ function updateTheme(theme) {
             paddleR.material.color.set(0xff0000); // Red
             ground.material.color.set(0x0369a1);  // Blue
     }
+    ground.material.needsUpdate = true;
 }
 
 function startGame() {
@@ -154,7 +164,7 @@ function initGame() {
     });
     ball.castShadow = true;
     // scene.add(ball);
-    
+
     //Create ground
     ground = new Box({
         width: groundWidth, 
@@ -367,6 +377,7 @@ function insertButton() {
     rankingButton.setAttribute('class', 'btn btn-primary');
     rankingButton.setAttribute('id', 'ranking');
     rankingButton.setAttribute('data-link', 'true');
+    rankingButton.style.margin = '0 10px';
     rankingButton.innerHTML = "Ranking";
     const playAgainButton = document.createElement('a');
     playAgainButton.setAttribute('href', '/gameConfig');
@@ -375,6 +386,7 @@ function insertButton() {
     playAgainButton.setAttribute('id', 'playAgain');
     playAgainButton.setAttribute('data-link', 'true');
     playAgainButton.innerHTML = "Play Again";
+    playAgainButton.style.margin = '0 10px';
     const body = document.querySelector("main");
     body.appendChild(div);
     div.appendChild(rankingButton);
