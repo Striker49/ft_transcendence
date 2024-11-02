@@ -1,8 +1,0 @@
-{
-	"liveServer.settings.AdvanceCustomBrowserCmdLine": "",
-	"liveServer.settings.mount": [],
-	"python.autoComplete.extraPaths": [
-		  "/code/core"  // Adjust the path to your project structure in the container
-	],
-	"liveServer.settings.port": 3001
-}
