@@ -89,3 +89,32 @@ h1 {
 	display: table;
 	clear: both;
 }
+
+.language-switcher {
+    position: relative;
+    display: inline-block;
+}
+
+.globe-icon {
+    width: 24px;
+    cursor: pointer;
+}
+
+.flag-options {
+    display: none; /* Hidden by default */
+    position: absolute;
+	background-color: transparent;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+}
+
+.flag {
+    width: 24px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.flag:hover {
+    background-color: #f1f1f1;
+}

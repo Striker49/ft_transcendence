@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	console.info("Locale:", newLocale);
 	requestAnimationFrame( () => {
 	setLocale(newLocale);
-	document.querySelector("[data-i18n-switcher]").value = newLocale;
+	//document.querySelector("[data-i18n-switcher]").value = newLocale;
 	});
 });
 
@@ -140,3 +140,34 @@ export function getTranslatedWord(wordKey) {
 	const currentLang = localStorage.getItem("lang") || "en";
 	return (translations[currentLang][wordKey] || wordKey);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        const globeIcon = document.getElementById("globeIcon");
+        const flagOptions = document.getElementById("flagOptions");
+
+        if (globeIcon && flagOptions) {
+            console.info("Language selector elements found.");
+            
+            globeIcon.addEventListener("click", () => {
+                flagOptions.style.display = flagOptions.style.display === "block" ? "none" : "block";
+            });
+
+            document.querySelectorAll(".flag").forEach(flag => {
+                flag.addEventListener("click", (event) => {
+                    const selectedLang = event.target.getAttribute("data-lang");
+                    setLocale(selectedLang); 
+                    flagOptions.style.display = "none";
+                });
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!document.getElementById("languageDropdown").contains(event.target)) {
+                    flagOptions.style.display = "none";
+                }
+            });
+        } else {
+            console.error("Error: Language selector elements not found.");
+        }
+    }, 50);
+});
