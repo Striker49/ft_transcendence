@@ -83,3 +83,33 @@ export class Box extends THREE.Mesh {
         this.geometry.dispose();
     }
 };
+
+// Create and export wall objects
+export const createWalls = (scene, width, depth, wallThickness, wallHeight, groundLevel) => {
+    // Adjust the y-position to align with the ground level
+    const wallYPosition = groundLevel + wallHeight / 2;
+
+    // Top wall
+    const topWall = new Box({
+        width: width,        
+        height: wallHeight, 
+        depth: wallThickness,
+        color: '0xffffff',   
+        position: { x: 0, y: wallYPosition, z: -depth / 2 - wallThickness / 2 }
+    });
+
+    // Bottom wall
+    const bottomWall = new Box({
+        width: width,      
+        height: wallHeight,  
+        depth: wallThickness,
+        color: '0xffffff',   
+        position: { x: 0, y: wallYPosition, z: depth / 2 + wallThickness / 2 } 
+    });
+
+    // Add walls to the scene
+    scene.add(topWall);
+    scene.add(bottomWall);
+    
+    return { topWall, bottomWall };
+};

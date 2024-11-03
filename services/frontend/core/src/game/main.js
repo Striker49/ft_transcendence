@@ -1,12 +1,12 @@
 import * as THREE from 'three'
 import { scene, camera, renderer, controls } from "../threejs/base.js";
 import { Box } from './box.js';
+import { createWalls } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
 import { getTranslatedWord } from '../localization.js';
-
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
 light.position.z = -1;
@@ -18,7 +18,6 @@ light.shadow.camera.top = 50;
 light.shadow.camera.bottom = -50;
 light.shadow.mapSize.set(9192, 9192);
 renderer.shadowMap.enabled = true;
-
 
 //Seting variable value
 //<----need to fetch player name-------->
@@ -39,17 +38,54 @@ let paddleL;
 let paddleR;
 let ground;
 let ball;
+let topWall;
+let bottomWall;
 
 const textureLoader = new THREE.TextureLoader();
 const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+const customWallTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
 
 function updateTheme(theme) {
     switch(theme) {
         case 'Custom':
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
-            ground.material.map = customTexture; // 
+
+            // Apply the custom texture to the walls
+            if (customWallTexture) {
+                // Set texture properties for proportional scaling
+                customWallTexture.wrapS = THREE.RepeatWrapping;
+                customWallTexture.wrapT = THREE.RepeatWrapping;
+
+                // Adjust the repeat property based on wall dimensions
+                topWall.material.map = customWallTexture;
+                bottomWall.material.map = customWallTexture;
+
+                // Scale the texture proportionally
+                customWallTexture.repeat.set(
+                    topWall.width / 10,  // Adjust the divisor to control scaling
+                    topWall.height / 10  // Adjust the divisor to control scaling
+                );
+
+                topWall.material.needsUpdate = true;
+                bottomWall.material.needsUpdate = true;
+            } else {
+                // Remove texture and reset to color only
+                topWall.material.map = null;
+                bottomWall.material.map = null;
+                topWall.material.color.set(0xffffff); // Default wall color
+                bottomWall.material.color.set(0xffffff); // Default wall color
+                topWall.material.needsUpdate = true;
+                bottomWall.material.needsUpdate = true;
+            }
+
+            topWall.material.needsUpdate = true;
+            bottomWall.material.needsUpdate = true;
+
+            // Apply the texture to the ground if needed
+            ground.material.map = customTexture ? customTexture : null;
             ground.material.color.set(0xffffff); // Reset color to avoid tinting
+            ground.material.needsUpdate = true;
             break;
         case 'Christmas':
             paddleL.material.color.set(0x00ff00); // Green
@@ -81,6 +117,8 @@ function startGame() {
     scene.add(paddleR);
     scene.add(ball);
     scene.add(ground);
+    scene.add(topWall);
+    scene.add(bottomWall);
     
     updateScore(); // Make sure this function updates the score correctly
     updateTheme(localStorage.getItem("theme"));
@@ -179,6 +217,7 @@ function initGame() {
     });
     ground.receiveShadow = true;
     // scene.add(ground);
+    ({ topWall, bottomWall } = createWalls(scene, groundWidth, 9, 0.5, 1.5, ground.position.y - 0.25));
     frames = 0;
     startGame();
 }
@@ -359,7 +398,6 @@ export const updateGameScene = () => {
     }
 }
 
-
 function showWinner(winnerName) {
     let winnerWord = getTranslatedWord("winner");
     createWinnerText(function (text2) {
@@ -421,6 +459,10 @@ function removeGameObjects() {
     scene.remove(paddleL);
     paddleR.kill();
     scene.remove(paddleR);
+    topWall.kill();
+    scene.remove(topWall);
+    bottomWall.kill();
+    scene.remove(bottomWall);
     ground.kill();
     scene.remove(ground);
     currentText.material.dispose();
