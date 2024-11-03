@@ -7,21 +7,23 @@ let defaultLocale = "en";
 let translations = {};
 
 
+function cycleSupportedLang(language) {
+	for (let i = 0; supportedLocales[i]; i++)
+	{
+		if (!language.split("-")[0].search(supportedLocales[i]))
+		{
+			console.debug("NAVLANG:", language)
+			console.debug("FOUND:", supportedLocales[i])
+			return (supportedLocales[i]);
+		}
+	}
+}
+
 function findSupported(navLang) {
 	console.debug("FIND IF SUPPORTED LANGUAGE");
 	//Will check if nav languages are supported from top to bottom
 	for (let j = 0; navLang[j]; j++)
-	{
-		for (let i = 0; supportedLocales[i]; i++)
-		{
-			if (!navLang[j].split("-")[0].search(supportedLocales[i]))
-			{
-				console.debug("NAVLANG:", navLang[j])
-				console.debug("FOUND:", supportedLocales[i])
-				return (supportedLocales[i]);
-			}
-		}
-	}
+		cycleSupportedLang(navLang[j]);
 	console.debug("NO LANGUAGE SUPPORTED");
 	return (defaultLocale);
 }
@@ -32,7 +34,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	let newLocale;
 
 	//Change locale value for localStorage if valid or the navigator language
-	if (localStorage.getItem("lang") && findSupported(localStorage.getItem("lang")) === localStorage.getItem("lang"))
+	if (localStorage.getItem("lang") && cycleSupportedLang(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
 	else
 	{
@@ -46,7 +48,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	console.info("Locale:", newLocale);
 	requestAnimationFrame( () => {
 	setLocale(newLocale);
-	document.querySelector("[data-i18n-switcher]").value = newLocale;
+	//document.querySelector("[data-i18n-switcher]").value = newLocale;
 	});
 });
 
@@ -112,10 +114,10 @@ export function translatePage() {
 function translateElement(element) {
 	//Checks if we have loaded translations already if not we're 
 	//probably still on the first page
-	// console.log(element);
 	if (JSON.stringify(translations) === '{}')
 		return;
-
+	if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
+		return;
 	// console.log(translations);
 	const key = element.getAttribute("data-i18n-key");
 	const translation = translations[key];
@@ -126,3 +128,46 @@ function translateElement(element) {
 		console.warn(`Translation key "${key}" not found.`);
 	}
 }
+
+export function getTranslatedWord(wordKey) {
+	console.log("getTranslatedWord", wordKey);
+	const translations = {
+		en: { winner: "WINNER"},
+		fr: { winner: "GAGNANT"},
+		nl: { winner: "WINNAAR"},
+	}
+
+	const currentLang = localStorage.getItem("lang") || "en";
+	return (translations[currentLang][wordKey] || wordKey);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        const globeIcon = document.getElementById("globeIcon");
+        const flagOptions = document.getElementById("flagOptions");
+
+        if (globeIcon && flagOptions) {
+            console.info("Language selector elements found.");
+            
+            globeIcon.addEventListener("click", () => {
+                flagOptions.style.display = flagOptions.style.display === "block" ? "none" : "block";
+            });
+
+            document.querySelectorAll(".flag").forEach(flag => {
+                flag.addEventListener("click", (event) => {
+                    const selectedLang = event.target.getAttribute("data-lang");
+                    setLocale(selectedLang); 
+                    flagOptions.style.display = "none";
+                });
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!document.getElementById("languageDropdown").contains(event.target)) {
+                    flagOptions.style.display = "none";
+                }
+            });
+        } else {
+            console.error("Error: Language selector elements not found.");
+        }
+    }, 50);
+});

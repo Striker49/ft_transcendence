@@ -17,13 +17,15 @@ export default `
 						<a class="nav-link" href="/profile" data-link data-i18n-key="profile">Profile</a>
 					</li>
 				</ul>
-				    <div class="navbar-right">
-						<!-- ... -->
-						<select data-i18n-switcher id="changeLang" class="locale-switcher">
-						<option value="en">English</option>
-						<option value="fr">Français</option>
-						<option value="nl">Nederlands</option>
-						</select>
+				<div class="navbar-right">
+					<div id="languageDropdown" class="language-switcher">
+						<img id="globeIcon" src="src/assets/globe.png" alt="Language Selector" class="globe-icon" />
+						<div id="flagOptions" class="flag-options">
+							<img src="src/assets/flags/en.png" alt="English" class="flag" data-lang="en" />
+							<img src="src/assets/flags/fr.png" alt="Français" class="flag" data-lang="fr" />
+							<img src="src/assets/flags/nl.png" alt="Nederlands" class="flag" data-lang="nl" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

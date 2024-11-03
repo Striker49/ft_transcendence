@@ -1,19 +1,14 @@
 import * as THREE from 'three'
 import { scene, camera, renderer, controls } from "../threejs/base.js";
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
-import { createText } from './text.js';
+import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
+import { getTranslatedWord } from '../localization.js';
 
-// const scene = new THREE.Scene();
-// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// camera.position.set(0, 9, 0);
-// scene.position.z = 1;
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
-// const light2 = new THREE.AmbientLight(0xffffff, 1);  // (color, intensity)
 light.position.z = -1;
 light.position.y = 3;
 light.castShadow = true;
@@ -22,26 +17,16 @@ light.shadow.camera.right = 50;
 light.shadow.camera.top = 50;
 light.shadow.camera.bottom = -50;
 light.shadow.mapSize.set(9192, 9192);
-// scene.add(light, light2);
-
-// const renderer = new THREE.WebGLRenderer({
-//     alpha: true,
-//     antialias: true,
-//     canvas: document.querySelector('#bg')
-// });
 renderer.shadowMap.enabled = true;
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// document.body.appendChild(renderer.domElement);
 
-// To move the scene around with the mouse
-// const controls = new OrbitControls(camera, renderer.domElement);
 
 //Seting variable value
 //<----need to fetch player name-------->
 let isStarted = false;
 let speed = 0.15;
-let text, currentText;
+let text, currentText, winnerText;
 let scoreP1, scoreP2;
+let nameP1, nameP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
@@ -55,8 +40,17 @@ let paddleR;
 let ground;
 let ball;
 
+const textureLoader = new THREE.TextureLoader();
+const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+
 function updateTheme(theme) {
     switch(theme) {
+        case 'Custom':
+            paddleL.material.color.set(0x00ff00); // Green
+            paddleR.material.color.set(0xff0000); // Red
+            ground.material.map = customTexture; // 
+            ground.material.color.set(0xffffff); // Reset color to avoid tinting
+            break;
         case 'Christmas':
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
@@ -78,6 +72,7 @@ function updateTheme(theme) {
             paddleR.material.color.set(0xff0000); // Red
             ground.material.color.set(0x0369a1);  // Blue
     }
+    ground.material.needsUpdate = true;
 }
 
 function startGame() {
@@ -93,8 +88,17 @@ function startGame() {
     state = 1;
 }
 
-function initGame() {
+function getUsername(queryName) {
+    let username = "No name";
+    const params = new URLSearchParams(window.location.search);
+    if (params.get(queryName))
+        username = params.get(queryName);
+    return (username);
+}
 
+function initGame() {
+    nameP1 = getUsername("username");
+    nameP2 = getUsername("username2");
     scoreP1 = 0;
     scoreP2 = 0;
     numberOfWins = localStorage.getItem("numberOfWins") || 3;
@@ -160,7 +164,7 @@ function initGame() {
     });
     ball.castShadow = true;
     // scene.add(ball);
-    
+
     //Create ground
     ground = new Box({
         width: groundWidth, 
@@ -328,7 +332,7 @@ export function resetBallPosition(ball, winner) {
     frames = 0;
     updateScore();
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
-        endGame();
+        endGame(winner);
 }
 
 //Generates a number between 0.06 and 0.1 and -0.1 and -0.06
@@ -355,14 +359,57 @@ export const updateGameScene = () => {
     }
 }
 
-function endGame() {
+
+function showWinner(winnerName) {
+    let winnerWord = getTranslatedWord("winner");
+    createWinnerText(function (text2) {
+        winnerText = text2;
+        scene.add(winnerText);
+    }, winnerWord, winnerName);
+}
+
+function insertButton() {
+    const div = document.createElement('div');
+    div.setAttribute('class', "mt-5 d-flex justify-content-center");
+    const rankingButton = document.createElement('a');
+    rankingButton.setAttribute('href', '/endGame');
+    rankingButton.setAttribute('data-i18n-key', 'ranking');
+    rankingButton.setAttribute('class', 'btn btn-primary');
+    rankingButton.setAttribute('id', 'ranking');
+    rankingButton.setAttribute('data-link', 'true');
+    rankingButton.style.margin = '0 10px';
+    rankingButton.innerHTML = "Ranking";
+    const playAgainButton = document.createElement('a');
+    playAgainButton.setAttribute('href', '/gameConfig');
+    playAgainButton.setAttribute('data-i18n-key', 'playAgain');
+    playAgainButton.setAttribute('class', 'btn btn-primary');
+    playAgainButton.setAttribute('id', 'playAgain');
+    playAgainButton.setAttribute('data-link', 'true');
+    playAgainButton.innerHTML = "Play Again";
+    playAgainButton.style.margin = '0 10px';
+    const body = document.querySelector("main");
+    body.appendChild(div);
+    div.appendChild(rankingButton);
+    div.appendChild(playAgainButton);
+    console.debug("body", body);
+}
+
+function endGame(winner) {
+    const winnerName = (winner == 2 ? nameP1 : nameP2);
+    console.debug("winner", winner);
+    console.debug("nameP1", nameP1);
+    console.debug("nameP2", nameP2);
+    console.debug("winnerName", winnerName);
     removeGameObjects();
     // scene.remove.apply(scene, scene.children);
     // cancelAnimationFrame(animationID);
     state = 0;
+    updateScore();
+    showWinner(winnerName);
     sendGameStats();
+    insertButton();
     //GoToEndScreen
-    navigateTo("/endGame");
+    // navigateTo("/endGame");
 	// router();
     // window.location.href = "/endGame";
 }
@@ -379,6 +426,12 @@ function removeGameObjects() {
     currentText.material.dispose();
     currentText.geometry.dispose();
     scene.remove(currentText);
+    if (winnerText)
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
 }
 
 
@@ -388,8 +441,10 @@ const headers = new Headers({
 })
 
 async function sendGameStats() {
+    if (!localStorage.getItem("authToken"))
+		return;
 	const url = "https://localhost/api/game/played/";
-    console.log(localStorage.getItem("authToken"));
+    console.debug(localStorage.getItem("authToken"));
 	try {
 		const response = await fetch(url, {
 			method: "POST",
@@ -411,3 +466,12 @@ async function sendGameStats() {
 		console.error(error.message);
 	}
 }
+
+document.addEventListener('click', (event) => {
+    if (event.target.matches("#ranking"))
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
+})

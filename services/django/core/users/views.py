@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from . import serializers, models, permissions
 from rest_framework.authentication import TokenAuthentication
@@ -48,12 +48,6 @@ class UserRegistrationAPIView(APIView):
 	serializer_class = serializers.RegistrationSerializer
 	authentication_classes = (TokenAuthentication,)
 	permission_classes = [AllowAny]
-	
-	# def create(self, request, *args, **kwargs):
-	# 	serializer = serializers.RegistrationSerializer(data=request.data)
-	# 	serializer.is_valid(raise_exception=True)
-	# 	self.perform_create(serializer)
-	# 	return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 	def post(self, request, format=None):
 		serializer = self.serializer_class(data=request.data)
