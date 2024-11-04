@@ -13,7 +13,8 @@ import { translateX } from "../utils/utils.js";
 import { translatePage } from "../localization.js";
 
 export const navigateTo = url => {
-	history.pushState(null, null, url);
+	if (url.search("/game?"))
+		history.pushState(null, null, url);
 	router();
 };
 
