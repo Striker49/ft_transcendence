@@ -20,7 +20,7 @@ down:
 	docker-compose down
 
 down-hard:
-	docker-compose down -v
+	docker-compose down --volumes
 
 restart:
 	docker-compose restart

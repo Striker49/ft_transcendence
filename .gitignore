@@ -28,3 +28,6 @@ test
 # Editor files
 .vscode/
 .code
+
+# Django migrations
+migrations/
