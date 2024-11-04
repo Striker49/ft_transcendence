@@ -11,16 +11,21 @@ const getCustomErrorMessage = statusCode => {
 	}
 };
 
-const headers = new Headers({
-	"Content-Type": "application/json"
-});
+const hideLoginModal = () => {
+	const modalElement = document.querySelector("#loginModal");
+	const modalInstance = bootstrap.Modal.getInstance(modalElement);
+	modalInstance.hide();
+};
 
 export const login = async form => {
+
 	const formData = {
 		email_or_username: form.username.value,
 		password: form.password.value
 	};
-
+	const headers = new Headers({
+		"Content-Type": "application/json"
+	});
 	const url = "https://localhost/api/users/login/";
 
 	try {
@@ -41,16 +46,14 @@ export const login = async form => {
 
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);
-		
-		// Update Login Section
-		const modalElement = document.querySelector("#loginModal");
-		const modalInstance = bootstrap.Modal.getInstance(modalElement);
-		modalInstance.hide();
 
 		updateLogin();
+		// updateFriendlist();
 		if (window.location.pathname === "/profile") {
 			updateProfile();
 		}
+
+		return true;
 
 	} catch (error) {
 		console.error(error.message);
@@ -117,7 +120,7 @@ const loginContent = () => {
 
 const updateLogin = () => {
 	document.querySelector("#login").innerHTML = loginContent();
-	// translatePage();
+	translatePage();
 };
 
 const html = () => {
@@ -139,8 +142,8 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		if (validateForm(e.target)) {
-			login(e.target);
+		if (validateForm(e.target) && login(e.target)) {
+			hideLoginModal();
 		}
 	}
 });

@@ -66,20 +66,25 @@ const uploadAvatar = async avatar => {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
+
         console.log("Image Upload Successful");
+
     } catch (error) {
         console.error(error.message);
     }
 };
 
 const submitRegistrationForm = async form => {
+
     const data = new FormData(form);
+
     console.log("========= Avatar =========");
     console.log("Custom avatar name : ", data.get("avatar").name);
     console.log("Custom avatar size : ", data.get("avatar").size);
+
     const avatar = avatarPath(data.get("avatar").name);
     console.log("Avatar Path : ", avatar);
-	console.log (form.first_name.value);
+
     const formData = {
         "email": form.email.value,
         "username": form.username.value,
@@ -96,6 +101,7 @@ const submitRegistrationForm = async form => {
         "Content-Type": "application/json"
     });
     const url = "https://localhost/api/users/registration/";
+
     try {
         const response = await fetch(url, {
             method: "POST",
@@ -106,16 +112,18 @@ const submitRegistrationForm = async form => {
             throw new Error(`Response status: ${response.status}`);
         }
 
-		login();
+		await login(form);
 
         // ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
-            uploadAvatar(data.get("avatar"));
+            await uploadAvatar(data.get("avatar"));
 			upload = false;
         }
+
         const json = await response.json();
         console.log(json);
         alert("Registration successful!");
+
     } catch (error) {
         console.error(error.message);
     }
@@ -127,7 +135,6 @@ const handleFetch = async (url, method, body, headers) => {
 		method: method,
 		headers: headers
 	};
-
 	if (method === "POST" || method === "PUT" || method == "PATCH") {
 		options.body = body;
 	}
@@ -143,30 +150,49 @@ const submitProfileForm = async form => {
 
 	const data = new FormData(form);
 
-	const formAvatar = {};
-	const formProfiles = {};
-	const formUsers = {};
+	// const formAvatar = {};
+	// const formProfiles = {};
+	// const formUsers = {};
 
-	for (const [key, value] of data.entries()) {
+	// for (const [key, value] of data.entries()) {
 	
-		switch (key) {
+	// 	switch (key) {
 
-			case "email": case "username":
-				// if (value !== userProfile[key]) {
-					formUsers[key] = value;
-				// }
-				break;
+	// 		case "email": case "username":
+	// 			// if (value !== userProfile[key]) {
+	// 				formUsers[key] = value;
+	// 			// }
+	// 			break;
 
-			case "avatar":
-				formAvatar[key] = value;
-				break;
+	// 		case "avatar":
+	// 			formAvatar[key] = value;
+	// 			break;
 
-			default:
-				// if (value !== userProfile[key]) {
-					formProfiles[key] = value;
-				// }
-		}
-	}
+	// 		default:
+	// 			// if (value !== userProfile[key]) {
+	// 				formProfiles[key] = value;
+	// 			// }
+	// 	}
+	// }
+
+	console.log("========= Avatar =========");
+    console.log("Custom avatar name : ", data.get("avatar").name);
+    console.log("Custom avatar size : ", data.get("avatar").size);
+
+    const avatar = avatarPath(data.get("avatar").name);
+    console.log("Avatar Path : ", avatar);
+
+	const formUsers = {
+		"email": form.email.value,
+        "username": form.username.value
+	};
+	const formProfiles = {
+		"first_name": form.first_name.value,
+		"last_name": form.last_name.value,
+		"avatar_path": avatar,
+		"bio": form.bio.value,
+		"lang": form.lang.value
+	};
 
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
@@ -176,29 +202,23 @@ const submitProfileForm = async form => {
 		"Authorization": `Token ${token}`,
 	});
 
-	const avatar = avatarPath(data.get("avatar").name);
-	formProfiles.avatar_path = avatar;
-
-	// const urlAvatar = "https://localhost/api/upload";
 	const urlProfiles = `https://localhost/api/profiles/${uid}/`;
 	const urlUsers = `https://localhost/api/users/${uid}/`;
 
 	try {
 
 		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
-		// const json_avatar = await handleFetch(urlAvatar, "POST", JSON.stringify(formAvatar), headers);
 		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
+
+		// ======== Upload if custom avatar =========
+        if (upload && data.get("avatar").size > 0) {
+            await uploadAvatar(data.get("avatar"));
+			upload = false;
+        }
 
 		console.log("======= Submitted Profile Form =======");
 		console.log(json_users);
 		console.log(json_profiles);
-
-		// ======== Upload if custom avatar =========
-        if (upload && data.get("avatar").size > 0) {
-            uploadAvatar(data.get("avatar"));
-			upload = false;
-        }
-
 		Object.assign(userProfile, json_profiles);
 
 		displayUserProfile();

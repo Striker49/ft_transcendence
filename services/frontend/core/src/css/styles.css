@@ -118,18 +118,26 @@ h1 {
 	box-shadow: 0px 4px 12px rgb(64, 64, 64);
 }
 
+.box-shadow-subtle {
+	box-shadow: 0px 4px 12px rgb(128, 128, 128);
+}
+
 .box-shadow-inset {
-	box-shadow: inset 0px 4px 12px black;
+	box-shadow: inset 0px 4px 12px rgb(128, 128, 128);
 }
 
 .text-shadow {
 	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
 }
 
-/* Borders */
+/* Orange */
 
 .border-orange {
-	border: 1px solid orange !important;	
+	border: 3px solid orange;	
+}
+
+.bg-orange {
+	background-color: orange;
 }
 
 .column {
