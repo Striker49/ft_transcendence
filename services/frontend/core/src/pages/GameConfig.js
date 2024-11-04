@@ -28,6 +28,27 @@ async function getUserProfile() {
 	}
 }
 
+async function getNbPlayer(queryName) {
+	let nbPlayer = false;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get(queryName) == "1")
+	{
+		nbPlayer = true;
+		localStorage.setItem("nbPlayer", "1");
+	}
+	else if (params.get(queryName) == "2")
+	{
+		nbPlayer = false;
+		localStorage.setItem("nbPlayer", "2");
+	}
+	else 
+	{
+		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
+		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
+	}
+    return (nbPlayer);
+}
+
 export default class extends Abstract {
 	constructor() {
 		super();
@@ -36,6 +57,7 @@ export default class extends Abstract {
 
 	async getHtml() {
 		const userData = await getUserProfile();
+		const ai = await getNbPlayer("nbPlayer");
 		const username = (userData ? userData.username : "Player 1")
 		const username2 = "Player 2";
 		// console.log("user name: ", userData.username);
