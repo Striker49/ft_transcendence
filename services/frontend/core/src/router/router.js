@@ -13,8 +13,7 @@ import { translateX } from "../utils/utils.js";
 import { translatePage } from "../localization.js";
 
 export const navigateTo = url => {
-	if (url.search("/game?"))
-		history.pushState(null, null, url);
+	history.pushState(null, null, url);
 	router();
 };
 
@@ -66,7 +65,7 @@ const router = async () => {
 
 };
 
-window.addEventListener("popstate", router);
+// window.addEventListener("popstate", router);
 
 const init = () => {
 	document.body.addEventListener("click", e => {
@@ -115,3 +114,13 @@ init();
 // window.route = route;
 
 // router();
+
+window.addEventListener("popstate", () => {
+    const currentUrl = window.location.pathname;
+    if (currentUrl === "/game") {
+        history.replaceState(null, null, "/gameConfig"); // Redirect instead of /game
+        router(); // Reload the page for /gameConfig
+    } else {
+        router(); // Regular route change handling
+    }
+});
