@@ -281,7 +281,7 @@ window.addEventListener('keyup', (event) => {
 })
 
 function calculateBallEndPoint() {
-    console.log("calculating ball endpoint");
+    // console.log("calculating ball endpoint");
     let endPointx = ball.position.x;
     let endPointz = ball.position.z;
     let velocityx = ball.velocity.x;
@@ -305,6 +305,7 @@ function calculateBallEndPoint() {
     return (endPointz);
 }
 
+//Tells if the center of the paddle is where the ball will land
 function approximate(newZPosition, paddlePosition) {
 
     if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
@@ -331,7 +332,6 @@ function updateGame() {
         paddleL.velocity.z = speed;
     }
 
-    paddleR.velocity.z = 0;
 
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
@@ -349,7 +349,7 @@ function updateGame() {
             {
                 paddleR.velocity.z = -speed;
             }
-            else if (newZPosition > paddleR.position.z && (paddleR.front - speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
+            else if (newZPosition > paddleR.position.z && (paddleR.front + speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
             {
                 paddleR.velocity.z = speed;
             }
