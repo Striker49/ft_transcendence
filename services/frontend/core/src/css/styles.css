@@ -59,7 +59,7 @@ h1 {
 	min-width: 10px;
 }
 
-/* Profile */
+/* ========= Profile ========= */
 
 #profile img {
 	border-color: orange !important;	
@@ -69,14 +69,75 @@ h1 {
 	cursor: pointer;
 }
 
+#games-history {
+	max-height: 150px;
+}
+
+#games-history .row {
+	border-bottom: 1px solid white;
+	padding: 12px 0;
+	margin: 0 6px;
+	font-style: italic;
+}
+
+#games-history .row:last-child {
+	border-bottom: 0;
+}
+
+#games-history .col {
+	margin: 0;
+}
+
+#games-history .col.status {
+	font-weight: bold;
+}
+
+/* ========= Custom Scrollbar ========= */
+
+/* Custom Scrollbar using CSS */
+.custom-scrollbar-css {
+	overflow-y: scroll;
+}
+  
+/* scrollbar width */
+.custom-scrollbar-css::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* scrollbar handle */
+.custom-scrollbar-css::-webkit-scrollbar-thumb {
+	border-radius: 1rem;
+	background-color: orange;
+}
+
+/* ========= Utils ========= */
+
 /* Shadows */
 
 .box-shadow {
 	box-shadow: 0px 4px 12px rgb(64, 64, 64);
 }
 
+.box-shadow-subtle {
+	box-shadow: 0px 4px 12px rgb(128, 128, 128);
+}
+
+.box-shadow-inset {
+	box-shadow: inset 0px 4px 12px rgb(128, 128, 128);
+}
+
 .text-shadow {
 	text-shadow: 4px 3px 0px black, 0px 4px 12px rgb(64, 64, 64);
+}
+
+/* Orange */
+
+.border-orange {
+	border: 3px solid orange;	
+}
+
+.bg-orange {
+	background-color: orange;
 }
 
 .column {

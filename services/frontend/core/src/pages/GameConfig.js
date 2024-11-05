@@ -62,7 +62,7 @@ export default class extends Abstract {
 		const username2 = "Player 2";
 		// console.log("user name: ", userData.username);
 		// console.debug("local storage: ", localStorage);
-		// console.debug("token: ", localStorage.transcendenceToken);
+		// console.debug("token: ", localStorage.authToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">

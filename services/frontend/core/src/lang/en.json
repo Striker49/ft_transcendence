@@ -37,6 +37,7 @@
 
   "newUser": "New User ?",
 
+  "addFriend": "Add friend",
 
   "name": "Name",
 
@@ -65,6 +66,10 @@
   "usernameRequired": "Username is required",
 
   "validEmail": "Please enter a valid email address",
+
+  "cancel": "Cancel",
+
+  "save": "Save",
 
 
   "singleGame": "Single Game",
