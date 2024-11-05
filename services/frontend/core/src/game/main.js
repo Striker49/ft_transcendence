@@ -290,17 +290,26 @@ function calculateBallEndPoint() {
     let paddleLength = (paddleL.width / 2);
     while (endPointx < (paddleR.position.x - paddleLength))
     {
-        console.log("endPointz:", endPointz);
+        // console.log("endPointz:", endPointz);
         if ((endPointx - (velocityx)) <= (paddleL.position.x + paddleLength) && velocityx < 0)
             velocityx *= -1.075;
-        if (endPointz + (velocityz) >= ground.front || endPointz - velocityz<= ground.back)
+        if (endPointz + (velocityz) >= ground.front || endPointz - velocityz <= ground.back)
             velocityz *= -1.075;
         if (velocityx > 0.25)
             velocityx = 0.25;
+        if (velocityz > 0.25)
+            velocityz = 0.25;
         endPointx += velocityx;
         endPointz += velocityz;
     }
     return (endPointz);
+}
+
+function approximate(newZPosition, paddlePosition) {
+
+    if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
+        return (1);
+    return (0);
 }
 
 let frames = 0;
@@ -327,18 +336,20 @@ function updateGame() {
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
+        // console.log("newZPosition:", newZPosition);
+
         //calculates ball position 20 frames after start then every 60 frames
-        if ((frames > 140 && (frames - 140) % 60 == 0 ) || frames == 140)
+        if ((frames > 140 && (frames - 140) % 70 == 0 ) || frames === 140)
             newZPosition = calculateBallEndPoint();
 
         
         if (frames >= 140 ) {
             //Goes up if next ball calculated position is higher or goes down if it's lower
-            if (newZPosition < paddleR.position.z && (paddleR.back - speed >= ground.back) && Math.round(newZPosition) != Math.round(paddleR.position.z))
+            if (newZPosition < paddleR.position.z && (paddleR.back - speed >= ground.back) && !approximate(newZPosition, paddleR.position.z))
             {
                 paddleR.velocity.z = -speed;
             }
-            else if (newZPosition > paddleR.position.z && (paddleR.front - speed <= ground.front) && Math.round(newZPosition) != Math.round(paddleR.position.z))
+            else if (newZPosition > paddleR.position.z && (paddleR.front - speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
             {
                 paddleR.velocity.z = speed;
             }
