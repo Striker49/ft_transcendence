@@ -55,9 +55,9 @@ const router = async () => {
 	if (!customBehaviour) {
 		document.querySelector("main").innerHTML = await page.getHtml();
 	} else {
-		if (window.location.pathname === "/profile") {
+		// if (window.location.pathname === "/profile") {
 			page.executeCustomBehaviour();
-		}
+		// }
 	}
 
 	translateX();
@@ -65,7 +65,7 @@ const router = async () => {
 
 };
 
-window.addEventListener("popstate", router);
+// window.addEventListener("popstate", router);
 
 const init = () => {
 	document.body.addEventListener("click", e => {
@@ -114,3 +114,13 @@ init();
 // window.route = route;
 
 // router();
+
+window.addEventListener("popstate", () => {
+    const currentUrl = window.location.pathname;
+    if (currentUrl === "/game") {
+        history.replaceState(null, null, "/gameConfig"); // Redirect instead of /game
+        router(); // Reload the page for /gameConfig
+    } else {
+        router(); // Regular route change handling
+    }
+});

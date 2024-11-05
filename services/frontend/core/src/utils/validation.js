@@ -23,7 +23,7 @@ const validateUsername = (username, isValid) => {
 
 	const span = username.nextElementSibling;
 
-	if (username.value === "") {
+	if (username.value === "" || username.value == null) {
 		printError(span, "usernameRequired", "Username is required");
 		return false;
 	}

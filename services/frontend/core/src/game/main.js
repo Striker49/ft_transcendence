@@ -32,6 +32,7 @@ let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
 let powerUps = false;
+let ai = false;
 let state = 0;
 
 let paddleL;
@@ -44,6 +45,8 @@ let bottomWall;
 const textureLoader = new THREE.TextureLoader();
 const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
 const customWallTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+
+const box = new THREE.Mesh
 
 function updateTheme(theme) {
     switch(theme) {
@@ -139,10 +142,13 @@ function initGame() {
     nameP2 = getUsername("username2");
     scoreP1 = 0;
     scoreP2 = 0;
-    numberOfWins = localStorage.getItem("numberOfWins") || 3;
+    ai = localStorage.getItem("nbPlayer") == "1" ? true : false;
+
+    numberOfWins = Math.max(1, Math.min(11, parseInt(localStorage.getItem("numberOfWins") || 3, 10)));
+    if (localStorage.getItem("numberOfWins") != numberOfWins)
+        localStorage.setItem("numberOfWins", numberOfWins);
     console.log('initGame now', numberOfWins);
     console.log('initGame theme', localStorage.getItem("theme"));
-    // theme = localStorage.getItem("theme") || 'none';
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
@@ -332,13 +338,23 @@ function updateGame() {
     }
 
     paddleR.velocity.z = 0;
+
     //Move right paddle if up/down key is pressed and will still be inbounds
-    if (keys.up.pressed && (paddleR.back - speed >= ground.back))
-        paddleR.velocity.z = -speed;
-    else if (keys.down.pressed && (paddleR.front + speed <= ground.front)) {
-        paddleR.velocity.z = speed;
+    if (ai == true)
+    {
+        if (ball.position.z < paddleR.position.z && (paddleR.back - speed >= ground.back))
+            paddleR.velocity.z = -speed;
+        else if (ball.position.z > paddleR.position.z && (paddleR.front + speed <= ground.front))
+            paddleR.velocity.z = speed;
     }
-    
+    else
+    {
+        //Move right paddle if up/down key is pressed and will still be inbounds
+        if (keys.up.pressed && (paddleR.back - speed >= ground.back))
+            paddleR.velocity.z = -speed;
+        else if (keys.down.pressed && (paddleR.front + speed <= ground.front))
+            paddleR.velocity.z = speed;
+    }
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);

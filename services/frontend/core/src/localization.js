@@ -33,6 +33,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	let newLocale;
 
+	// Redirect to another page if /game was reloaded
+	if (window.location.pathname === "/game") {
+		window.location.href = "/gameConfig";
+	}
 	//Change locale value for localStorage if valid or the navigator language
 	if (localStorage.getItem("lang") && cycleSupportedLang(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
@@ -47,8 +51,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		document.querySelector("[lang]").setAttribute("lang", newLocale);
 	console.info("Locale:", newLocale);
 	requestAnimationFrame( () => {
-	setLocale(newLocale);
-	//document.querySelector("[data-i18n-switcher]").value = newLocale;
+		setLocale(newLocale);
 	});
 });
 

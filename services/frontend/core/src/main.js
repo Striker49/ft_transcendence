@@ -5,6 +5,7 @@ import About from "./components/about.js"
 import Main from "./components/main.js"
 import Nav from "./components/nav.js"
 import Profile from "./components/profile.js"
+import Friendlist from "./components/friendlist.js"
 
 const addScript = url => {
 	const script = document.createElement("script");
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", e => {
 		${Main}
 		${About}
 		${Profile}
+		${Friendlist}
 		${Footer}
 	`);
 	addScript("/src/router/router.js");
