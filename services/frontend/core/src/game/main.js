@@ -491,13 +491,3 @@ document.addEventListener('click', (event) => {
         scene.remove(winnerText);
     }
 })
-
-window.addEventListener("load", (event) => {
-    console.log("window.location", window.location.pathname);
-    if (window.location.pathname === "/game") {
-        console.log("entered if con");
-
-        // Redirect to another page if /game was reloaded
-        window.location.href = "/gameConfig";
-    }
-});
