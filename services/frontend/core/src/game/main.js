@@ -6,6 +6,7 @@ import { keys } from './keys.js';
 import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
 import { getTranslatedWord } from '../localization.js';
+import { boxCollision } from './collision.js';
 
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
@@ -291,7 +292,7 @@ function createPowerBox(paddle, side) {
         position: {
             x: paddle.position.x,
             y: -2.5,
-            z: paddle.position.z
+            z: -paddle.position.z
         }})
     powerUps[side].castShadow = true;
     scene.add(powerUps[side]);
@@ -300,6 +301,8 @@ function createPowerBox(paddle, side) {
 }
 
 function spawnPowerUp() {
+    if (frames < 500)
+        return;
     console.log("paddle poweredUp state:", paddleL.poweredUp);
     if (paddleL.poweredUp == false)
     {
@@ -365,7 +368,7 @@ function updateGame() {
         paddleL.velocity.z = speed;
     }
 
-    // spawnPowerUp();
+    spawnPowerUp();
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
@@ -406,6 +409,15 @@ function updateGame() {
     powerUps.forEach(obj => {
         obj.rotation.z += 0.01;
         obj.rotation.y += 0.01;
+        obj.updateSides();
+        if (boxCollision({
+            box1: obj,
+            box2: paddleL
+        }))
+        {
+            obj.kill();
+            scene.remove(obj);
+        }
     })
 
     let winner = 0;
