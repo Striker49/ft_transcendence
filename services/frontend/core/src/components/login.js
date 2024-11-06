@@ -1,6 +1,7 @@
 import { updateProfile } from "./profile.js";
 import { validateForm } from "../utils/validation.js";
 import { translatePage } from "../localization.js";
+import { updateFriendlistSection } from "./friendlist.js"
 
 const getCustomErrorMessage = statusCode => {
 	switch (Number(statusCode)) {
@@ -48,10 +49,10 @@ export const login = async form => {
 		localStorage.setItem("UID", json.UID);
 
 		updateLogin();
-		// updateFriendlist();
 		if (window.location.pathname === "/profile") {
 			updateProfile();
 		}
+		updateFriendlistSection(true);
 
 		return true;
 
@@ -69,13 +70,12 @@ export const login = async form => {
 };
 
 const logout = () => {
-	if (localStorage.getItem("authToken")) {
-		localStorage.clear();
-		updateLogin();
-		if (window.location.pathname === "/profile") {
-			updateProfile();
-		}
+	localStorage.clear();
+	updateLogin();
+	if (window.location.pathname === "/profile") {
+		updateProfile();
 	}
+	updateFriendlistSection(false);
 };
 
 const loginContent = () => {
@@ -125,6 +125,7 @@ const updateLogin = () => {
 
 const html = () => {
 	return `
+		<!-- Login -->
 		<section id="login">${loginContent()}</section>
 	`;
 };
