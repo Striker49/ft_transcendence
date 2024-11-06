@@ -285,17 +285,22 @@ window.addEventListener('keyup', (event) => {
 })
 
 function applyPowerUp(paddle) {
-    let type = Math.round(Math.random() * (2 -1) + 1);
+    let type = Math.round(Math.random() * (2 - 1) + 1);
     // console.log("random", type);
     if (type == 1)
     {
         paddle.scale.z = 0.5;
-        paddle.depth = 0.5;
+        paddle.depth *= 0.5;
     }
     else if (type == 2)
     {
         paddle.scale.z = 2;
-        paddle.depth *= 2;       
+        paddle.depth *= 2;
+        paddle.update(ground);
+        if (paddle.front > ground.front)
+            paddle.position.z -= paddle.front - ground.front;
+        if (paddle.back < ground.back)
+            paddle.position.z += ground.back - paddle.back;     
     }
 }
 
@@ -323,9 +328,10 @@ function createPowerBox(paddle, side) {
         color: '#de5aed',
         position: {
             x: paddle.position.x,
-            y: -2.5,
+            y: 0,
             z: paddle.position.z > 0 ? -(ground.depth / 2* 0.75) : (ground.depth / 2 * 0.75)
         }})
+    powerUps[side].height = 0.5;
     powerUps[side].castShadow = true;
     scene.add(powerUps[side]);
     
@@ -391,7 +397,7 @@ function updatePowerUps() {
             return;
         obj.rotation.z += 0.01;
         obj.rotation.y += 0.01;
-        obj.updateSides();
+        obj.update(ground);
         if (boxCollision({
             box1: obj,
             box2: index == 0 ? paddleL : paddleR
@@ -431,9 +437,9 @@ function updateGame() {
     }
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
-    if (keys.w.pressed && (paddleL.back - speed >= ground.back))
+    if (keys.w.pressed && (paddleL.back - speed > ground.back))
         paddleL.velocity.z = -speed;
-    else if (keys.s.pressed && (paddleL.front + speed <= ground.front)) {
+    else if (keys.s.pressed && (paddleL.front + speed < ground.front)) {
         paddleL.velocity.z = speed;
     }
 
@@ -476,35 +482,6 @@ function updateGame() {
     paddleR.update(ground);
     paddleL.update(ground);
     updatePowerUps();
-    // powerUps.forEach((obj, index) => {
-    //     if (obj == null)
-    //         return;
-    //     obj.rotation.z += 0.01;
-    //     obj.rotation.y += 0.01;
-    //     obj.updateSides();
-    //     if (boxCollision({
-    //         box1: obj,
-    //         box2: index == 0 ? paddleL : paddleR
-    //     }))
-    //     {
-    //         scene.remove(obj);
-    //         obj.kill();
-    //         if (powerUps[index] != null)
-    //         {
-    //             if (index == 0)
-    //             {
-    //                 paddleL.poweredUp = true;
-    //                 applyPowerUp(paddleL);
-    //             }
-    //             else
-    //             {
-    //                 paddleR.poweredUp = true;
-    //                 applyPowerUp(paddleR);
-    //             }
-    //             powerUps[index] = null;
-    //         }
-    //     }
-    //     })
 
     let winner = 0;
 
