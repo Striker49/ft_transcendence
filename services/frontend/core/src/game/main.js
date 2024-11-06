@@ -31,6 +31,7 @@ let scoreP1, scoreP2;
 let nameP1, nameP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
+let paddleDepth= 2.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
@@ -119,7 +120,7 @@ function initGame() {
     paddleL = new Box({
         width: paddleWidth,
         height: 0.5,
-        depth: 2.5,
+        depth: paddleDepth,
         velocity: {
             x: 0,
             y: -0.01,
@@ -139,7 +140,7 @@ function initGame() {
     paddleR = new Box({
         width: paddleWidth,
         height: 0.5,
-        depth: 2.5,
+        depth: paddleDepth,
         velocity: {
             x: 0,
             y: -0.01,
@@ -283,6 +284,37 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
+function applyPowerUp(paddle) {
+    let type = Math.round(Math.random() * (2 -1) + 1);
+    // console.log("random", type);
+    if (type == 1)
+    {
+        paddle.scale.z = 0.5;
+        paddle.depth = 0.5;
+    }
+    else if (type == 2)
+    {
+        paddle.scale.z = 2;
+        paddle.depth *= 2;       
+    }
+}
+
+function removePowerUp() {
+    if (paddleL.poweredUp == true)
+    {
+        paddleL.scale.z = 1;
+        paddleL.depth = paddleDepth;
+    }
+    if (paddleR.poweredUp == true)
+    {
+        paddleR.scale.z = 1;
+        paddleR.depth = paddleDepth;
+    }
+    paddleL.poweredUp = false;
+    paddleR.poweredUp = false;
+    // powerUps.forEach((obj, index) => powerUps[index].poweredUp = false);
+}
+
 function createPowerBox(paddle, side) {
     powerUps[side] = new Box({
         width: 0.35,
@@ -303,18 +335,21 @@ function createPowerBox(paddle, side) {
 function spawnPowerUp() {
     if (frames < 500)
         return;
-    console.log("paddle poweredUp state:", paddleL.poweredUp);
     if (paddleL.poweredUp == false)
     {
-        console.log("creating power up...");
         if (!powerUps[0])
+        {
+            console.log("creating power up...");
             createPowerBox(paddleL, 0);
+        }
     }
     if (paddleR.poweredUp == false)
     {
-        console.log("creating power up...");
         if (!powerUps[1])
+        {
+            console.log("creating power up...");
             createPowerBox(paddleR, 1);
+        }
     }
 }
 
@@ -348,6 +383,40 @@ function approximate(newZPosition, paddlePosition) {
     if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
         return (1);
     return (0);
+}
+
+function updatePowerUps() {
+    powerUps.forEach((obj, index) => {
+        if (!powerUps[index])
+            return;
+        obj.rotation.z += 0.01;
+        obj.rotation.y += 0.01;
+        obj.updateSides();
+        if (boxCollision({
+            box1: obj,
+            box2: index == 0 ? paddleL : paddleR
+        }))
+        {
+            // console.log("powerUps[index].poweredUp:", powerUps[index].poweredUp);
+            if (powerUps[index].poweredUp == false)
+                {
+                    if (index == 0)
+                    {
+                        paddleL.poweredUp = true;
+                        applyPowerUp(paddleL);
+                    }
+                    else
+                    {
+                        paddleR.poweredUp = true;
+                        applyPowerUp(paddleR);
+                    }
+                    powerUps[index].poweredUp = true;
+                    scene.remove(powerUps[index]);
+                    powerUps[index].kill();
+                    powerUps[index] = null;
+                }
+            }
+        })
 }
 
 function updateGame() {
@@ -406,19 +475,36 @@ function updateGame() {
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);
-    powerUps.forEach((obj, index) => {
-        obj.rotation.z += 0.01;
-        obj.rotation.y += 0.01;
-        obj.updateSides();
-        if (boxCollision({
-            box1: obj,
-            box2: index == 0 ? paddleL : paddleR
-        }))
-        {
-            obj.kill();
-            scene.remove(obj);
-        }
-    })
+    updatePowerUps();
+    // powerUps.forEach((obj, index) => {
+    //     if (obj == null)
+    //         return;
+    //     obj.rotation.z += 0.01;
+    //     obj.rotation.y += 0.01;
+    //     obj.updateSides();
+    //     if (boxCollision({
+    //         box1: obj,
+    //         box2: index == 0 ? paddleL : paddleR
+    //     }))
+    //     {
+    //         scene.remove(obj);
+    //         obj.kill();
+    //         if (powerUps[index] != null)
+    //         {
+    //             if (index == 0)
+    //             {
+    //                 paddleL.poweredUp = true;
+    //                 applyPowerUp(paddleL);
+    //             }
+    //             else
+    //             {
+    //                 paddleR.poweredUp = true;
+    //                 applyPowerUp(paddleR);
+    //             }
+    //             powerUps[index] = null;
+    //         }
+    //     }
+    //     })
 
     let winner = 0;
 
@@ -445,8 +531,9 @@ export function resetBallPosition(ball, winner) {
     ball.velocity.y = 0;
     ball.velocity.z = 0;
     ball.velocity.x = 0;
-    frames = 0;
     updateScore();
+    removePowerUp();
+    frames = 0;
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
         endGame(winner);
 }
