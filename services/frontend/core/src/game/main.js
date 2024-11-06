@@ -293,12 +293,11 @@ function calculateBallEndPoint() {
         // console.log("endPointz:", endPointz);
         if ((endPointx - (velocityx)) <= (paddleL.position.x + paddleLength) && velocityx < 0)
             velocityx *= -1.075;
-        if (endPointz + (velocityz) >= ground.front || endPointz - velocityz <= ground.back)
-            velocityz *= -1.075;
+        if ((endPointz + (velocityz) >= ground.front && velocityz > 0) || (endPointz - velocityz <= ground.back && velocityz < 0))
+            velocityz *= -1;
         if (velocityx > 0.25)
             velocityx = 0.25;
-        if (velocityz > 0.25)
-            velocityz = 0.25;
+
         endPointx += velocityx;
         endPointz += velocityz;
     }
@@ -337,6 +336,7 @@ function updateGame() {
     if (ai == true)
     {
         // console.log("newZPosition:", newZPosition);
+        // console.log("paddlePosition:", paddleR.position.z);
 
         //calculates ball position 20 frames after start then every 60 frames
         if ((frames > 140 && (frames - 140) % 70 == 0 ) || frames === 140)
