@@ -406,13 +406,13 @@ function updateGame() {
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);
-    powerUps.forEach(obj => {
+    powerUps.forEach((obj, index) => {
         obj.rotation.z += 0.01;
         obj.rotation.y += 0.01;
         obj.updateSides();
         if (boxCollision({
             box1: obj,
-            box2: paddleL
+            box2: index == 0 ? paddleL : paddleR
         }))
         {
             obj.kill();
