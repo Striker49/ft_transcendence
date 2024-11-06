@@ -498,6 +498,7 @@ function updateGame() {
 
 //Resets ball to 0 position with randomized velocities to change direction
 export function resetBallPosition(ball, winner) {
+    paddleR.velocity.z = 0;
     if (winner === 1)
         scoreP2++;
     else
@@ -605,6 +606,13 @@ function removeGameObjects() {
     scene.remove(ground);
     currentText.material.dispose();
     currentText.geometry.dispose();
+    powerUps.forEach((obj, index) => {
+        if (powerUps[index])
+        {
+            powerUps[index].kill();
+            scene.remove(powerUps[index]);
+        }
+    })
     scene.remove(currentText);
     if (winnerText)
     {
