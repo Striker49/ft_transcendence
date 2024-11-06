@@ -1,7 +1,7 @@
 import { updateProfile } from "./profile.js";
 import { validateForm } from "../utils/validation.js";
 import { translatePage } from "../localization.js";
-import { updateFriendlistSection } from "./friendlist.js"
+// import { updateFriendlistSection } from "./friendlist.js"
 
 const getCustomErrorMessage = statusCode => {
 	switch (Number(statusCode)) {
@@ -49,10 +49,10 @@ export const login = async form => {
 		localStorage.setItem("UID", json.UID);
 
 		updateLogin();
-		if (window.location.pathname === "/profile") {
+		// if (window.location.pathname === "/profile") {
 			updateProfile();
-		}
-		updateFriendlistSection(true);
+		// }
+		// updateFriendlistSection(true);
 
 		return true;
 
@@ -72,10 +72,8 @@ export const login = async form => {
 const logout = () => {
 	localStorage.clear();
 	updateLogin();
-	if (window.location.pathname === "/profile") {
-		updateProfile();
-	}
-	updateFriendlistSection(false);
+	updateProfile();
+	// updateFriendlistSection(false);
 };
 
 const loginContent = () => {

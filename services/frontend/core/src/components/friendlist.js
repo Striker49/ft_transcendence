@@ -70,22 +70,6 @@ const createFriendship = async () => {
 	}
 };
 
-const getFriendList = async () => {
-
-	const headers = new Headers({
-        "Content-Type": "application/json"
-    });
-    const url = "https://localhost/api/profiles/friendship/";
-
-	try {
-		const json = await handleFetch(url, "GET", "", headers);
-		console.log("======= Friendlist =======");
-		console.log(json);
-	} catch (error) {
-		console.error(error.message);
-	}
-};
-
 const createUserSnippet = (avatar_path, username, rank) => {
 
 	const defaultAvatarPath = "/src/assets/avatar/avatar1.jpg";
@@ -266,70 +250,63 @@ const removeFriendlistSection = () => {
 	}
 };
 
-const addFriendlistSection = () => {
+const addFriendlistSection = async () => {
 
-	if (localStorage.getItem("authToken")) {
+	const friendlist = document.createElement("section");
+	const header = document.createElement("div");
+	const headerTitle = document.createElement("h3");
+	const headerCloseBtn = document.createElement("button");
+	const body = document.createElement("div");
 
-		const friendlist = document.createElement("section");
-		const header = document.createElement("div");
-		const headerTitle = document.createElement("h3");
-		const headerCloseBtn = document.createElement("button");
-		const body = document.createElement("div");
+	friendlist.id = "friendlist";
+	friendlist.setAttribute("tabindex", "-1");
+	friendlist.setAttribute("aria-labelledby", "friendlistLabel");
+	friendlist.classList.add("offcanvas", "offcanvas-start", "bg-secondary-subtle");
+	header.classList.add("offcanvas-header", "p-0", "d-block", "text-center");
 
-		friendlist.id = "friendlist";
-		friendlist.setAttribute("tabindex", "-1");
-		friendlist.setAttribute("aria-labelledby", "friendlistLabel");
-		friendlist.classList.add("offcanvas", "offcanvas-start", "bg-secondary-subtle");
-		header.classList.add("offcanvas-header", "p-0", "d-block", "text-center");
+	const headerTitleClasses = [
+		"offcanvas-title",
+		"d-inline-block",
+		"px-5",
+		"py-2",
+		"fs-5",
+		"fw-bold",
+		"rounded-4",
+		"rounded-top-0",
+		"box-shadow-subtle",
+		"bg-orange"
+	];
+	headerTitle.id = "friendlistLabel";
+	headerTitle.classList.add(...headerTitleClasses);
+	headerTitle.textContent = "Friends";
 
-		const headerTitleClasses = [
-			"offcanvas-title",
-			"d-inline-block",
-			"px-5",
-			"py-2",
-			"fs-5",
-			"fw-bold",
-			"rounded-4",
-			"rounded-top-0",
-			"box-shadow-subtle",
-			"bg-orange"
-		];
-		headerTitle.id = "friendlistLabel";
-		headerTitle.classList.add(...headerTitleClasses);
-		headerTitle.textContent = "Friends";
+	headerCloseBtn.setAttribute("type", "button");
+	headerCloseBtn.setAttribute("aria-label", "Close");
+	headerCloseBtn.setAttribute("data-bs-dismiss", "offcanvas");
+	headerCloseBtn.classList.add("btn-close", "float-end", "m-2");
+	body.classList.add("offcanvas-body", "container", "p-4");
 
-		headerCloseBtn.setAttribute("type", "button");
-		headerCloseBtn.setAttribute("aria-label", "Close");
-		headerCloseBtn.setAttribute("data-bs-dismiss", "offcanvas");
-		headerCloseBtn.classList.add("btn-close", "float-end", "m-2");
-		body.classList.add("offcanvas-body", "container", "p-4");
+	header.appendChild(headerTitle);
+	header.appendChild(headerCloseBtn);
+	
+	body.appendChild(await addContent());
 
-		header.appendChild(headerTitle);
-		header.appendChild(headerCloseBtn);
-		
-		addContent().then(content => body.appendChild(content));
+	friendlist.appendChild(header);
+	friendlist.appendChild(body);
 
-		friendlist.appendChild(header);
-		friendlist.appendChild(body);
-
-		// document.querySelector("#profile").insertAdjacentElement("afterend", friendlist);
-
-		console.log("friendlist: ", friendlist);
-		return friendlist;
-	}
-	return "";
+	document.querySelector("#profile").insertAdjacentElement("afterend", friendlist);
 };
 
 export const updateFriendlistSection = isLoggedIn => {
 
 	if (isLoggedIn) {
-		document.querySelector("#profile").insertAdjacentElement("afterend", addFriendlistSection());
+		if (!document.getElementById("friendlist")) {
+			addFriendlistSection();
+		}
 	} else {
 		removeFriendlistSection();
 	}
 };
-
-export default addFriendlistSection().outerHTML;
 
 // ============ Events ==============
 
