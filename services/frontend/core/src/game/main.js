@@ -23,6 +23,7 @@ renderer.shadowMap.enabled = true;
 //Seting variable value
 //<----need to fetch player name-------->
 let isStarted = false;
+let frames = 0;
 let speed = 0.15;
 let text, currentText, winnerText;
 let scoreP1, scoreP2;
@@ -32,7 +33,8 @@ let paddleWidth = 0.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
-let powerUps = false;
+let powerUpMode = false;
+let powerUps = [];
 let ai = false;
 let newZPosition = 0;
 let state = 0;
@@ -280,6 +282,39 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
+function createPowerBox(paddle, side) {
+    powerUps[side] = new Box({
+        width: 0.35,
+        height: 0.35,
+        depth: 0.35,
+        color: '#de5aed',
+        position: {
+            x: paddle.position.x,
+            y: -2.5,
+            z: paddle.position.z
+        }})
+    powerUps[side].castShadow = true;
+    scene.add(powerUps[side]);
+    
+    
+}
+
+function spawnPowerUp() {
+    console.log("paddle poweredUp state:", paddleL.poweredUp);
+    if (paddleL.poweredUp == false)
+    {
+        console.log("creating power up...");
+        if (!powerUps[0])
+            createPowerBox(paddleL, 0);
+    }
+    if (paddleR.poweredUp == false)
+    {
+        console.log("creating power up...");
+        if (!powerUps[1])
+            createPowerBox(paddleR, 1);
+    }
+}
+
 function calculateBallEndPoint() {
     // console.log("calculating ball endpoint");
     let endPointx = ball.position.x;
@@ -312,7 +347,6 @@ function approximate(newZPosition, paddlePosition) {
     return (0);
 }
 
-let frames = 0;
 function updateGame() {
     if (state === 0)
         return;
@@ -331,7 +365,7 @@ function updateGame() {
         paddleL.velocity.z = speed;
     }
 
-
+    // spawnPowerUp();
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
@@ -369,6 +403,10 @@ function updateGame() {
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);
+    powerUps.forEach(obj => {
+        obj.rotation.z += 0.01;
+        obj.rotation.y += 0.01;
+    })
 
     let winner = 0;
 
