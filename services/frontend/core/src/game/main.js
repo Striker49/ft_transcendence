@@ -324,7 +324,7 @@ function createPowerBox(paddle, side) {
         position: {
             x: paddle.position.x,
             y: -2.5,
-            z: -paddle.position.z
+            z: paddle.position.z > 0 ? -(ground.depth / 2* 0.75) : (ground.depth / 2 * 0.75)
         }})
     powerUps[side].castShadow = true;
     scene.add(powerUps[side]);
