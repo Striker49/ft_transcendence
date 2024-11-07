@@ -37,6 +37,7 @@ let numberOfWins;
 let theme;
 let powerUpMode = false;
 let powerUps = [];
+let powerUpLocation;
 let ai = false;
 let newZPosition = 0;
 let state = 0;
@@ -359,8 +360,11 @@ function spawnPowerUp() {
     }
 }
 
+
 function calculateBallEndPoint() {
     // console.log("calculating ball endpoint");
+    if (powerUps[1])
+        powerUpLocation = powerUps[1].position.z;
     let endPointx = ball.position.x;
     let endPointz = ball.position.z;
     let velocityx = ball.velocity.x;
@@ -383,12 +387,25 @@ function calculateBallEndPoint() {
     return (endPointz);
 }
 
-//Tells if the center of the paddle is where the ball will land
+//Tells if the center of the paddle is where the ball will land or where the powerUp is located
 function approximate(newZPosition, paddlePosition) {
-
-    if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
+    if (powerUpLocation && powerUpLocation <= paddlePosition + (paddleDepth / 2) && powerUpLocation >= paddlePosition - (paddleDepth / 2))
+        return (1);
+    else if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
         return (1);
     return (0);
+}
+
+function targetLocation() {
+    // if (powerUpLocation && ((powerUpLocation > 0 && newZPosition > 0) || (powerUpLocation < 0 && newZPosition < 0)))
+    //     return (powerUpLocation);
+    // else
+    //     return (newZPosition);
+    //If powerUpLocation is known, it will be the target. Otherwise go to ball
+    if (powerUpLocation)
+        return (powerUpLocation);
+    else
+        return (newZPosition);
 }
 
 function updatePowerUps() {
@@ -415,6 +432,7 @@ function updatePowerUps() {
                     {
                         paddleR.poweredUp = true;
                         applyPowerUp(paddleR);
+                        powerUpLocation = null;
                     }
                     powerUps[index].poweredUp = true;
                     scene.remove(powerUps[index]);
@@ -457,11 +475,11 @@ function updateGame() {
         
         if (frames >= 140 ) {
             //Goes up if next ball calculated position is higher or goes down if it's lower
-            if (newZPosition < paddleR.position.z && (paddleR.back - speed >= ground.back) && !approximate(newZPosition, paddleR.position.z))
+            if (targetLocation() < paddleR.position.z && (paddleR.back - speed >= ground.back) && !approximate(newZPosition, paddleR.position.z))
             {
                 paddleR.velocity.z = -speed;
             }
-            else if (newZPosition > paddleR.position.z && (paddleR.front + speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
+            else if (targetLocation() > paddleR.position.z && (paddleR.front + speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
             {
                 paddleR.velocity.z = speed;
             }
@@ -499,6 +517,7 @@ function updateGame() {
 //Resets ball to 0 position with randomized velocities to change direction
 export function resetBallPosition(ball, winner) {
     paddleR.velocity.z = 0;
+    newZPosition = 0;
     if (winner === 1)
         scoreP2++;
     else
