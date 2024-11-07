@@ -92,6 +92,12 @@ h1 {
 	font-weight: bold;
 }
 
+/* ========= Friendlist ========= */
+
+#friends .row:last-child {
+	margin-bottom: 0 !important;
+}
+
 /* ========= Custom Scrollbar ========= */
 
 /* Custom Scrollbar using CSS */

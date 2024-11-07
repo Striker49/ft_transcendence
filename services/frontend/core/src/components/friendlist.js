@@ -47,27 +47,71 @@ import { handleFetch } from "../api/api.js";
 // 	</div>
 // `;
 
-const createFriendship = async () => {
+const createFriendship = async uid2 => {
+
+	const token = localStorage.getItem("authToken");
+	const uid1 = localStorage.getItem("UID");
 
 	const data = {
-		"user1_ID": null,
-		"user2_ID": null,
+		"user1_ID": uid1,
+		"user2_ID": uid2,
 		"type": "pending_first_second"
 	};
 	const headers = new Headers({
-        "Content-Type": "application/json"
-    });
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
     const url = "https://localhost/api/profiles/friendship/";
 
 	try {
 		const json = await handleFetch(url, "POST", JSON.stringify(data), headers);
 		console.log("======= Friend Request Sent =======");
 		console.log(json);
-		console.log("Response status: ", response.status);
-		
 	} catch (error) {
 		console.error(error.message);
 	}
+};
+
+const checkIfUserExists = async input => {
+
+	const headers = new Headers({
+        "Content-Type": "application/json"
+    });
+	const url = `https://localhost/api/profiles/?search=${input}`;
+
+	try {
+		const json = await handleFetch(url, "GET", "", headers);
+		return json;
+	} catch (error) {
+		console.error(error.message);
+		return "";
+	}
+};
+
+const displayProfiles = async input => {
+
+	const headers = new Headers({
+        "Content-Type": "application/json"
+    });
+	const url = "https://localhost/api/profiles/";
+
+	let json;
+
+	try {
+		json = await handleFetch(url, "GET", "", headers);
+	} catch (error) {
+		console.error(error.message);
+	}
+
+	const fragment = document.createDocumentFragment();
+	json.forEach(profile => {
+		if (profile.username.startsWith(input)) {
+			const entry = document.createElement("li");
+			entry.textContent = profile.username;
+			fragment.appendChild(entry);
+		}
+	});
+	return fragment;
 };
 
 const createUserSnippet = (avatar_path, username, rank) => {
@@ -82,7 +126,7 @@ const createUserSnippet = (avatar_path, username, rank) => {
 	const userDescription = document.createElement("p");
 	const userRank = document.createElement("span");
 
-	row.className = "row";
+	row.classList.add("row", "mb-3");
 	col1.className = "col-4";
 	col2.className = "col-8";
 
@@ -121,9 +165,8 @@ const createUserSnippet = (avatar_path, username, rank) => {
 	return row;
 };
 
-const addFriendBtn = () => {
+const addButton = button => {
 
-	const div = document.createElement("div");
 	const btn = document.createElement("button");
 	const btnClasses = [
 		"btn",
@@ -135,17 +178,29 @@ const addFriendBtn = () => {
 		"border-0",
 		"text-dark",
 		"fw-bold",
-		"box-shadow-subtle"
+		"box-shadow-subtle",
+		"text-center",
+		"mx-2"
 	];
 
-	btn.id = "add-friend-btn";
-	btn.textContent = "Add friend";
+	btn.id = button.id;
+	btn.textContent = button.text;
 	btn.setAttribute("type", "button");
-	btn.setAttribute("data-i18n-key", "addFriend");
+	btn.setAttribute("data-i18n-key", button.langClass);
 	btn.classList.add(...btnClasses);
-	div.classList.add("text-center");
-	div.appendChild(btn);
-	return div;
+	return btn;
+};
+
+const addButtons = buttons => {
+
+	const friendlistButtons = document.createElement("div");
+
+	friendlistButtons.id = "friendlistButtons";
+	friendlistButtons.className = "text-center";
+	buttons.forEach(button => {
+		friendlistButtons.appendChild(addButton(button));
+	});
+	return friendlistButtons;
 };
 
 const addFriendlist = async () => {
@@ -173,7 +228,8 @@ const addFriendlist = async () => {
 	});
 
 	const container = document.createElement("div");
-	container.classList.add("box-shadow-inset", "p-4", "rounded-3", "bg-light");
+	container.id = "friends";
+	container.classList.add("box-shadow-inset", "p-4", "mt-4", "mb-3", "rounded-3", "bg-light");
 	container.appendChild(fragment);
 	return container;
 };
@@ -184,21 +240,27 @@ const addSearchBar = () => {
 	const span = document.createElement("span");
 	const icon = document.createElement("i");
 	const input = document.createElement("input");
+	const dropdown = document.createElement("ul");
 
-	searchBar.classList.add("input-group", "my-3");
+	searchBar.id = "searchBar";
+	searchBar.classList.add("input-group", "mt-4", "mb-3", "dropdown");
 	span.id = "search";
 	span.classList.add("input-group-text", "bg-light");
 	icon.classList.add("bi", "bi-search");
 
-	input.className = "form-control";
+	input.classList.add("form-control", "dropdown-toggle");
 	input.setAttribute("type", "text");
 	input.setAttribute("placeholder", "Search");
 	input.setAttribute("aria-label", "Search");
 	input.setAttribute("aria-describedby", "search");
+	input.setAttribute("data-bs-toggle", "dropdown");
+
+	dropdown.className = "dropdown-menu";
 
 	span.appendChild(icon);
 	searchBar.appendChild(span);
 	searchBar.appendChild(input);
+	searchBar.appendChild(dropdown);
 
 	return searchBar;
 };
@@ -226,18 +288,48 @@ const addCurrentUser = async () => {
 		console.error(error.message);
 	}
 
-	return createUserSnippet(jsonProfile[0].avatar_path, jsonProfile[0].username, jsonGameStats[0].rank);
+	const currentUser = createUserSnippet(jsonProfile[0].avatar_path, jsonProfile[0].username, jsonGameStats[0].rank);
+	currentUser.id = "currentUser";
+	return currentUser;
 };
 
-const addContent = async () => {
+const toggleContent = async isSearchMode => {
 
 	const fragment = document.createDocumentFragment();
+	const friendlist = document.querySelector("#friendlist .offcanvas-body");
 
-	fragment.appendChild(await addCurrentUser());
-	fragment.appendChild(addSearchBar());
-	fragment.appendChild(await addFriendlist());
-	fragment.appendChild(addFriendBtn());
-
+	if (isSearchMode) {
+		if (friendlist) {
+			friendlist.removeChild(document.getElementById("friends"));
+			friendlist.removeChild(document.getElementById("friendlistButtons"));
+		}
+		fragment.appendChild(addSearchBar());
+		fragment.appendChild(addButtons([
+		{
+			id: "cancel-friend-btn",
+			text: "Cancel",
+			langClass: "cancel"
+		},
+		{
+			id: "invite-friend-btn",
+			text: "Invite",
+			langClass: "invite"
+		}
+		]));
+	} else {
+		if (friendlist) {
+			friendlist.removeChild(document.getElementById("searchBar"));
+			friendlist.removeChild(document.getElementById("friendlistButtons"));
+		}
+		fragment.appendChild(await addFriendlist());
+		fragment.appendChild(addButtons([
+		{
+			id: "add-friend-btn",
+			text: "Add friend",
+			langClass: "addFriend"
+		}
+		]));
+	}
 	return fragment;
 };
 
@@ -257,6 +349,7 @@ const addFriendlistSection = async () => {
 	const headerTitle = document.createElement("h3");
 	const headerCloseBtn = document.createElement("button");
 	const body = document.createElement("div");
+	const buttons = document.createElement("div");
 
 	friendlist.id = "friendlist";
 	friendlist.setAttribute("tabindex", "-1");
@@ -289,8 +382,9 @@ const addFriendlistSection = async () => {
 	header.appendChild(headerTitle);
 	header.appendChild(headerCloseBtn);
 	
-	body.appendChild(await addContent());
-
+	body.appendChild(await addCurrentUser());
+	body.appendChild(await toggleContent(false));
+	
 	friendlist.appendChild(header);
 	friendlist.appendChild(body);
 
@@ -310,14 +404,59 @@ export const updateFriendlistSection = isLoggedIn => {
 
 // ============ Events ==============
 
-// document.addEventListener("click", e => {
+document.addEventListener("click", e => {
 
-// 	const element = e.target;
+	const element = e.target;
 
-// 	switch (true) {
-// 		case element.matches("#add-friend-btn"):
-// 			e.preventDefault();
-// 			createFriendship();
-// 			break;
-// 	}
-// });
+	switch (true) {
+
+		case element.matches("#add-friend-btn"):
+			e.preventDefault();
+			toggleContent(true).then(content => {
+				document.querySelector("#friendlist .offcanvas-body").appendChild(content);
+			});
+			break;
+
+		case element.matches("#cancel-friend-btn"):
+			e.preventDefault();
+			toggleContent(false).then(content => {
+				document.querySelector("#friendlist .offcanvas-body").appendChild(content);
+			});
+			break;
+		
+		case element.matches("#invite-friend-btn"):
+			e.preventDefault();
+			const input = document.querySelector("#searchBar input").value;
+			if (input) {
+				checkIfUserExists(input).then(user => {
+					if (user) {
+						createFriendship(user[0].UID);
+					} else {
+						alert("Username not found. Please provide an existing username");
+					}
+				});
+			} else {
+				alert ("Please provide a username");
+			}
+			break;
+
+		case element.matches("#friendlist .dropdown-menu li"):
+			e.preventDefault();
+			document.querySelector("#searchBar input").value = element.textContent;
+			break;
+	}
+});
+
+document.addEventListener("input", e => {
+
+	const element = e.target;
+
+	switch (true) {
+		case element.matches("#searchBar input"):
+			e.preventDefault();
+			displayProfiles(element.value).then(profiles => {
+				document.querySelector("#friendlist .dropdown-menu").replaceChildren(profiles);
+			});
+			break;
+	}
+});
