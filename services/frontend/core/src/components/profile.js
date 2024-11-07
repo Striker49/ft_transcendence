@@ -381,7 +381,7 @@ const addAvatarSection = () => {
 			</div>
 			<div id="avatar-section-2" class="d-none text-center">
 				<input type="file" class="form-control" name="avatar" id="avatar">
-				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image">Select default image</a>&nbsp;&nbsp; <--</span>
+				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image" data-i18n-key="selectDefaultImage">Select default image</a>&nbsp;&nbsp; <--</span>
 			</div>
 		</div>
 	`;
@@ -458,8 +458,8 @@ const displayProfileForm = isEditMode => {
 							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
 							<select class="form-select" name="lang" id="lang">
 								<option value="en" ${setSelectedLanguage("en")}>English</option>
-								<option value="fr" ${setSelectedLanguage("fr")}>French</option>
-								<option value="nl" ${setSelectedLanguage("nl")}>Dutch</option>
+								<option value="fr" ${setSelectedLanguage("fr")}>Français</option>
+								<option value="nl" ${setSelectedLanguage("nl")}>Nederlands</option>
 							</select>
 						</div>
 					</div>
