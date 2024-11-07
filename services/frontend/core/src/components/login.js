@@ -46,13 +46,14 @@ export const login = async form => {
 
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);
+		// localStorage.setItem("lang", json.lang);
 
 		updateLogin();
 		// updateFriendlist();
 		if (window.location.pathname === "/profile") {
 			updateProfile();
 		}
-
+		translatePage();
 		return true;
 
 	} catch (error) {

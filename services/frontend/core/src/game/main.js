@@ -5,7 +5,7 @@ import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
-import { getTranslatedWord } from '../localization.js';
+import { getTranslatedWord, translatePage } from '../localization.js';
 import { boxCollision } from './collision.js';
 
 
@@ -591,6 +591,7 @@ function insertButton() {
     body.appendChild(div);
     div.appendChild(rankingButton);
     div.appendChild(playAgainButton);
+    translatePage();
     console.debug("body", body);
 }
 
