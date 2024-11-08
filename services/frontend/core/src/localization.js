@@ -84,6 +84,8 @@ async function setLocale(newLocale) {
 		localStorage.setItem("lang", locale);
 		console.log("newtranslations:", newTranslations);
 		translations = newTranslations;
+		//Puts the last language translated's JSON in localStorage
+		localStorage.setItem("translations", JSON.stringify(translations));
 		// Ensure the page is fully loaded before translating
 		translatePage();
 		console.info("Content has been translated to:", locale);

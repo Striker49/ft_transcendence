@@ -5,7 +5,8 @@ import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
-import { getTranslatedWord } from '../localization.js';
+import { getTranslatedWord, translatePage } from '../localization.js';
+import { boxCollision } from './collision.js';
 
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
@@ -23,17 +24,22 @@ renderer.shadowMap.enabled = true;
 //Seting variable value
 //<----need to fetch player name-------->
 let isStarted = false;
+let frames = 0;
 let speed = 0.15;
 let text, currentText, winnerText;
 let scoreP1, scoreP2;
 let nameP1, nameP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
+let paddleDepth= 2.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
-let powerUps = false;
+let powerUpMode = false;
+let powerUps = [];
+let powerUpLocation;
 let ai = false;
+let newZPosition = 0;
 let state = 0;
 
 let paddleL;
@@ -115,7 +121,7 @@ function initGame() {
     paddleL = new Box({
         width: paddleWidth,
         height: 0.5,
-        depth: 2.5,
+        depth: paddleDepth,
         velocity: {
             x: 0,
             y: -0.01,
@@ -135,7 +141,7 @@ function initGame() {
     paddleR = new Box({
         width: paddleWidth,
         height: 0.5,
-        depth: 2.5,
+        depth: paddleDepth,
         velocity: {
             x: 0,
             y: -0.01,
@@ -279,7 +285,164 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
-let frames = 0;
+function applyPowerUp(paddle) {
+    let type = Math.round(Math.random() * (2 - 1) + 1);
+    // console.log("random", type);
+    if (type == 1)
+    {
+        paddle.scale.z = 0.5;
+        paddle.depth *= 0.5;
+    }
+    else if (type == 2)
+    {
+        paddle.scale.z = 2;
+        paddle.depth *= 2;
+        paddle.update(ground);
+        if (paddle.front > ground.front)
+            paddle.position.z -= paddle.front - ground.front;
+        if (paddle.back < ground.back)
+            paddle.position.z += ground.back - paddle.back;     
+    }
+}
+
+function removePowerUp() {
+    if (paddleL.poweredUp == true)
+    {
+        paddleL.scale.z = 1;
+        paddleL.depth = paddleDepth;
+    }
+    if (paddleR.poweredUp == true)
+    {
+        paddleR.scale.z = 1;
+        paddleR.depth = paddleDepth;
+    }
+    paddleL.poweredUp = false;
+    paddleR.poweredUp = false;
+    // powerUps.forEach((obj, index) => powerUps[index].poweredUp = false);
+}
+
+function createPowerBox(paddle, side) {
+    powerUps[side] = new Box({
+        width: 0.35,
+        height: 0.35,
+        depth: 0.35,
+        color: '#de5aed',
+        position: {
+            x: paddle.position.x,
+            y: 0,
+            z: paddle.position.z > 0 ? -(ground.depth / 2* 0.75) : (ground.depth / 2 * 0.75)
+        }})
+    powerUps[side].height = 0.5;
+    powerUps[side].castShadow = true;
+    scene.add(powerUps[side]);
+    
+    
+}
+
+function spawnPowerUp() {
+    if (frames < 500)
+        return;
+    if (paddleL.poweredUp == false)
+    {
+        if (!powerUps[0])
+        {
+            console.log("creating power up...");
+            createPowerBox(paddleL, 0);
+        }
+    }
+    if (paddleR.poweredUp == false)
+    {
+        if (!powerUps[1])
+        {
+            console.log("creating power up...");
+            createPowerBox(paddleR, 1);
+        }
+    }
+}
+
+
+function calculateBallEndPoint() {
+    // console.log("calculating ball endpoint");
+    if (powerUps[1])
+        powerUpLocation = powerUps[1].position.z;
+    let endPointx = ball.position.x;
+    let endPointz = ball.position.z;
+    let velocityx = ball.velocity.x;
+    let velocityz = ball.velocity.z;
+    let ballRadius = ball.radius;
+    let paddleLength = (paddleL.width / 2);
+    while (endPointx < (paddleR.position.x - paddleLength))
+    {
+        // console.log("endPointz:", endPointz);
+        if ((endPointx - (velocityx)) <= (paddleL.position.x + paddleLength) && velocityx < 0)
+            velocityx *= -1.075;
+        if ((endPointz + (velocityz) >= ground.front && velocityz > 0) || (endPointz - velocityz <= ground.back && velocityz < 0))
+            velocityz *= -1;
+        if (velocityx > 0.25)
+            velocityx = 0.25;
+
+        endPointx += velocityx;
+        endPointz += velocityz;
+    }
+    return (endPointz);
+}
+
+//Tells if the center of the paddle is where the ball will land or where the powerUp is located
+function approximate(newZPosition, paddlePosition) {
+    if (powerUpLocation && powerUpLocation <= paddlePosition + (paddleDepth / 2) && powerUpLocation >= paddlePosition - (paddleDepth / 2))
+        return (1);
+    else if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
+        return (1);
+    return (0);
+}
+
+function targetLocation() {
+    // if (powerUpLocation && ((powerUpLocation > 0 && newZPosition > 0) || (powerUpLocation < 0 && newZPosition < 0)))
+    //     return (powerUpLocation);
+    // else
+    //     return (newZPosition);
+    //If powerUpLocation is known, it will be the target. Otherwise go to ball
+    if (powerUpLocation)
+        return (powerUpLocation);
+    else
+        return (newZPosition);
+}
+
+function updatePowerUps() {
+    powerUps.forEach((obj, index) => {
+        if (!powerUps[index])
+            return;
+        obj.rotation.z += 0.01;
+        obj.rotation.y += 0.01;
+        obj.update(ground);
+        if (boxCollision({
+            box1: obj,
+            box2: index == 0 ? paddleL : paddleR
+        }))
+        {
+            // console.log("powerUps[index].poweredUp:", powerUps[index].poweredUp);
+            if (powerUps[index].poweredUp == false)
+                {
+                    if (index == 0)
+                    {
+                        paddleL.poweredUp = true;
+                        applyPowerUp(paddleL);
+                    }
+                    else
+                    {
+                        paddleR.poweredUp = true;
+                        applyPowerUp(paddleR);
+                        powerUpLocation = null;
+                    }
+                    powerUps[index].poweredUp = true;
+                    scene.remove(powerUps[index]);
+                    powerUps[index].kill();
+                    powerUps[index] = null;
+                }
+            }
+        })
+}
+
 function updateGame() {
     if (state === 0)
         return;
@@ -292,21 +455,38 @@ function updateGame() {
     }
     paddleL.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
-    if (keys.w.pressed && (paddleL.back - speed >= ground.back))
+    if (keys.w.pressed && (paddleL.back - speed > ground.back))
         paddleL.velocity.z = -speed;
-    else if (keys.s.pressed && (paddleL.front + speed <= ground.front)) {
+    else if (keys.s.pressed && (paddleL.front + speed < ground.front)) {
         paddleL.velocity.z = speed;
     }
 
-    paddleR.velocity.z = 0;
-
+    spawnPowerUp();
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
-        if (ball.position.z < paddleR.position.z && (paddleR.back - speed >= ground.back))
-            paddleR.velocity.z = -speed;
-        else if (ball.position.z > paddleR.position.z && (paddleR.front + speed <= ground.front))
-            paddleR.velocity.z = speed;
+        // console.log("newZPosition:", newZPosition);
+        // console.log("paddlePosition:", paddleR.position.z);
+
+        //calculates ball position 20 frames after start then every 60 frames
+        if ((frames > 140 && (frames - 140) % 70 == 0 ) || frames === 140)
+            newZPosition = calculateBallEndPoint();
+
+        
+        if (frames >= 140 ) {
+            //Goes up if next ball calculated position is higher or goes down if it's lower
+            if (targetLocation() < paddleR.position.z && (paddleR.back - speed >= ground.back) && !approximate(newZPosition, paddleR.position.z))
+            {
+                paddleR.velocity.z = -speed;
+            }
+            else if (targetLocation() > paddleR.position.z && (paddleR.front + speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
+            {
+                paddleR.velocity.z = speed;
+            }
+            else
+                paddleR.velocity.z = 0;
+
+        }
     }
     else
     {
@@ -319,6 +499,7 @@ function updateGame() {
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);
+    updatePowerUps();
 
     let winner = 0;
 
@@ -335,6 +516,8 @@ function updateGame() {
 
 //Resets ball to 0 position with randomized velocities to change direction
 export function resetBallPosition(ball, winner) {
+    paddleR.velocity.z = 0;
+    newZPosition = 0;
     if (winner === 1)
         scoreP2++;
     else
@@ -345,8 +528,9 @@ export function resetBallPosition(ball, winner) {
     ball.velocity.y = 0;
     ball.velocity.z = 0;
     ball.velocity.x = 0;
-    frames = 0;
     updateScore();
+    removePowerUp();
+    frames = 0;
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
         endGame(winner);
 }
@@ -407,6 +591,7 @@ function insertButton() {
     body.appendChild(div);
     div.appendChild(rankingButton);
     div.appendChild(playAgainButton);
+    translatePage();
     console.debug("body", body);
 }
 
@@ -441,6 +626,13 @@ function removeGameObjects() {
     scene.remove(ground);
     currentText.material.dispose();
     currentText.geometry.dispose();
+    powerUps.forEach((obj, index) => {
+        if (powerUps[index])
+        {
+            powerUps[index].kill();
+            scene.remove(powerUps[index]);
+        }
+    })
     scene.remove(currentText);
     if (winnerText)
     {

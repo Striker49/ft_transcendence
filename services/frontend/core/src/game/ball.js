@@ -102,10 +102,6 @@ export class Ball extends THREE.Mesh{
                 // Checks if the ball is hitting the bottom of the paddle and inverts z velocity
                 if (this.front > box.front && this.velocity.z < 0)
                     this.velocity.z *= -1;
-                //Accelerates ball z velocity
-                // this.velocity.z *= ((this.front - this.radius) / box.front);
-                if (this.velocity.z > 0.25)
-                    this.velocity.z = 0.25;
             }
         }
     }
