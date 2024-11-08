@@ -47,6 +47,7 @@ export const login = async form => {
 
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);
+		localStorage.setItem("username", json.username);
 		// localStorage.setItem("lang", json.lang);
 
 		updateLogin();
