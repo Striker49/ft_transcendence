@@ -17,19 +17,26 @@ function cycleSupportedLang(language) {
 			return (supportedLocales[i]);
 		}
 	}
+	return (0);
 }
 
 function findSupported(navLang) {
 	console.debug("FIND IF SUPPORTED LANGUAGE");
+	let found = 0;
 	//Will check if nav languages are supported from top to bottom
 	for (let j = 0; navLang[j]; j++)
-		cycleSupportedLang(navLang[j]);
+	{
+		found = cycleSupportedLang(navLang[j]);
+		if (found)
+			return (found);
+	}
 	console.debug("NO LANGUAGE SUPPORTED");
 	return (defaultLocale);
 }
 
 export function setLanguage() {
 	let newLocale;
+
 	//Change locale value for localStorage if valid or the navigator language
 	if (localStorage.getItem("lang") && cycleSupportedLang(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
@@ -80,6 +87,10 @@ async function setLocale(newLocale) {
 	console.info("trying to switch to:", newLocale);
 	if (newLocale === locale) return;  // Don't reload if locale is the same
 	try {
+
+		if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
+			document.querySelector("[lang]").setAttribute("lang", newLocale);
+		
 		const newTranslations = await fetchTranslationsFor(newLocale);
 		
 		// Update the locale and translations
@@ -97,7 +108,7 @@ async function setLocale(newLocale) {
 	}
 }
 
-async function fetchTranslationsFor(newLocale) {
+export async function fetchTranslationsFor(newLocale) {
 	try {
 		const response = await fetch(`/src/lang/${newLocale}.json`);
 		if (!response.ok) {

@@ -55,8 +55,24 @@
   "gamesPerfect": "Perfecte spellen",
 
   "rank": "Rang",
+  
+  "gameHistory": "Wedstrijdgeschiedenis",
+
+  "noGamesPlayed": "Nog geen spellen gespeeld",
+
+  "CPU": "CPU",
+
+  "score": "Score",
+
+  "to": "naar",
+
+  "won": "Gewonnen",
+
+  "lost": "Verloren",
 
   "editProfile": "Wijzig profiel",
+
+  "friendlist": "Vriendenlijst",
 
   "passwordLength": "Wachtwoord moet tussen 6 en 20 tekens zijn",
 

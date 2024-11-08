@@ -56,8 +56,24 @@
   "gamesPerfect": "Parties parfaites",
 
   "rank": "Rang",
+
+  "gameHistory": "Historique des parties",
+
+  "noGamesPlayed": "Aucune partie jouée",
+
+  "CPU": "Ordi",
+
+  "score": "Score",
+
+  "to": "à",
+
+  "won": "Gagné",
+
+  "lost": "Perdu",
   
   "editProfile": "Modifier le profil",
+
+  "friendlist": "Liste d'amis",
 
   "passwordLength": "Le mot de passe doit être 6 et 20 caractères",
 
