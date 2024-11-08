@@ -1,17 +1,25 @@
 // ========== Form validation ==========
 import { translatePage } from "../localization.js"
 
+export const addSpan = () => {
+
+	const span = document.createElement("p");
+
+	span.classList.add("form-error", "my-0", "mt-2", "fst-italic", "lh-1");
+	span.style.fontSize = "12px";
+	return span;
+};
 
 const clearSpan = span => {
 	if (span) {		
-		span.innerHTML = "";
+		span.textContent = "";
 		span.removeAttribute("data-i18n-key");
 	}
 };
 
 const printError = (span, langKey, msg) => {
 	if (span) {
-		span.innerHTML = msg;
+		span.textContent = msg;
 		span.setAttribute("data-i18n-key", langKey);
 		translatePage();
 	} else {

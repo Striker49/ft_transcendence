@@ -1,4 +1,5 @@
 import { handleFetch } from "../api/api.js";
+// import { addSpan } from "../utils/validation.js";
 
 // export default `
 // 	<div class="offcanvas offcanvas-start bg-secondary-subtle" tabindex="-1" id="friendlist" aria-labelledby="friendlistLabel">
@@ -47,6 +48,142 @@ import { handleFetch } from "../api/api.js";
 // 	</div>
 // `;
 
+const addButton = button => {
+
+	const btn = document.createElement("button");
+	const btnClasses = [
+		"btn",
+		"btn-dark",
+		"rounded-pill",
+		"px-4",
+		"my-3",
+		"bg-orange",
+		"border-0",
+		"text-dark",
+		"fw-bold",
+		"box-shadow-subtle",
+		"text-center",
+		"mx-2"
+	];
+
+	btn.id = button.id;
+	btn.textContent = button.text;
+	btn.setAttribute("type", "button");
+	btn.setAttribute("data-i18n-key", button.langClass);
+	btn.classList.add(...btnClasses);
+	return btn;
+};
+
+const addButtons = buttons => {
+
+	const friendlistButtons = document.createElement("div");
+
+	friendlistButtons.id = "friendlistButtons";
+	friendlistButtons.className = "text-center";
+	buttons.forEach(button => {
+		friendlistButtons.appendChild(addButton(button));
+	});
+	return friendlistButtons;
+};
+
+const addImage = (src, alt, id) => {
+
+	const img = document.createElement("img");
+
+	img.src = src;
+	img.alt = alt;
+	img.className = id;
+	img.style.width = "100%";
+	return img;
+};
+
+const addFriendshipIcons = friendship => {
+
+	const icons = document.createDocumentFragment();
+
+	// if (friendship.type == "pending_first_second") {
+	// 	if (localStorage.getItem("UID") == friendship.user1_ID) {
+	// 		icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection", "pending-connection"));
+	// 	} else {
+	// 		icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation", "decline-invitation"));
+	// 		icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation", "accept-invitation"));
+	// 	}
+	// } else {
+	// 	icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game", "user-in-game"));
+	// }
+
+	switch (friendship.type) {
+		case "pending_first_second":
+			icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection"));
+			break;
+		case "pending_second_first":
+			icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation"));
+			icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation"));
+			break;
+		default:
+			icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game"));
+	}
+
+	return icons;
+};
+
+const createUserSnippet = (avatar_path, username, rank, friendship) => {
+
+	const defaultAvatarPath = "/src/assets/avatar/avatar1.jpg";
+
+	const row = document.createElement("div");
+	const col1 = document.createElement("div");
+	const col2 = document.createElement("div");
+	const col3 = document.createElement("div");
+	const img = document.createElement("img");
+	const userTitle = document.createElement("h4");
+	const userDescription = document.createElement("p");
+	const userRank = document.createElement("span");
+
+	row.classList.add("row", "mb-3");
+	col1.className = "col-4";
+	col2.className = "col-6";
+	col3.className = "col-2";
+
+	img.classList.add("border-orange", "w-100");
+	userDescription.classList.add("fst-italic");
+	userRank.classList.add("fw-bold");
+
+	if (avatar_path) {
+		img.src = avatar_path;
+	} else {
+		img.src = defaultAvatarPath;
+	}
+
+	if (username) {
+		img.alt = `${username}'s avatar`;
+		userTitle.textContent = username;
+	} else {
+		img.alt = "Default avatar";
+		userTitle.textContent = "Undefined";
+	}
+
+	if (rank) {
+		userRank.textContent = rank;
+	} else {
+		userRank.textContent = "-42";
+	}
+	userDescription.textContent = "Rank: ";
+	userDescription.appendChild(userRank);
+
+	if (friendship) {		
+		col3.appendChild(addFriendshipIcons(friendship));
+	}
+	col1.appendChild(img);
+	col2.appendChild(userTitle);
+	col2.appendChild(userDescription);
+	row.appendChild(col1);
+	row.appendChild(col2);
+	row.appendChild(col3);
+
+	return row;
+};
+
 const createFriendship = async uid2 => {
 
 	const token = localStorage.getItem("authToken");
@@ -67,6 +204,7 @@ const createFriendship = async uid2 => {
 		const json = await handleFetch(url, "POST", JSON.stringify(data), headers);
 		console.log("======= Friend Request Sent =======");
 		console.log(json);
+		document.querySelector("#friendlist .offcanvas-body").appendChild(await toggleContent(false));
 	} catch (error) {
 		console.error(error.message);
 	}
@@ -114,97 +252,9 @@ const displayProfiles = async input => {
 	return fragment;
 };
 
-const createUserSnippet = (avatar_path, username, rank) => {
-
-	const defaultAvatarPath = "/src/assets/avatar/avatar1.jpg";
-
-	const row = document.createElement("div");
-	const col1 = document.createElement("div");
-	const col2 = document.createElement("div");
-	const img = document.createElement("img");
-	const userTitle = document.createElement("h4");
-	const userDescription = document.createElement("p");
-	const userRank = document.createElement("span");
-
-	row.classList.add("row", "mb-3");
-	col1.className = "col-4";
-	col2.className = "col-8";
-
-	img.classList.add("border-orange", "w-100");
-	userDescription.classList.add("fst-italic");
-	userRank.classList.add("fw-bold");
-
-	if (avatar_path) {
-		img.src = avatar_path;
-	} else {
-		img.src = defaultAvatarPath;
-	}
-
-	if (username) {
-		img.alt = `${username}'s avatar`;
-		userTitle.textContent = username;
-	} else {
-		img.alt = "Default avatar";
-		userTitle.textContent = "Undefined";
-	}
-
-	if (rank) {
-		userRank.textContent = rank;
-	} else {
-		userRank.textContent = "-42";
-	}
-	userDescription.textContent = "Rank: ";
-	userDescription.appendChild(userRank);
-
-	col1.appendChild(img);
-	col2.appendChild(userTitle);
-	col2.appendChild(userDescription);
-	row.appendChild(col1);
-	row.appendChild(col2);
-
-	return row;
-};
-
-const addButton = button => {
-
-	const btn = document.createElement("button");
-	const btnClasses = [
-		"btn",
-		"btn-dark",
-		"rounded-pill",
-		"px-4",
-		"my-3",
-		"bg-orange",
-		"border-0",
-		"text-dark",
-		"fw-bold",
-		"box-shadow-subtle",
-		"text-center",
-		"mx-2"
-	];
-
-	btn.id = button.id;
-	btn.textContent = button.text;
-	btn.setAttribute("type", "button");
-	btn.setAttribute("data-i18n-key", button.langClass);
-	btn.classList.add(...btnClasses);
-	return btn;
-};
-
-const addButtons = buttons => {
-
-	const friendlistButtons = document.createElement("div");
-
-	friendlistButtons.id = "friendlistButtons";
-	friendlistButtons.className = "text-center";
-	buttons.forEach(button => {
-		friendlistButtons.appendChild(addButton(button));
-	});
-	return friendlistButtons;
-};
-
 const addFriendlist = async () => {
 
+	const uid = localStorage.getItem("UID");
 	const token = localStorage.getItem("authToken");
 	const headers = new Headers({
 		"Content-Type": "application/json",
@@ -224,7 +274,11 @@ const addFriendlist = async () => {
 
 	const fragment = document.createDocumentFragment();
 	json.forEach(friend => {
-		fragment.appendChild(createUserSnippet("", friend.user2_username, ""));
+		if (uid == friend.user1_ID) {
+			fragment.appendChild(createUserSnippet("", friend.user2_username, "", friend));
+		} else {
+			fragment.appendChild(createUserSnippet("", friend.user1_username, "", friend));
+		}
 	});
 
 	const container = document.createElement("div");
@@ -260,6 +314,7 @@ const addSearchBar = () => {
 	span.appendChild(icon);
 	searchBar.appendChild(span);
 	searchBar.appendChild(input);
+	// searchBar.appendChild(addSpan());
 	searchBar.appendChild(dropdown);
 
 	return searchBar;
@@ -288,7 +343,7 @@ const addCurrentUser = async () => {
 		console.error(error.message);
 	}
 
-	const currentUser = createUserSnippet(jsonProfile[0].avatar_path, jsonProfile[0].username, jsonGameStats[0].rank);
+	const currentUser = createUserSnippet(jsonProfile[0].avatar_path, jsonProfile[0].username, jsonGameStats[0].rank, "");
 	currentUser.id = "currentUser";
 	return currentUser;
 };
@@ -428,16 +483,25 @@ document.addEventListener("click", e => {
 			e.preventDefault();
 			const input = document.querySelector("#searchBar input").value;
 			if (input) {
-				checkIfUserExists(input).then(user => {
-					if (user) {
-						createFriendship(user[0].UID);
-					} else {
-						alert("Username not found. Please provide an existing username");
-					}
-				});
+				if (input == localStorage.getItem("UID")) {
+					alert("Cannot add yourself as a friend.");
+				} else {
+					checkIfUserExists(input).then(user => {
+						if (user) {
+							createFriendship(user[0].UID);
+						} else {
+							alert("Username not found. Please provide an existing username");
+						}
+					});
+				}
 			} else {
 				alert ("Please provide a username");
 			}
+			break;
+
+		case element.matches(".accept-invitation"):
+			e.preventDefault();
+
 			break;
 
 		case element.matches("#friendlist .dropdown-menu li"):
@@ -454,9 +518,11 @@ document.addEventListener("input", e => {
 	switch (true) {
 		case element.matches("#searchBar input"):
 			e.preventDefault();
-			displayProfiles(element.value).then(profiles => {
-				document.querySelector("#friendlist .dropdown-menu").replaceChildren(profiles);
-			});
+			if (element.value) {
+				displayProfiles(element.value).then(profiles => {
+					document.querySelector("#friendlist .dropdown-menu").replaceChildren(profiles);
+				});
+			}
 			break;
 	}
 });
