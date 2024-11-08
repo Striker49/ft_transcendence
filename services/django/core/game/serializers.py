@@ -9,7 +9,10 @@ class GameStatsSerializer(serializers.ModelSerializer):
 	rank = serializers.ReadOnlyField()
 	username = serializers.ReadOnlyField(source='UID.username')
 	last_played = serializers.ReadOnlyField(source='formatted_created')
+<<<<<<< Updated upstream
 	perfect_games = serializers.ReadOnlyField()
+=======
+>>>>>>> Stashed changes
 
 	class Meta:
 		model = models.GameStats

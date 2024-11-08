@@ -85,6 +85,7 @@ class UserLoginApiView(ObtainAuthToken):
 			'token': token.key,
 			'UID': user.id,
 			'username': user.username,
+			'lang_pref': user.profile.lang,
 		})
   
 class UserDetail(generics.RetrieveAPIView):

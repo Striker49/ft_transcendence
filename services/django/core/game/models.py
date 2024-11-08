@@ -12,6 +12,7 @@ class GameStats(models.Model):
 	wins=models.PositiveIntegerField(default=0)
 	losses=models.PositiveIntegerField(default=0)
 	perfect_games=models.PositiveIntegerField(default=0)
+	rank=models.PositiveIntegerField(default=0, blank=True, null=True)
 	last_played=models.DateTimeField(blank=True, null=True)
 
 	class Meta:
@@ -28,20 +29,24 @@ class GameStats(models.Model):
 	def total_games(self):
 		return self.wins + self.losses
 
-	@property
-	def rank(self):
-		total_players = GameStats.objects.count()
+	def formatted_created(self):
+		return self.created.strftime("%Y-%m-%d %H:%M:%S")
+
+	def calculate_rank(self):
 		if self.wins == 0 and self.losses == 0:
-			return None
-		if total_players == 1:
-			return 1
-		rank = GameStats.objects.filter(Q(wins__gt=self.wins) | 
-			(Q(wins=self.wins) & Q(losses__lt=self.losses))).count()
+			return None 
+		rank = GameStats.objects.filter(
+			Q(wins__gt=self.wins) | 
+			(Q(wins=self.wins) & Q(losses__lt=self.losses))
+		).count()
 		return rank + 1
 
 	def formatted_created(self):
 		local_created = timezone.localtime(self.created)
 		return local_created.strftime("%Y-%m-%d %H:%M:%S")
+	def save(self, *args, **kwargs):
+		self.rank = self.calculate_rank()
+		super().save(*args, **kwargs)
 
 	def __str__(self):
 		"""Return string representation of our user"""
