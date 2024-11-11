@@ -98,6 +98,10 @@ h1 {
 	margin-bottom: 0 !important;
 }
 
+#friends .accept-invitation, #friends .decline-invitation {
+	cursor: pointer;
+}
+
 /* ========= Custom Scrollbar ========= */
 
 /* Custom Scrollbar using CSS */

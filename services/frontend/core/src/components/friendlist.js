@@ -113,19 +113,6 @@ const addFriendshipIcons = friendship => {
 			icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation", "accept-invitation"));
 		}
 	}
-	
-	// switch (friendship.type) {
-	// 	case "pending_first_second":
-	// 		icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection"));
-	// 		break;
-	// 	case "pending_second_first":
-	// 		icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation"));
-	// 		icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation"));
-	// 		break;
-	// 	default:
-	// 		icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game"));
-	// }
-
 	return icons;
 };
 
@@ -212,27 +199,89 @@ const createFriendship = async uid2 => {
 	}
 };
 
-// const updateFriendship = async () => {
+const getFriendlist = async () => {
 
-// 	const token = localStorage.getItem("authToken");
+	const token = localStorage.getItem("authToken");
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+    const url = "https://localhost/api/profiles/friendship/";
 
-// 	const data = {
+	try {
+		const json = await handleFetch(url, "GET", "", headers);
+		console.log("======= Friendlist : Other users =======");
+		console.log(json);
+		return json;
+	} catch (error) {
+		console.error(error.message);
+		return "";
+	}
+};	
 
-// 	};
-// 	const headers = new Headers({
-// 		"Content-Type": "application/json",
-// 		"Authorization": `Token ${token}`,
-// 	});
-//     const url = "https://localhost/api/profiles/friendship/";
+const getFriendshipID = async user => {
 
-// 	try {
-// 		const json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
-// 		console.log("======= Friendship updated =======");
-// 		console.log(json);
-// 	} catch (error) {
-// 		console.error(error.message);
-// 	}
-// };
+	const friendlist = await getFriendlist();
+
+	if (friendlist) {
+		for (const friend of friendlist) {
+			if (user == friend.user1_username || user == friend.user2_username) {
+				return friend.friendship_id;
+			}
+		}
+	}
+	return null;
+};
+
+const updateFriendship = async (friendshipId, element, status) => {
+
+	const token = localStorage.getItem("authToken");
+	const data = {
+		"type": "friends"
+	};
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+    const url = `https://localhost/api/profiles/friendship/${friendshipId}/`;
+
+	let json;
+
+	try {
+		if (status) {
+			json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
+			element.replaceChildren(addFriendshipIcons(json));
+		} else {
+			console.log("Yo");
+			json = await handleFetch(url, "DELETE", "", headers);
+			element.remove();
+		}
+		console.log("======= Friendship updated =======");
+		console.log(json);
+		
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+const handleInvitation = (icon, status) => {
+
+	const user = icon.parentElement.previousSibling.firstElementChild.textContent;
+
+	if (user) {
+		getFriendshipID(user).then(id => {
+			if (id) {
+				if (status) {
+					updateFriendship(id, icon.parentElement, status);
+				} else {
+					updateFriendship(id, icon.parentElement.parentElement, status);
+				}
+			}
+		});
+	} else {
+		alert ("No user selected !");
+	}
+};
 
 const checkIfUserExists = async input => {
 
@@ -278,26 +327,11 @@ const displayProfiles = async input => {
 
 const addFriendlist = async () => {
 
+	const friendlist = await getFriendlist();
 	const uid = localStorage.getItem("UID");
-	const token = localStorage.getItem("authToken");
-	const headers = new Headers({
-		"Content-Type": "application/json",
-		"Authorization": `Token ${token}`,
-	});
-    const url = "https://localhost/api/profiles/friendship/";
-
-	let json;
-
-	try {
-		json = await handleFetch(url, "GET", "", headers);
-		console.log("======= Friendlist : Other users =======");
-		console.log(json);
-	} catch (error) {
-		console.error(error.message);
-	}
 
 	const fragment = document.createDocumentFragment();
-	json.forEach(friend => {
+	friendlist.forEach(friend => {
 		if (uid == friend.user1_ID) {
 			fragment.appendChild(createUserSnippet("", friend.user2_username, "", friend));
 		} else {
@@ -525,6 +559,12 @@ document.addEventListener("click", e => {
 
 		case element.matches(".accept-invitation"):
 			e.preventDefault();
+			handleInvitation(element, true);
+			break;
+
+		case element.matches(".decline-invitation"):
+			e.preventDefault();
+			handleInvitation(element, false);
 			break;
 
 		case element.matches("#friendlist .dropdown-menu li"):
