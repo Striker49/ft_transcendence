@@ -1,5 +1,5 @@
 import { login } from "./login.js";
-import { translatePage, fetchTranslationsFor } from "../localization.js";
+import { translatePage, fetchTranslationsFor, setLanguage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 
 let upload = false;
@@ -196,6 +196,7 @@ const submitProfileForm = async form => {
 
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
+	localStorage.setItem("lang", form.lang.value);
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
@@ -619,6 +620,7 @@ document.addEventListener("submit", e => {
 			e.preventDefault();
 			if (validateForm(element)) {
 				submitProfileForm(element);
+				setLanguage();
 			}
 			break;
 	}
