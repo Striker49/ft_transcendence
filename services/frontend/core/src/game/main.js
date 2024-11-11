@@ -49,27 +49,45 @@ let ground;
 let ball;
 
 const textureLoader = new THREE.TextureLoader();
-const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+
+let customTextureGround
+let customTexturePaddleL;
+let customTexturePaddleR;
+let customTextureBall;
+let customTextureNumber;
+
 
 const box = new THREE.Mesh
 
 function updateTheme(theme) {
     switch(theme) {
         case 'Custom':
-            paddleL.material.color.set(0x00ff00); // Green
-            paddleR.material.color.set(0xff0000); // Red
-            ground.material.map = customTexture; // 
-            ground.material.color.set(0xffffff); // Reset color to avoid tinting
+            customTextureGround = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+            customTexturePaddleL = textureLoader.load('src/assets/Stylized_Stone_Floor_010_basecolor.png');
+            customTexturePaddleR = textureLoader.load('src/assets/Stylized_Stone_Floor_009_basecolor.png');
+            customTextureBall = textureLoader.load('/src/assets/Tiles_053_basecolor.png');
+            customTextureNumber = textureLoader.load('/src/assets/Wood_Planks_014_basecolor.png');
+            customTexturePaddleL.repeat.set(0.4,0.4);
+            customTexturePaddleR.repeat.set(0.4,0.4);
+
+            paddleL.material.map = customTexturePaddleL; // Green
+            paddleR.material.map = customTexturePaddleR; // Red
+            ground.material.map = customTextureGround; // 
+            ball.material.map = customTextureBall; // Reset color to avoid tinting
+            // currentText.material.map = customTextureNumber;
+
             break;
         case 'Christmas':
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
             ground.material.color.set(0x0369a1);  // Blue
+            ball.material.color.set('yellow'); // Yellow
             break;
         case 'Halloween':
             paddleL.material.color.set(0xff6600); // Orange
             paddleR.material.color.set(0x8c00ff); // Purple
             ground.material.color.set(0x564c43);  // Brown
+            ball.material.color.set('yellow'); // Yellow
             break;
         case 'Winter':
             paddleL.material.color.set(0x9fffff); // Light Blue
@@ -78,9 +96,11 @@ function updateTheme(theme) {
             ball.material.color.set(0x00ffff);    // Cyan for the ball
             break;
         default:
-            paddleL.material.color.set(0x00ff00); // Green
-            paddleR.material.color.set(0xff0000); // Red
-            ground.material.color.set(0x0369a1);  // Blue
+            paddleL.material.color.set(0x3ec300); // Green
+            paddleR.material.color.set(0xb63b85); // Red
+            ground.material.color.set(0x1a879c);  // Blue
+            ball.material.color.set('yellow'); // Yellow
+
     }
     ground.material.needsUpdate = true;
 }
@@ -123,6 +143,7 @@ function initGame() {
         width: paddleWidth,
         height: 0.5,
         depth: paddleDepth,
+        color: null,
         velocity: {
             x: 0,
             y: -0.01,
@@ -143,6 +164,7 @@ function initGame() {
         width: paddleWidth,
         height: 0.5,
         depth: paddleDepth,
+        color: null,
         velocity: {
             x: 0,
             y: -0.01,
@@ -153,7 +175,6 @@ function initGame() {
             y: -1.25,
             z: 0
         },
-        color: 'red'
     });
     paddleR.castShadow = true;
     // scene.add(paddleR);
@@ -173,7 +194,7 @@ function initGame() {
             y: -1.25,
             z: 0
         },
-        color: 'yellow'
+        color: null
     });
     ball.castShadow = true;
     // scene.add(ball);
@@ -183,7 +204,7 @@ function initGame() {
         width: groundWidth, 
         height: 0.5,
         depth: 9,
-        color: '#0369a1',
+        color: null,
         position: {
             x: 0,
             y: -3,
@@ -209,6 +230,10 @@ function updateScore(text) {
             return;
         text.castShadow = true;
         text.receiveShadow = true;
+        console.log("customTextureNumber", customTextureNumber);
+        if (customTextureNumber)
+            text.material.map = customTextureNumber;
+        
         scene.add(text);
     
         // Store the reference to the new text
@@ -608,6 +633,12 @@ function endGame(winner) {
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
     console.debug("winnerName", winnerName);
+    // text.material.map = null;
+    // currentText.material.map = null;
+    // currentText.material.needsUpdate = true;
+    // text.material.needsUpdate = true;
+    // customTextureNumber.material.map = null;
+    // customTextureNumber.material.needsUpdate = true;
     removeGameObjects();
     // scene.remove.apply(scene, scene.children);
     // cancelAnimationFrame(animationID);
