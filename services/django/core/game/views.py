@@ -51,7 +51,7 @@ class GamesRanking(ListAPIView):
 	def get_queryset(self):
 		"""Get the profiles based on search query or return the logged-in user's profile."""
 		limit = int(self.request.query_params.get('limit', 10))
-		queryset = models.GameStats.objects.exclude().order_by('-wins')[:limit]
+		queryset = models.GameStats.objects.exclude().order_by('rank')[:limit]
 
 		return queryset
 
