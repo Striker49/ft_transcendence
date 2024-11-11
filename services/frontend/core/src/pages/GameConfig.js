@@ -56,10 +56,13 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
+		let localTranslations = JSON.parse(localStorage.getItem("translations"));
+		if (localTranslations == null)
+			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 		const userData = await getUserProfile();
 		const ai = await getNbPlayer("nbPlayer");
-		const username = (userData ? userData.username : "Player 1")
-		const username2 = "Player 2";
+		const username = (userData ? userData.username : localTranslations["playerOne"])
+		const username2 = localTranslations["playerTwo"] || "Player 2";
 		// console.log("user name: ", userData.username);
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.authToken);

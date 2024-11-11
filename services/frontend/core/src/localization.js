@@ -1,9 +1,6 @@
-// The active locale
-// const defaultLocale = "en";
 const supportedLocales = ["en", "nl", "fr"];
 
 let locale = "en";
-let defaultLocale = "en";
 let translations = {};
 
 
@@ -31,7 +28,7 @@ function findSupported(navLang) {
 			return (found);
 	}
 	console.debug("NO LANGUAGE SUPPORTED");
-	return (defaultLocale);
+	return (locale);
 }
 
 export function setLanguage() {
@@ -96,7 +93,7 @@ async function setLocale(newLocale) {
 		// Update the locale and translations
 		locale = newLocale;
 		localStorage.setItem("lang", locale);
-		console.log("newtranslations:", newTranslations);
+		console.debug("newtranslations:", newTranslations);
 		translations = newTranslations;
 		//Puts the last language translated's JSON in localStorage
 		localStorage.setItem("translations", JSON.stringify(translations));
@@ -122,7 +119,7 @@ export async function fetchTranslationsFor(newLocale) {
 }
 
 export function translatePage() {
-	console.log("TranslatePage() is called");
+	console.debug("TranslatePage() is called");
 	document.querySelectorAll("[data-i18n-key]").forEach((element) => {
 		translateElement(element);
 	});
@@ -131,8 +128,7 @@ export function translatePage() {
 // Replace the inner text of the given HTML element with the translation
 // corresponding to the element's data-i18n-key
 function translateElement(element) {
-	//Checks if we have loaded translations already if not we're 
-	//probably still on the first page
+	//Checks if we have loaded translations already
 	if (JSON.stringify(translations) === '{}')
 		return;
 	if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
@@ -149,7 +145,6 @@ function translateElement(element) {
 }
 
 export function getTranslatedWord(wordKey) {
-	console.log("getTranslatedWord", wordKey);
 	const translations = {
 		en: { winner: "WINNER"},
 		fr: { winner: "GAGNANT"},

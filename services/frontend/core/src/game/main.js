@@ -41,6 +41,7 @@ let powerUpLocation;
 let ai = false;
 let newZPosition = 0;
 let state = 0;
+let winnerName;
 
 let paddleL;
 let paddleR;
@@ -115,8 +116,8 @@ function initGame() {
     numberOfWins = Math.max(1, Math.min(11, parseInt(localStorage.getItem("numberOfWins") || 3, 10)));
     if (localStorage.getItem("numberOfWins") != numberOfWins)
         localStorage.setItem("numberOfWins", numberOfWins);
-    console.log('initGame now', numberOfWins);
-    console.log('initGame theme', localStorage.getItem("theme"));
+    console.debug('initGame now', numberOfWins);
+    console.debug('initGame theme', localStorage.getItem("theme"));
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
@@ -346,7 +347,7 @@ function spawnPowerUp() {
     {
         if (!powerUps[0])
         {
-            console.log("creating power up...");
+            console.debug("creating power up...");
             createPowerBox(paddleL, 0);
         }
     }
@@ -354,7 +355,7 @@ function spawnPowerUp() {
     {
         if (!powerUps[1])
         {
-            console.log("creating power up...");
+            console.debug("creating power up...");
             createPowerBox(paddleR, 1);
         }
     }
@@ -562,6 +563,12 @@ export const updateGameScene = () => {
 
 function showWinner(winnerName) {
     let winnerWord = getTranslatedWord("winner");
+    let translations = JSON.parse(localStorage.getItem("translations"));
+    if (translations && (winnerName == "Player 1" || winnerName == "Joueur 1" || winnerName == "Speler 1"))
+        winnerName = translations["playerOne"];
+    else if (translations && (winnerName == "Player 2" || winnerName == "Joueur 2" || winnerName == "Speler 2"))
+        winnerName= translations["playerTwo"];
+    console.log("tarnslation player 1/2: ", translations["playerOne"], translations["playerTwo"]);
     createWinnerText(function (text2) {
         winnerText = text2;
         scene.add(winnerText);
@@ -596,7 +603,7 @@ function insertButton() {
 }
 
 function endGame(winner) {
-    const winnerName = (winner == 2 ? nameP1 : nameP2);
+    winnerName = (winner == 2 ? nameP1 : nameP2);
     console.debug("winner", winner);
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
@@ -682,4 +689,44 @@ document.addEventListener('click', (event) => {
         winnerText.geometry.dispose();
         scene.remove(winnerText);
     }
+    // else if (winnerText)
+    // {
+    //     winnerText.material.dispose();
+    //     winnerText.geometry.dispose();
+    //     scene.remove(winnerText);
+    //     showWinner(getTranslatedWord(winnerName));
+    // }
 })
+
+document.addEventListener('click', (event) => {
+    if (event.target.matches("#ranking"))
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
+    // else if (winnerText)
+    // {
+    //     winnerText.material.dispose();
+    //     winnerText.geometry.dispose();
+    //     scene.remove(winnerText);
+    //     showWinner(getTranslatedWord(winnerName));
+    // }
+})
+
+document.querySelectorAll(".flag").forEach(flag => {
+    flag.addEventListener("click", (event) => {
+        // const selectedLang = event.target.getAttribute("data-lang");
+        // setLocale(selectedLang);
+        setTimeout( () => {
+        console.log("sleep over");
+        if (winnerText) {
+            winnerText.material.dispose();
+            winnerText.geometry.dispose();
+            scene.remove(winnerText);
+            showWinner(getTranslatedWord(winnerName));
+        }
+    }, 100);
+        // flagOptions.style.display = "none";
+    });
+});
