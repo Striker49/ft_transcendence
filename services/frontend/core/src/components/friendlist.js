@@ -100,29 +100,31 @@ const addImage = (src, alt, id) => {
 const addFriendshipIcons = friendship => {
 
 	const icons = document.createDocumentFragment();
+	const uid = localStorage.getItem("UID");
 
-	// if (friendship.type == "pending_first_second") {
-	// 	if (localStorage.getItem("UID") == friendship.user1_ID) {
-	// 		icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection", "pending-connection"));
-	// 	} else {
-	// 		icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation", "decline-invitation"));
-	// 		icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation", "accept-invitation"));
-	// 	}
-	// } else {
-	// 	icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game", "user-in-game"));
-	// }
-
-	switch (friendship.type) {
-		case "pending_first_second":
-			icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection"));
-			break;
-		case "pending_second_first":
-			icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation"));
-			icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation"));
-			break;
-		default:
-			icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game"));
+	if (friendship.type == "friends") {
+		icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game", "user-in-game"));
+	} else {
+		if ((friendship.type == "pending_first_second" && uid == friendship.user1_ID) ||
+			(friendship.type == "pending_second_first" && uid == friendship.user2_ID)) {
+			icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection", "pending-connection"));
+		} else {
+			icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation", "decline-invitation"));
+			icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation", "accept-invitation"));
+		}
 	}
+	
+	// switch (friendship.type) {
+	// 	case "pending_first_second":
+	// 		icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection"));
+	// 		break;
+	// 	case "pending_second_first":
+	// 		icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation"));
+	// 		icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation"));
+	// 		break;
+	// 	default:
+	// 		icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game"));
+	// }
 
 	return icons;
 };
@@ -190,9 +192,9 @@ const createFriendship = async uid2 => {
 	const uid1 = localStorage.getItem("UID");
 
 	const data = {
-		"user1_ID": uid1,
-		"user2_ID": uid2,
-		"type": "pending_first_second"
+		"user1_ID": uid1 < uid2 ? uid1 : uid2,
+		"user2_ID": uid1 > uid2 ? uid1 : uid2,
+		"type": uid1 < uid2 ? "pending_first_second" : "pending_second_first"
 	};
 	const headers = new Headers({
 		"Content-Type": "application/json",
@@ -209,6 +211,28 @@ const createFriendship = async uid2 => {
 		console.error(error.message);
 	}
 };
+
+// const updateFriendship = async () => {
+
+// 	const token = localStorage.getItem("authToken");
+
+// 	const data = {
+
+// 	};
+// 	const headers = new Headers({
+// 		"Content-Type": "application/json",
+// 		"Authorization": `Token ${token}`,
+// 	});
+//     const url = "https://localhost/api/profiles/friendship/";
+
+// 	try {
+// 		const json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
+// 		console.log("======= Friendship updated =======");
+// 		console.log(json);
+// 	} catch (error) {
+// 		console.error(error.message);
+// 	}
+// };
 
 const checkIfUserExists = async input => {
 
@@ -483,7 +507,7 @@ document.addEventListener("click", e => {
 			e.preventDefault();
 			const input = document.querySelector("#searchBar input").value;
 			if (input) {
-				if (input == localStorage.getItem("UID")) {
+				if (input == localStorage.getItem("username")) {
 					alert("Cannot add yourself as a friend.");
 				} else {
 					checkIfUserExists(input).then(user => {
@@ -501,7 +525,6 @@ document.addEventListener("click", e => {
 
 		case element.matches(".accept-invitation"):
 			e.preventDefault();
-
 			break;
 
 		case element.matches("#friendlist .dropdown-menu li"):
