@@ -48,6 +48,17 @@ import { handleFetch } from "../api/api.js";
 // 	</div>
 // `;
 
+const hasParent = (parent, element) => {
+
+	while (element) {
+		if (element === parent) {
+			return true;
+		}
+		element = element.parentElement;
+	}
+	return false;
+};
+
 const addButton = button => {
 
 	const btn = document.createElement("button");
@@ -129,10 +140,10 @@ const createUserSnippet = (avatar_path, username, rank, friendship) => {
 	const userDescription = document.createElement("p");
 	const userRank = document.createElement("span");
 
-	row.classList.add("row", "mb-3");
+	row.classList.add("row", "py-1", "mb-2");
 	col1.className = "col-4";
-	col2.className = "col-6";
-	col3.className = "col-2";
+	col2.classList.add("col-6", "friend-info");
+	col3.classList.add("col-2", "friend-icons");
 
 	img.classList.add("border-orange", "w-100");
 	userDescription.classList.add("fst-italic");
@@ -173,6 +184,52 @@ const createUserSnippet = (avatar_path, username, rank, friendship) => {
 	return row;
 };
 
+const acceptFriendship = async (friendshipId, element) => {
+
+	const token = localStorage.getItem("authToken");
+	const data = {
+		"type": "friends"
+	};
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+    const url = `https://localhost/api/profiles/friendship/${friendshipId}/`;
+
+	try {
+		const json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
+		element.replaceChildren(addFriendshipIcons(json));
+		console.log("======= Friendship updated =======");
+		console.log(json);
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+const removeFriendship = async (friendshipId, element) => {
+
+	const token = localStorage.getItem("authToken");
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`
+	});
+    const url = `https://localhost/api/profiles/friendship/${friendshipId}/`;
+
+	try {
+		const response = await fetch(url, {
+			method: "DELETE",
+			headers: headers
+		});
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+		console.log("======= Friendship deleted =======");
+		element.remove();
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
 const createFriendship = async uid2 => {
 
 	const token = localStorage.getItem("authToken");
@@ -185,7 +242,7 @@ const createFriendship = async uid2 => {
 	};
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization": `Token ${token}`,
+		"Authorization": `Token ${token}`
 	});
     const url = "https://localhost/api/profiles/friendship/";
 
@@ -233,53 +290,102 @@ const getFriendshipID = async user => {
 	return null;
 };
 
-const updateFriendship = async (friendshipId, element, status) => {
+// const updateFriendship = async (friendshipId, element, status) => {
 
-	const token = localStorage.getItem("authToken");
-	const data = {
-		"type": "friends"
-	};
-	const headers = new Headers({
-		"Content-Type": "application/json",
-		"Authorization": `Token ${token}`,
-	});
-    const url = `https://localhost/api/profiles/friendship/${friendshipId}/`;
+// 	const token = localStorage.getItem("authToken");
+// 	const data = {
+// 		"type": "friends"
+// 	};
+// 	const headers = new Headers({
+// 		"Content-Type": "application/json",
+// 		"Authorization": `Token ${token}`,
+// 	});
+//     const url = `https://localhost/api/profiles/friendship/${friendshipId}/`;
 
-	let json;
+// 	try {
+// 		if (status) {
+// 			const json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
+// 			element.replaceChildren(addFriendshipIcons(json));
+// 			console.log("======= Friendship updated =======");
+// 			console.log(json);
+// 		} else {
+// 			const response = await fetch(url, {
+// 				method: "DELETE",
+// 				headers: headers
+// 			});
+// 			if (!response.ok) {
+// 				throw new Error(`Response status: ${response.status}`);
+// 			}
+// 			console.log("======= Friendship deleted =======");
+// 			element.remove();
+// 		}
+// 	} catch (error) {
+// 		console.error(error.message);
+// 	}
+// };
 
-	try {
-		if (status) {
-			json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
-			element.replaceChildren(addFriendshipIcons(json));
-		} else {
-			console.log("Yo");
-			json = await handleFetch(url, "DELETE", "", headers);
-			element.remove();
+const getIcons = row => {
+
+	for (const child of row.children) {
+		if (child.classList.contains("friend-icons")) {
+			return child;
 		}
-		console.log("======= Friendship updated =======");
-		console.log(json);
-		
-	} catch (error) {
-		console.error(error.message);
 	}
+	return null;
 };
 
-const handleInvitation = (icon, status) => {
+const getRow = element => {
 
-	const user = icon.parentElement.previousSibling.firstElementChild.textContent;
+	const friendlist = document.querySelector("#friends");
+
+	while (element.parentElement !== friendlist) {
+		element = element.parentElement;
+	}
+	return element;
+};
+
+const getUser = row => {
+
+	for (const child of row.children) {
+		if (child.classList.contains("friend-info")) {
+			return child.firstElementChild.textContent;
+		}
+	}
+	return null;
+};
+
+const handleFriendship = (element, status) => {
+
+	// const user = icon.parentElement.previousSibling.firstElementChild.textContent;
+	const row = getRow(element);
+	const user = getUser(row);
 
 	if (user) {
 		getFriendshipID(user).then(id => {
 			if (id) {
 				if (status) {
-					updateFriendship(id, icon.parentElement, status);
+					acceptFriendship(id, getIcons(row));
 				} else {
-					updateFriendship(id, icon.parentElement.parentElement, status);
+					removeFriendship(id, row);
 				}
 			}
 		});
 	} else {
 		alert ("No user selected !");
+	}
+};
+
+const selectRow = element => {
+
+	const friendlist = document.querySelector("#friends");
+
+	while (element.parentElement !== friendlist) {
+		element = element.parentElement;
+	}
+	if (element.classList.contains("row-selected")) {
+		element.classList.remove("row-selected");
+	} else {
+		element.classList.add("row-selected");
 	}
 };
 
@@ -437,6 +543,11 @@ const toggleContent = async isSearchMode => {
 		fragment.appendChild(await addFriendlist());
 		fragment.appendChild(addButtons([
 		{
+			id: "remove-friend-btn",
+			text: "Remove friend",
+			langClass: "removeFriend"
+		},
+		{
 			id: "add-friend-btn",
 			text: "Add friend",
 			langClass: "addFriend"
@@ -556,20 +667,38 @@ document.addEventListener("click", e => {
 				alert ("Please provide a username");
 			}
 			break;
-
-		case element.matches(".accept-invitation"):
+		
+		case element.matches("#remove-friend-btn"):
 			e.preventDefault();
-			handleInvitation(element, true);
+			const rows = document.querySelectorAll(".row-selected");
+			if (rows.length) {
+				rows.forEach(friend => {
+					handleFriendship(friend, false);
+				});
+			} else {
+				alert("You must select friends first.");
+			}
 			break;
 
 		case element.matches(".decline-invitation"):
 			e.preventDefault();
-			handleInvitation(element, false);
+			handleFriendship(element, false);
+			break;
+
+		case element.matches(".accept-invitation"):
+			e.preventDefault();
+			handleFriendship(element, true);
 			break;
 
 		case element.matches("#friendlist .dropdown-menu li"):
 			e.preventDefault();
 			document.querySelector("#searchBar input").value = element.textContent;
+			break;
+
+		// Has to be at the end in order not to override the other cases
+		case hasParent(document.querySelector("#friends"), element):
+			e.preventDefault();
+			selectRow(element);
 			break;
 	}
 });

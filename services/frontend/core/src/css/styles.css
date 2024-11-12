@@ -95,7 +95,11 @@ h1 {
 /* ========= Friendlist ========= */
 
 #friends .row:last-child {
-	margin-bottom: 0 !important;
+	margin-bottom: 0;
+}
+
+#friends .row:hover, .row-selected {
+	background-color: lightgray;
 }
 
 #friends .accept-invitation, #friends .decline-invitation {
