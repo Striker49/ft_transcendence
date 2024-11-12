@@ -1,7 +1,10 @@
 import Abstract from "./Abstract.js";
+import { navigateTo } from "../router/router.js";
 
 let p2NameField;
 let p2Name;
+let username;
+let username2;
 
 const headers = new Headers({
 	"Content-Type": "application/json",
@@ -70,15 +73,17 @@ export default class extends Abstract {
 			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 		const userData = await getUserProfile();
 		const ai = await getNbPlayer("nbPlayer");
-		const username = (userData ? userData.username : localTranslations["playerOne"])
-		const username2 = localTranslations["playerTwo"] || "Player 2";
+		username = (userData ? userData.username : localTranslations["playerOne"])
+		username2 = localTranslations["playerTwo"] || "Player 2";
 		// console.log("user name: ", userData.username);
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.authToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-				<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+				<label id="p2Form" for="player1" class="form-label">
+				<span data-i18n-key="player">Player</span> 1</label>
+				<span id="player1" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
 				${p2NameField}
 				<div class="slidecontainer">
 					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
@@ -97,7 +102,7 @@ export default class extends Abstract {
 							</select>
 						</div>
 					<div class="mt-5 d-flex justify-content-center">
-						<a href="/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}" data-i18n-key="start" id="startBtn" class="btn btn-primary" data-link>START</a>
+						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
 					</div>
 					</div>
 					</div>
@@ -106,6 +111,8 @@ export default class extends Abstract {
 					`;
 	}
 }
+
+
 
 document.addEventListener("input", (event) => {
 	if (event.target.matches("#winRange")) {
@@ -128,28 +135,30 @@ document.addEventListener("change", (event) => {
 	}
 })
 
-// document.addEventListener("click", (event) => {
-// 	console.log("e.target", event.target);
-// 	if (event.target.matches("#startBtn"))
-// 	{
-// 		event.preventDefault();
-// 		document.getElementById("p2Form").submit();
-// 		if (1)
-// 			console.log("names are OK", event.target.p2Name);
-// 		else
-// 			console.log("names are NOT OK");
-// 	}
-// })
+const readName = async () => {
+	username = (document.querySelector("#username")?.value || '');
+	username2 = (document.querySelector("#p2Name")?.value || '');
 
-// document.addEventListener("submit", event => {
-// 	console.log("e.target", event.target);
-// 	if (event.target.matches("#startBtn"))
-// 	{
-// 		event.preventDefault();
-// 		document.getElementById("p2Form").submit();
-// 		if (1)
-// 			console.log("names are OK", event.target.p2Name);
-// 		else
-// 			console.log("names are NOT OK");
-// 	}
-// });
+	// return (username2);
+
+	console.log("Form is being submitted with names:", username, username2);
+}
+
+document.addEventListener("click", (event) => {
+    if (event.target.matches("#startBtn")) {
+        // Prevent default link behavior if it's an <a> tag
+        // event.preventDefault();
+		// document.addEventListener("submit", e => {
+
+		// 	// Retrieve username and username2 values from the input fields
+		// 	username2 = e.target.value || '';
+			
+			// console.log("Form is being submitted with names:", username, username2);
+			// Build the URL with query parameters
+			const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
+			
+			// Navigate to the URL
+			navigateTo(url);
+		// });
+    }
+});

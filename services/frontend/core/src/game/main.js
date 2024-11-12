@@ -230,7 +230,6 @@ function updateScore(text) {
             return;
         text.castShadow = true;
         text.receiveShadow = true;
-        console.log("customTextureNumber", customTextureNumber);
         if (customTextureNumber)
             text.material.map = customTextureNumber;
         
