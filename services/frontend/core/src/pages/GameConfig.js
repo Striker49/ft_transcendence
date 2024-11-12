@@ -101,6 +101,9 @@ export default class extends Abstract {
 								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</div>
+					<div>
+						<label>Power-Ups</label>
+						<input type="checkbox" id="powerUps" value="false">
 					<div class="mt-5 d-flex justify-content-center">
 						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
 					</div>
@@ -145,6 +148,19 @@ const readName = async () => {
 }
 
 document.addEventListener("click", (event) => {
+    if (event.target.matches("#powerUps")) {
+		console.log("powerups!!!");
+		const checkBox = document.getElementById("powerUps");
+		console.log("checkbox", checkBox);
+		if (checkBox.value == "true") {
+			checkBox.value = false;
+			localStorage.setItem("powerUps", false);
+		}
+		else {
+			checkBox.value = true;
+			localStorage.setItem("powerUps", true)
+		}
+	}
     if (event.target.matches("#startBtn")) {
         // Prevent default link behavior if it's an <a> tag
         // event.preventDefault();

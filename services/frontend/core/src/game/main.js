@@ -35,7 +35,7 @@ let paddleDepth= 2.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
-let powerUpMode = false;
+let powerUpMode;
 let powerUps = [];
 let powerUpLocation;
 let ai = false;
@@ -132,6 +132,7 @@ function initGame() {
     scoreP1 = 0;
     scoreP2 = 0;
     ai = localStorage.getItem("nbPlayer") == "1" ? true : false;
+    powerUpMode = localStorage.getItem("powerUps") == "true"? true : false;
 
     numberOfWins = Math.max(1, Math.min(11, parseInt(localStorage.getItem("numberOfWins") || 3, 10)));
     if (localStorage.getItem("numberOfWins") != numberOfWins)
@@ -487,7 +488,8 @@ function updateGame() {
         paddleL.velocity.z = speed;
     }
 
-    spawnPowerUp();
+    if (powerUpMode == true)
+        spawnPowerUp();
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
