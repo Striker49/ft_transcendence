@@ -67,8 +67,8 @@ function updateTheme(theme) {
             customTexturePaddleR = textureLoader.load('src/assets/Stylized_Stone_Floor_009_basecolor.png');
             customTextureBall = textureLoader.load('/src/assets/Tiles_053_basecolor.png');
             customTextureNumber = textureLoader.load('/src/assets/Wood_Planks_014_basecolor.png');
-            customTexturePaddleL.repeat.set(0.4,0.4);
-            customTexturePaddleR.repeat.set(0.4,0.4);
+            customTexturePaddleL.repeat.set(0.75,0.75);
+            customTexturePaddleR.repeat.set(0.75,0.75);
 
             paddleL.material.map = customTexturePaddleL; // Green
             paddleR.material.map = customTexturePaddleR; // Red
@@ -633,12 +633,6 @@ function endGame(winner) {
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
     console.debug("winnerName", winnerName);
-    // text.material.map = null;
-    // currentText.material.map = null;
-    // currentText.material.needsUpdate = true;
-    // text.material.needsUpdate = true;
-    // customTextureNumber.material.map = null;
-    // customTextureNumber.material.needsUpdate = true;
     removeGameObjects();
     // scene.remove.apply(scene, scene.children);
     // cancelAnimationFrame(animationID);
@@ -662,6 +656,9 @@ function removeGameObjects() {
     scene.remove(paddleR);
     ground.kill();
     scene.remove(ground);
+    currentText.material.map = null;
+    currentText.material.needsUpdate = true;
+    customTextureNumber = null;
     currentText.material.dispose();
     currentText.geometry.dispose();
     powerUps.forEach((obj, index) => {
@@ -674,6 +671,13 @@ function removeGameObjects() {
     scene.remove(currentText);
     if (winnerText)
     {
+        // text.material.map = null;
+        // currentText.material.map = null;
+        // currentText.material.needsUpdate = true;
+        // text.material.needsUpdate = true;
+        // customTextureNumber.material.map = null;
+        // customTextureNumber.material.needsUpdate = true;
+        // customTextureNumber = null;
         winnerText.material.dispose();
         winnerText.geometry.dispose();
         scene.remove(winnerText);
