@@ -1,5 +1,8 @@
 import Abstract from "./Abstract.js";
 
+let p2NameField;
+let p2Name;
+
 const headers = new Headers({
 	"Content-Type": "application/json",
 	"Authorization": "Token " + localStorage.getItem("authToken")
@@ -33,16 +36,22 @@ async function getNbPlayer(queryName) {
     const params = new URLSearchParams(window.location.search);
     if (params.get(queryName) == "1")
 	{
+		console.log("One player detected");
 		nbPlayer = true;
+		p2NameField = "";
 		localStorage.setItem("nbPlayer", "1");
 	}
 	else if (params.get(queryName) == "2")
 	{
+		console.log("Two players detected");
 		nbPlayer = false;
+		p2NameField = "<label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
+		console.log("No player detected");
+		p2NameField = "<label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -70,6 +79,7 @@ export default class extends Abstract {
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
 				<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+				${p2NameField}
 				<div class="slidecontainer">
 					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
 					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
@@ -117,3 +127,29 @@ document.addEventListener("change", (event) => {
 
 	}
 })
+
+// document.addEventListener("click", (event) => {
+// 	console.log("e.target", event.target);
+// 	if (event.target.matches("#startBtn"))
+// 	{
+// 		event.preventDefault();
+// 		document.getElementById("p2Form").submit();
+// 		if (1)
+// 			console.log("names are OK", event.target.p2Name);
+// 		else
+// 			console.log("names are NOT OK");
+// 	}
+// })
+
+// document.addEventListener("submit", event => {
+// 	console.log("e.target", event.target);
+// 	if (event.target.matches("#startBtn"))
+// 	{
+// 		event.preventDefault();
+// 		document.getElementById("p2Form").submit();
+// 		if (1)
+// 			console.log("names are OK", event.target.p2Name);
+// 		else
+// 			console.log("names are NOT OK");
+// 	}
+// });

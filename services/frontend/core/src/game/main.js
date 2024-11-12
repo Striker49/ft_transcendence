@@ -480,6 +480,7 @@ function updateGame() {
         ball.velocity.y = 0;
     }
     paddleL.velocity.z = 0;
+    paddleR.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
     if (keys.w.pressed && (paddleL.back - speed > ground.back))
         paddleL.velocity.z = -speed;
