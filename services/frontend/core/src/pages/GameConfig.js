@@ -48,13 +48,13 @@ async function getNbPlayer(queryName) {
 	{
 		console.log("Two players detected");
 		nbPlayer = false;
-		p2NameField = "<label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.log("No player detected");
-		p2NameField = "<label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -81,12 +81,12 @@ export default class extends Abstract {
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-				<label id="p2Form" for="player1" class="form-label">
-				<span data-i18n-key="player">Player</span> 1</label>
+				<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
+				<span data-i18n-key="playerOne">Player 1</label>
 				<span id="player1" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
 				${p2NameField}
 				<div class="slidecontainer">
-					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
+					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
 					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
 					</div>
 					<div>
@@ -101,9 +101,11 @@ export default class extends Abstract {
 								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</div>
-					<div>
+					<div class="d-flex justify-content-center my-2 p-1">
 						<label>Power-Ups</label>
-						<input type="checkbox" id="powerUps" value="false">
+						<div class="d-flex justify-content-center my-2 p-1">
+							<input type="checkbox" id="powerUps" value="false">
+						</div>
 					<div class="mt-5 d-flex justify-content-center">
 						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
 					</div>
