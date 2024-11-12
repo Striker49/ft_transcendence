@@ -750,14 +750,13 @@ document.querySelectorAll(".flag").forEach(flag => {
         // const selectedLang = event.target.getAttribute("data-lang");
         // setLocale(selectedLang);
         setTimeout( () => {
-        console.log("sleep over");
-        if (winnerText) {
+        if (winnerText && window.location.href.includes("/game?") && state == 0) {
+            console.log("href", window.location.href);
             winnerText.material.dispose();
             winnerText.geometry.dispose();
             scene.remove(winnerText);
             showWinner(getTranslatedWord(winnerName));
         }
     }, 100);
-        // flagOptions.style.display = "none";
     });
 });
