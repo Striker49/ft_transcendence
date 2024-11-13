@@ -286,8 +286,8 @@ const listGamesHistory = async () => {
 		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
 			const date = game.created.substring(0, 10);
-			const player2 = game.username_player2 || "<span data-i18n-key=\"won\">" + localTranslations["CPU"] + "</span>";
-			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"won\">" + localTranslations["lost"] + "</span>";
+			const player2 = game.username_player2 || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
+			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
 			gamesHistoryDiv.innerHTML += `
 				<div class="row">
 					<p class="col date">${date}</p>

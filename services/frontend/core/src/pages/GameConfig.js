@@ -83,7 +83,7 @@ export default class extends Abstract {
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
 				<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
 				<span data-i18n-key="playerOne">Player 1</label>
-				<span id="player1" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+				<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
 				${p2NameField}
 				<div class="slidecontainer">
 					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
