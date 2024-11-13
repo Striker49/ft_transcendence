@@ -48,13 +48,13 @@ async function getNbPlayer(queryName) {
 	{
 		console.log("Two players detected");
 		nbPlayer = false;
-		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.log("No player detected");
-		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\">";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -101,14 +101,12 @@ export default class extends Abstract {
 								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</div>
-					<div class="d-flex justify-content-center my-2 p-1">
-						<label>Power-Ups</label>
-						<div class="d-flex justify-content-center my-2 p-1">
-							<input type="checkbox" id="powerUps" value="false">
-						</div>
-					<div class="mt-5 d-flex justify-content-center">
-						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
+					<div class="d-flex justify-content-center mt-4" >
+						<label class="me-2">Power-Ups</label>
+						<input type="checkbox" id="powerUps" value="false">
 					</div>
+					<div class="mt-4 d-flex justify-content-center">
+						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
 					</div>
 					</div>
 					<script>
