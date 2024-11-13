@@ -1,4 +1,11 @@
 import Abstract from "./Abstract.js";
+import { navigateTo } from "../router/router.js";
+import { fetchTranslationsFor } from "../localization.js";
+
+let p2NameField;
+let p2Name;
+let username;
+let username2;
 
 const headers = new Headers({
 	"Content-Type": "application/json",
@@ -33,16 +40,22 @@ async function getNbPlayer(queryName) {
     const params = new URLSearchParams(window.location.search);
     if (params.get(queryName) == "1")
 	{
+		console.log("One player detected");
 		nbPlayer = true;
+		p2NameField = "";
 		localStorage.setItem("nbPlayer", "1");
 	}
 	else if (params.get(queryName) == "2")
 	{
+		console.log("Two players detected");
 		nbPlayer = false;
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
+		console.log("No player detected");
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -56,19 +69,25 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
+		let localTranslations = JSON.parse(localStorage.getItem("translations"));
+		if (localTranslations == null)
+			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 		const userData = await getUserProfile();
 		const ai = await getNbPlayer("nbPlayer");
-		const username = (userData ? userData.username : "Player 1")
-		const username2 = "Player 2";
+		username = (userData ? userData.username : localTranslations["playerOne"])
+		username2 = localTranslations["playerTwo"] || "Player 2";
 		// console.log("user name: ", userData.username);
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.authToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-				<span class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+				<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
+				<span data-i18n-key="playerOne">Player 1</label>
+				<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+				${p2NameField}
 				<div class="slidecontainer">
-					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
+					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
 					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
 					</div>
 					<div>
@@ -83,9 +102,12 @@ export default class extends Abstract {
 								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</div>
-					<div class="mt-5 d-flex justify-content-center">
-						<a href="/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}" data-i18n-key="start" id="startBtn" class="btn btn-primary" data-link>START</a>
+					<div class="d-flex justify-content-center mt-4" >
+						<label class="me-2">Power-Ups</label>
+						<input type="checkbox" id="powerUps" value="false">
 					</div>
+					<div class="mt-4 d-flex justify-content-center">
+						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
 					</div>
 					</div>
 					<script>
@@ -93,6 +115,8 @@ export default class extends Abstract {
 					`;
 	}
 }
+
+
 
 document.addEventListener("input", (event) => {
 	if (event.target.matches("#winRange")) {
@@ -114,3 +138,44 @@ document.addEventListener("change", (event) => {
 
 	}
 })
+
+const readName = async () => {
+	username = (document.querySelector("#username")?.value || '');
+	username2 = (document.querySelector("#p2Name")?.value || '');
+
+	// return (username2);
+
+	console.log("Form is being submitted with names:", username, username2);
+}
+
+document.addEventListener("click", (event) => {
+    if (event.target.matches("#powerUps")) {
+		console.log("powerups!!!");
+		const checkBox = document.getElementById("powerUps");
+		console.log("checkbox", checkBox);
+		if (checkBox.value == "true") {
+			checkBox.value = false;
+			localStorage.setItem("powerUps", false);
+		}
+		else {
+			checkBox.value = true;
+			localStorage.setItem("powerUps", true)
+		}
+	}
+    if (event.target.matches("#startBtn")) {
+        // Prevent default link behavior if it's an <a> tag
+        // event.preventDefault();
+		// document.addEventListener("submit", e => {
+
+		// 	// Retrieve username and username2 values from the input fields
+		// 	username2 = e.target.value || '';
+			
+			// console.log("Form is being submitted with names:", username, username2);
+			// Build the URL with query parameters
+			const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
+			
+			// Navigate to the URL
+			navigateTo(url);
+		// });
+    }
+});

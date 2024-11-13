@@ -1,5 +1,5 @@
 import { login } from "./login.js";
-import { translatePage } from "../localization.js";
+import { translatePage, fetchTranslationsFor, setLanguage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
 import { handleFetch } from "../api/api.js";
 import { updateFriendlistSection } from "./friendlist.js"
@@ -181,6 +181,7 @@ const submitProfileForm = async form => {
 
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
+	localStorage.setItem("lang", form.lang.value);
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
@@ -263,19 +264,22 @@ const listGamesHistory = async () => {
 	if (gamesHistory) {
 
 		const gamesHistoryDiv = document.querySelector("#games-history");
+		let localTranslations = JSON.parse(localStorage.getItem("translations"));
+		if (localTranslations == null)
+			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 
 		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
-
 			const date = game.created.substring(0, 10);
-			const player2 = game.username_player2 || "CPU";
-			const status = game.score_player1 > game.score_player2 ? "Won" : "Lost";
-
+			let player2 = game.username_player2 || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
+			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
+				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
+			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
 			gamesHistoryDiv.innerHTML += `
 				<div class="row">
 					<p class="col date">${date}</p>
 					<p class="col vs">vs. ${player2}</p>
-					<p class="col score">Score: ${game.score_player1} to ${game.score_player2}</p>
+					<p class="col score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
 					<p class="col status">${status}</p>
 				</div>
 			`;
@@ -283,7 +287,7 @@ const listGamesHistory = async () => {
 	} else {
 		document.querySelector("#games-history").innerHTML = `
 			<div class="row">
-				<p>No games done yet.</p>
+				<p data-i18n-key="noGamesPlayed">No games played yet.</p>
 			</div>
 		`;
 	}
@@ -479,7 +483,7 @@ const displayUserProfile = () => {
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
 						<p class="m-0 mt-4 text-center">
-							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
+							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
 						</p>
 					</div>
@@ -513,7 +517,7 @@ const displayUserProfile = () => {
 						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-shadow" id="rank" style="font-size: 60px; color: orange"></span></p>
 					</div>
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 mt-4">
-						<p class="mb-2 fw-bold">Games history</p>
+						<p class="mb-2 fw-bold" data-i18n-key="gameHistory">Game history</p>
 						<div class="bg-dark rounded-5 p-2 box-shadow text-white text-center custom-scrollbar-css" id="games-history"></div>
 					</div>
 				</div>
@@ -605,6 +609,7 @@ document.addEventListener("submit", e => {
 			e.preventDefault();
 			if (validateForm(element)) {
 				submitProfileForm(element);
+				setLanguage();
 			}
 			break;
 	}

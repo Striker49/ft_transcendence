@@ -59,7 +59,23 @@
 
   "rank": "Rank",
 
+  "gameHistory": "Game History",
+
+  "noGamesPlayed": "No games played yet",
+
+  "CPU": "CPU",
+
+  "score": "Score",
+
+  "to": "to",
+
+  "won": "Won",
+
+  "lost": "Lost",
+
   "editProfile": "Edit profile",
+
+  "friendlist": "Friendlist",
 
   "passwordLength": "Password must be 6 and 256 characters",
 
@@ -90,6 +106,8 @@
   "player": "Player",
   
   "playerOne": "Player 1",
+
+  "playerTwo": "Player 2",
 
   "numberOfWins": "Number of wins",
 

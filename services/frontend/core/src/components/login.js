@@ -1,7 +1,6 @@
 import { updateProfile } from "./profile.js";
 import { validateForm } from "../utils/validation.js";
-import { translatePage } from "../localization.js";
-// import { updateFriendlistSection } from "./friendlist.js"
+import { translatePage, setLanguage } from "../localization.js";
 
 const getCustomErrorMessage = statusCode => {
 	switch (Number(statusCode)) {
@@ -48,13 +47,14 @@ export const login = async form => {
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);
 		localStorage.setItem("username", json.username);
-		// localStorage.setItem("lang", json.lang);
+		localStorage.setItem("lang", json.lang_pref);
 
 		updateLogin();
 		// if (window.location.pathname === "/profile") {
 			updateProfile();
 		// }
-		translatePage();
+		// Changes language to user preferred language
+		setLanguage();
 		return true;
 
 	} catch (error) {

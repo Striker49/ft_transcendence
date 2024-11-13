@@ -35,12 +35,13 @@ let paddleDepth= 2.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
-let powerUpMode = false;
+let powerUpMode;
 let powerUps = [];
 let powerUpLocation;
 let ai = false;
 let newZPosition = 0;
 let state = 0;
+let winnerName;
 
 let paddleL;
 let paddleR;
@@ -48,27 +49,45 @@ let ground;
 let ball;
 
 const textureLoader = new THREE.TextureLoader();
-const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+
+let customTextureGround
+let customTexturePaddleL;
+let customTexturePaddleR;
+let customTextureBall;
+let customTextureNumber;
+
 
 const box = new THREE.Mesh
 
 function updateTheme(theme) {
     switch(theme) {
         case 'Custom':
-            paddleL.material.color.set(0x00ff00); // Green
-            paddleR.material.color.set(0xff0000); // Red
-            ground.material.map = customTexture; // 
-            ground.material.color.set(0xffffff); // Reset color to avoid tinting
+            customTextureGround = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+            customTexturePaddleL = textureLoader.load('src/assets/Stylized_Stone_Floor_010_basecolor.png');
+            customTexturePaddleR = textureLoader.load('src/assets/Stylized_Stone_Floor_009_basecolor.png');
+            customTextureBall = textureLoader.load('/src/assets/Tiles_053_basecolor.png');
+            customTextureNumber = textureLoader.load('/src/assets/Wood_Planks_014_basecolor.png');
+            customTexturePaddleL.repeat.set(0.75,0.75);
+            customTexturePaddleR.repeat.set(0.75,0.75);
+
+            paddleL.material.map = customTexturePaddleL; // Green
+            paddleR.material.map = customTexturePaddleR; // Red
+            ground.material.map = customTextureGround; // 
+            ball.material.map = customTextureBall; // Reset color to avoid tinting
+            // currentText.material.map = customTextureNumber;
+
             break;
         case 'Christmas':
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
             ground.material.color.set(0x0369a1);  // Blue
+            ball.material.color.set('yellow'); // Yellow
             break;
         case 'Halloween':
             paddleL.material.color.set(0xff6600); // Orange
             paddleR.material.color.set(0x8c00ff); // Purple
             ground.material.color.set(0x564c43);  // Brown
+            ball.material.color.set('yellow'); // Yellow
             break;
         case 'Winter':
             paddleL.material.color.set(0x9fffff); // Light Blue
@@ -77,9 +96,11 @@ function updateTheme(theme) {
             ball.material.color.set(0x00ffff);    // Cyan for the ball
             break;
         default:
-            paddleL.material.color.set(0x00ff00); // Green
-            paddleR.material.color.set(0xff0000); // Red
-            ground.material.color.set(0x0369a1);  // Blue
+            paddleL.material.color.set(0x3ec300); // Green
+            paddleR.material.color.set(0xb63b85); // Red
+            ground.material.color.set(0x1a879c);  // Blue
+            ball.material.color.set('yellow'); // Yellow
+
     }
     ground.material.needsUpdate = true;
 }
@@ -111,17 +132,19 @@ function initGame() {
     scoreP1 = 0;
     scoreP2 = 0;
     ai = localStorage.getItem("nbPlayer") == "1" ? true : false;
+    powerUpMode = localStorage.getItem("powerUps") == "true"? true : false;
 
     numberOfWins = Math.max(1, Math.min(11, parseInt(localStorage.getItem("numberOfWins") || 3, 10)));
     if (localStorage.getItem("numberOfWins") != numberOfWins)
         localStorage.setItem("numberOfWins", numberOfWins);
-    console.log('initGame now', numberOfWins);
-    console.log('initGame theme', localStorage.getItem("theme"));
+    console.debug('initGame now', numberOfWins);
+    console.debug('initGame theme', localStorage.getItem("theme"));
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
         height: 0.5,
         depth: paddleDepth,
+        color: null,
         velocity: {
             x: 0,
             y: -0.01,
@@ -142,6 +165,7 @@ function initGame() {
         width: paddleWidth,
         height: 0.5,
         depth: paddleDepth,
+        color: null,
         velocity: {
             x: 0,
             y: -0.01,
@@ -152,7 +176,6 @@ function initGame() {
             y: -1.25,
             z: 0
         },
-        color: 'red'
     });
     paddleR.castShadow = true;
     // scene.add(paddleR);
@@ -172,7 +195,7 @@ function initGame() {
             y: -1.25,
             z: 0
         },
-        color: 'yellow'
+        color: null
     });
     ball.castShadow = true;
     // scene.add(ball);
@@ -182,7 +205,7 @@ function initGame() {
         width: groundWidth, 
         height: 0.5,
         depth: 9,
-        color: '#0369a1',
+        color: null,
         position: {
             x: 0,
             y: -3,
@@ -208,6 +231,9 @@ function updateScore(text) {
             return;
         text.castShadow = true;
         text.receiveShadow = true;
+        if (customTextureNumber)
+            text.material.map = customTextureNumber;
+        
         scene.add(text);
     
         // Store the reference to the new text
@@ -346,7 +372,7 @@ function spawnPowerUp() {
     {
         if (!powerUps[0])
         {
-            console.log("creating power up...");
+            console.debug("creating power up...");
             createPowerBox(paddleL, 0);
         }
     }
@@ -354,7 +380,7 @@ function spawnPowerUp() {
     {
         if (!powerUps[1])
         {
-            console.log("creating power up...");
+            console.debug("creating power up...");
             createPowerBox(paddleR, 1);
         }
     }
@@ -454,6 +480,7 @@ function updateGame() {
         ball.velocity.y = 0;
     }
     paddleL.velocity.z = 0;
+    paddleR.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
     if (keys.w.pressed && (paddleL.back - speed > ground.back))
         paddleL.velocity.z = -speed;
@@ -461,7 +488,8 @@ function updateGame() {
         paddleL.velocity.z = speed;
     }
 
-    spawnPowerUp();
+    if (powerUpMode == true)
+        spawnPowerUp();
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
@@ -562,6 +590,11 @@ export const updateGameScene = () => {
 
 function showWinner(winnerName) {
     let winnerWord = getTranslatedWord("winner");
+    let translations = JSON.parse(localStorage.getItem("translations"));
+    if (translations && (winnerName == "Player 1" || winnerName == "Joueur 1" || winnerName == "Speler 1"))
+        winnerName = translations["playerOne"];
+    else if (translations && (winnerName == "Player 2" || winnerName == "Joueur 2" || winnerName == "Speler 2"))
+        winnerName= translations["playerTwo"];
     createWinnerText(function (text2) {
         winnerText = text2;
         scene.add(winnerText);
@@ -596,7 +629,7 @@ function insertButton() {
 }
 
 function endGame(winner) {
-    const winnerName = (winner == 2 ? nameP1 : nameP2);
+    winnerName = (winner == 2 ? nameP1 : nameP2);
     console.debug("winner", winner);
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
@@ -624,6 +657,9 @@ function removeGameObjects() {
     scene.remove(paddleR);
     ground.kill();
     scene.remove(ground);
+    currentText.material.map = null;
+    currentText.material.needsUpdate = true;
+    customTextureNumber = null;
     currentText.material.dispose();
     currentText.geometry.dispose();
     powerUps.forEach((obj, index) => {
@@ -636,6 +672,13 @@ function removeGameObjects() {
     scene.remove(currentText);
     if (winnerText)
     {
+        // text.material.map = null;
+        // currentText.material.map = null;
+        // currentText.material.needsUpdate = true;
+        // text.material.needsUpdate = true;
+        // customTextureNumber.material.map = null;
+        // customTextureNumber.material.needsUpdate = true;
+        // customTextureNumber = null;
         winnerText.material.dispose();
         winnerText.geometry.dispose();
         scene.remove(winnerText);
@@ -660,11 +703,12 @@ async function sendGameStats() {
 			body: JSON.stringify({
 				player1_UID: localStorage.getItem("UID"), 
 				player2_UID: null,
-                username_player2: null,
+                username_player2: ai == true ? null : nameP2,
 				score_player1: scoreP1,
 				score_player2: scoreP2
 			})
 		});
+        console.log(ai == true ? null : nameP2);
 		if(!response.ok) { 
 			throw new Error(`Response status: ${response.status}`);
 		}
@@ -682,4 +726,43 @@ document.addEventListener('click', (event) => {
         winnerText.geometry.dispose();
         scene.remove(winnerText);
     }
+    // else if (winnerText)
+    // {
+    //     winnerText.material.dispose();
+    //     winnerText.geometry.dispose();
+    //     scene.remove(winnerText);
+    //     showWinner(getTranslatedWord(winnerName));
+    // }
 })
+
+document.addEventListener('click', (event) => {
+    if (event.target.matches("#ranking"))
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
+    // else if (winnerText)
+    // {
+    //     winnerText.material.dispose();
+    //     winnerText.geometry.dispose();
+    //     scene.remove(winnerText);
+    //     showWinner(getTranslatedWord(winnerName));
+    // }
+})
+
+document.querySelectorAll(".flag").forEach(flag => {
+    flag.addEventListener("click", (event) => {
+        // const selectedLang = event.target.getAttribute("data-lang");
+        // setLocale(selectedLang);
+        setTimeout( () => {
+        if (winnerText && window.location.href.includes("/game?") && state == 0) {
+            console.log("href", window.location.href);
+            winnerText.material.dispose();
+            winnerText.geometry.dispose();
+            scene.remove(winnerText);
+            showWinner(getTranslatedWord(winnerName));
+        }
+    }, 100);
+    });
+});
