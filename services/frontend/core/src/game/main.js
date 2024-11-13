@@ -595,7 +595,6 @@ function showWinner(winnerName) {
         winnerName = translations["playerOne"];
     else if (translations && (winnerName == "Player 2" || winnerName == "Joueur 2" || winnerName == "Speler 2"))
         winnerName= translations["playerTwo"];
-    console.log("tarnslation player 1/2: ", translations["playerOne"], translations["playerTwo"]);
     createWinnerText(function (text2) {
         winnerText = text2;
         scene.add(winnerText);

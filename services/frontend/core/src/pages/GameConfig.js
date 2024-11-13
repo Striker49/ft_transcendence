@@ -1,5 +1,6 @@
 import Abstract from "./Abstract.js";
 import { navigateTo } from "../router/router.js";
+import { fetchTranslationsFor } from "../localization.js";
 
 let p2NameField;
 let p2Name;
