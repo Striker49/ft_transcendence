@@ -704,11 +704,12 @@ async function sendGameStats() {
 			body: JSON.stringify({
 				player1_UID: localStorage.getItem("UID"), 
 				player2_UID: null,
-                username_player2: null,
+                username_player2: ai == true ? null : nameP2,
 				score_player1: scoreP1,
 				score_player2: scoreP2
 			})
 		});
+        console.log(ai == true ? null : nameP2);
 		if(!response.ok) { 
 			throw new Error(`Response status: ${response.status}`);
 		}
