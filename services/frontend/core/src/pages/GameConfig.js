@@ -104,7 +104,7 @@ export default class extends Abstract {
 						</div>
 					<div class="d-flex justify-content-center mt-4" >
 						<label class="me-2">Power-Ups</label>
-						<input type="checkbox" id="powerUps" value="false">
+						<input type="checkbox" id="powerUps" value=${localStorage.getItem("powerUps") == "true" ? "\"true\" checked" : "false"}>
 					</div>
 					<div class="mt-4 d-flex justify-content-center">
 						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
@@ -155,10 +155,12 @@ document.addEventListener("click", (event) => {
 		console.log("checkbox", checkBox);
 		if (checkBox.value == "true") {
 			checkBox.value = false;
+			checkBox.checked = false;
 			localStorage.setItem("powerUps", false);
 		}
 		else {
 			checkBox.value = true;
+			checkBox.checked = true;
 			localStorage.setItem("powerUps", true)
 		}
 	}
