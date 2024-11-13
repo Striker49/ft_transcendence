@@ -38,23 +38,23 @@ async function getUserProfile() {
 async function getNbPlayer(queryName) {
 	let nbPlayer = false;
     const params = new URLSearchParams(window.location.search);
-    if (params.get(queryName) == "1")
+    if (params.get(queryName) == "1" || (!params.get(queryName) && localStorage.getItem("nbPlayer") == "1"))
 	{
-		console.log("One player detected");
+		console.debug("One player detected");
 		nbPlayer = true;
 		p2NameField = "";
 		localStorage.setItem("nbPlayer", "1");
 	}
 	else if (params.get(queryName) == "2")
 	{
-		console.log("Two players detected");
+		console.debug("Two players detected");
 		nbPlayer = false;
 		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
-		console.log("No player detected");
+		console.debug("No player detected");
 		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)

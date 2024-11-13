@@ -1,0 +1,112 @@
+import * as THREE from 'three'
+import { Box } from './box.js';
+import { Ball } from './ball.js';
+
+export async function sendGameStats(scoreP1, scoreP2, ai, nameP2) {
+    if (!localStorage.getItem("authToken"))
+		return;
+	const url = "https://localhost/api/game/played/";
+    console.debug(localStorage.getItem("authToken"));
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Token " + localStorage.getItem("authToken")
+            },
+			body: JSON.stringify({
+				player1_UID: localStorage.getItem("UID"), 
+				player2_UID: null,
+                username_player2: ai == true ? null : nameP2,
+				score_player1: scoreP1,
+				score_player2: scoreP2
+			})
+		});
+		if(!response.ok) { 
+			throw new Error(`Response status: ${response.status}`);
+		}
+		const stats = await response.json();
+		console.log("RANKING", stats);
+	} catch (error) {
+		console.error(error.message);
+	}
+}
+
+export function insertButton() {
+    const div = document.createElement('div');
+    div.setAttribute('class', "mt-5 d-flex justify-content-center");
+    const rankingButton = document.createElement('a');
+    rankingButton.setAttribute('href', '/endGame');
+    rankingButton.setAttribute('data-i18n-key', 'ranking');
+    rankingButton.setAttribute('class', 'btn btn-primary');
+    rankingButton.setAttribute('id', 'ranking');
+    rankingButton.setAttribute('data-link', 'true');
+    rankingButton.style.margin = '0 10px';
+    rankingButton.innerHTML = "Ranking";
+    const playAgainButton = document.createElement('a');
+    playAgainButton.setAttribute('href', '/gameConfig');
+    playAgainButton.setAttribute('data-i18n-key', 'playAgain');
+    playAgainButton.setAttribute('class', 'btn btn-primary');
+    playAgainButton.setAttribute('id', 'playAgain');
+    playAgainButton.setAttribute('data-link', 'true');
+    playAgainButton.innerHTML = "Play Again";
+    playAgainButton.style.margin = '0 10px';
+    const body = document.querySelector("main");
+    body.appendChild(div);
+    div.appendChild(rankingButton);
+    div.appendChild(playAgainButton);
+    console.debug("body", body);
+}
+
+function removeNumberTexture(currentText, customTextureNumber) {
+    currentText.material.map = null;
+    currentText.material.needsUpdate = true;
+    customTextureNumber = null;
+    currentText.material.dispose();
+    currentText.geometry.dispose();
+
+}
+
+function removePowerUps(scene, powerUps) {
+    powerUps.forEach((obj, index) => {
+        if (powerUps[index])
+        {
+            powerUps[index].kill();
+            scene.remove(powerUps[index]);
+        }
+    })
+}
+
+function removeWinner(scene, winnerText) {
+    if (winnerText)
+        {
+            winnerText.material.dispose();
+            winnerText.geometry.dispose();
+            scene.remove(winnerText);
+        }
+}
+
+export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText) {
+	ball.kill();
+    scene.remove(ball);
+    paddleL.kill();
+    scene.remove(paddleL);
+    paddleR.kill();
+    scene.remove(paddleR);
+    ground.kill();
+    scene.remove(ground);
+    removePowerUps(scene, powerUps);
+    if (customTextureNumber)
+        removeNumberTexture(currentText, customTextureNumber);
+    scene.remove(scene, currentText);
+    removeWinner(scene, winnerText);
+	return (null);
+}
+
+//Generates a number between 0.06 and 0.1 and -0.1 and -0.06
+export function randomVelocity() {
+    let number = Math.random() * (0.1 - 0.06) + 0.06;
+    if (Math.random() > 0.5)
+        number *= -1;
+    return(number);
+}
