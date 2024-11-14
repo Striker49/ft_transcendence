@@ -1,5 +1,8 @@
 import { handleFetch } from "../api/api.js";
-// import { addSpan } from "../utils/validation.js";
+import { translatePage } from "../localization.js";
+import { addSpan, clearSpan, printError } from "../utils/validation.js";
+
+const getSpan = () => document.querySelector("#friendlist .form-error");
 
 const hasParent = (parent, element) => {
 
@@ -61,17 +64,45 @@ const addImage = (src, alt, id) => {
 	return img;
 };
 
-const addFriendshipIcons = friendship => {
+const searchProfile = async user => {
+
+	const headers = new Headers({
+        "Content-Type": "application/json"
+    });
+	const url = `https://localhost/api/profiles/?search=${user}`;
+
+	try {
+		const json = await handleFetch(url, "GET", "", headers);
+		return json;
+	} catch (error) {
+		console.error(error.message);
+		return null;
+	}
+};
+
+const addFriendshipIcons = async friendship => {
 
 	const icons = document.createDocumentFragment();
 	const uid = localStorage.getItem("UID");
 
 	if (friendship.type == "friends") {
-		icons.appendChild(addImage("/src/assets/icons/input-gaming-icon-lg.png", "In-game", "user-in-game"));
+		const username = uid == friendship.user2_ID ? friendship.user1_username : friendship.user2_username;
+		const profile = await searchProfile(username);
+		if (profile) {
+			if (profile.status === "online") {
+				icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online"));
+			} else if (profile.status === "in_game") {
+				icons.appendChild(addImage("/src/assets/icons/in-game.png", "In-game", "in-game"));
+			} else {
+				icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
+			}
+		} else {
+			icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
+		}
 	} else {
 		if ((friendship.type == "pending_first_second" && uid == friendship.user1_ID) ||
 			(friendship.type == "pending_second_first" && uid == friendship.user2_ID)) {
-			icons.appendChild(addImage("/src/assets/icons/question-mark.webp", "Pending connection", "pending-connection"));
+			icons.appendChild(addImage("/src/assets/icons/question-mark.png", "Pending connection", "pending-connection"));
 		} else {
 			icons.appendChild(addImage("/src/assets/icons/x.png", "Decline invitation", "decline-invitation"));
 			icons.appendChild(addImage("/src/assets/icons/check.png", "Accept invitation", "accept-invitation"));
@@ -80,7 +111,7 @@ const addFriendshipIcons = friendship => {
 	return icons;
 };
 
-const createUserSnippet = (avatar_path, username, rank, friendship) => {
+const createUserSnippet = async (avatar_path, username, rank, friendship) => {
 
 	const defaultAvatarPath = "/src/assets/avatar/avatar1.jpg";
 
@@ -122,10 +153,11 @@ const createUserSnippet = (avatar_path, username, rank, friendship) => {
 		userRank.textContent = "-42";
 	}
 	userDescription.textContent = "Rank: ";
+	// userDescription.setAttribute("data-i18n-key", "rank");
 	userDescription.appendChild(userRank);
 
 	if (friendship) {		
-		col3.appendChild(addFriendshipIcons(friendship));
+		col3.appendChild(await addFriendshipIcons(friendship));
 	}
 	col1.appendChild(img);
 	col2.appendChild(userTitle);
@@ -151,7 +183,7 @@ const acceptFriendship = async (friendshipId, element) => {
 
 	try {
 		const json = await handleFetch(url, "PATCH", JSON.stringify(data), headers);
-		element.replaceChildren(addFriendshipIcons(json));
+		element.replaceChildren(await addFriendshipIcons(json));
 		console.log("======= Friendship updated =======");
 		console.log(json);
 	} catch (error) {
@@ -353,16 +385,16 @@ const displayProfiles = async input => {
 const addFriendlist = async () => {
 
 	const friendlist = await getFriendlist();
+	const fragment = document.createDocumentFragment();
 	const uid = localStorage.getItem("UID");
 
-	const fragment = document.createDocumentFragment();
-	friendlist.forEach(friend => {
+	for (const friend of friendlist) {
 		if (uid == friend.user1_ID) {
-			fragment.appendChild(createUserSnippet("", friend.user2_username, "", friend));
+			fragment.appendChild(await createUserSnippet("", friend.user2_username, "", friend));
 		} else {
-			fragment.appendChild(createUserSnippet("", friend.user1_username, "", friend));
+			fragment.appendChild(await createUserSnippet("", friend.user1_username, "", friend));
 		}
-	});
+	}
 
 	const container = document.createElement("div");
 	container.id = "friends";
@@ -397,7 +429,6 @@ const addSearchBar = () => {
 	span.appendChild(icon);
 	searchBar.appendChild(span);
 	searchBar.appendChild(input);
-	// searchBar.appendChild(addSpan());
 	searchBar.appendChild(dropdown);
 
 	return searchBar;
@@ -439,9 +470,11 @@ const toggleContent = async isSearchMode => {
 	if (isSearchMode) {
 		if (friendlist) {
 			friendlist.removeChild(document.getElementById("friends"));
+			friendlist.removeChild(document.querySelector("#friendlist .form-error"));
 			friendlist.removeChild(document.getElementById("friendlistButtons"));
 		}
 		fragment.appendChild(addSearchBar());
+		fragment.appendChild(addSpan());
 		fragment.appendChild(addButtons([
 		{
 			id: "cancel-friend-btn",
@@ -457,9 +490,11 @@ const toggleContent = async isSearchMode => {
 	} else {
 		if (friendlist) {
 			friendlist.removeChild(document.getElementById("searchBar"));
+			friendlist.removeChild(document.querySelector("#friendlist .form-error"));
 			friendlist.removeChild(document.getElementById("friendlistButtons"));
 		}
 		fragment.appendChild(await addFriendlist());
+		fragment.appendChild(addSpan());
 		fragment.appendChild(addButtons([
 		{
 			id: "remove-friend-btn",
@@ -514,12 +549,13 @@ const addFriendlistSection = async () => {
 	];
 	headerTitle.id = "friendlistLabel";
 	headerTitle.classList.add(...headerTitleClasses);
-	headerTitle.textContent = "Friends";
+	headerTitle.textContent = "Friendlist";
+	headerTitle.setAttribute("data-i18n-key", "friendlist");
 
 	headerCloseBtn.setAttribute("type", "button");
 	headerCloseBtn.setAttribute("aria-label", "Close");
 	headerCloseBtn.setAttribute("data-bs-dismiss", "offcanvas");
-	headerCloseBtn.classList.add("btn-close", "float-end", "m-2");
+	headerCloseBtn.classList.add("btn-close", "m-2", "position-absolute", "end-0");
 	body.classList.add("offcanvas-body", "container", "p-4");
 
 	header.appendChild(headerTitle);
@@ -557,6 +593,7 @@ document.addEventListener("click", e => {
 			e.preventDefault();
 			toggleContent(true).then(content => {
 				document.querySelector("#friendlist .offcanvas-body").appendChild(content);
+				translatePage();
 			});
 			break;
 
@@ -564,6 +601,7 @@ document.addEventListener("click", e => {
 			e.preventDefault();
 			toggleContent(false).then(content => {
 				document.querySelector("#friendlist .offcanvas-body").appendChild(content);
+				translatePage();
 			});
 			break;
 		
@@ -572,18 +610,21 @@ document.addEventListener("click", e => {
 			const input = document.querySelector("#searchBar input").value;
 			if (input) {
 				if (input == localStorage.getItem("username")) {
-					alert("Cannot add yourself as a friend.");
+					printError(getSpan(), "sameUser", "Cannot add yourself as a friend.");
+					// alert("Cannot add yourself as a friend.");
 				} else {
 					checkIfUserExists(input).then(user => {
 						if (user) {
 							createFriendship(user[0].UID);
 						} else {
-							alert("Username not found. Please provide an existing username");
+							printError(getSpan(), "userNotFound", "Username not found. Please provide an existing username");
+							// alert("Username not found. Please provide an existing username");
 						}
 					});
 				}
 			} else {
-				alert ("Please provide a username");
+				printError(getSpan(), "usernameRequired", "Username is required");
+				// alert ("Please provide a username");
 			}
 			break;
 		
@@ -591,11 +632,13 @@ document.addEventListener("click", e => {
 			e.preventDefault();
 			const rows = document.querySelectorAll(".row-selected");
 			if (rows.length) {
+				clearSpan(getSpan());
 				rows.forEach(friend => {
 					handleFriendship(friend, false);
 				});
 			} else {
-				alert("You must select friends first.");
+				printError(getSpan(), "selectFriends", "You must select friends first.");
+				// alert("You must select friends first.");
 			}
 			break;
 

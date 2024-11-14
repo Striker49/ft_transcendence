@@ -17,7 +17,7 @@ const hideLoginModal = () => {
 	modalInstance.hide();
 };
 
-export const login = async form => {
+export const login = async (form, updateProf) => {
 
 	const formData = {
 		email_or_username: form.username.value,
@@ -50,9 +50,9 @@ export const login = async form => {
 		localStorage.setItem("lang", json.lang_pref);
 
 		updateLogin();
-		// if (window.location.pathname === "/profile") {
+		if (updateProf) {
 			updateProfile();
-		// }
+		}
 		// Changes language to user preferred language
 		setLanguage();
 		return true;
@@ -141,7 +141,7 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		if (validateForm(e.target) && login(e.target)) {
+		if (validateForm(e.target) && login(e.target, true)) {
 			hideLoginModal();
 		}
 	}

@@ -10,14 +10,14 @@ export const addSpan = () => {
 	return span;
 };
 
-const clearSpan = span => {
+export const clearSpan = span => {
 	if (span) {		
 		span.textContent = "";
 		span.removeAttribute("data-i18n-key");
 	}
 };
 
-const printError = (span, langKey, msg) => {
+export const printError = (span, langKey, msg) => {
 	if (span) {
 		span.textContent = msg;
 		span.setAttribute("data-i18n-key", langKey);
