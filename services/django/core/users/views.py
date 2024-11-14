@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.settings import api_settings
 from rest_framework import generics, status, viewsets, filters
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
 from .serializers import AuthCustomTokenSerializer
 from rest_framework.views import APIView
@@ -24,7 +24,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	permission_classes = (permissions.IsAuthenticatedOrCreateOnly, permissions.UpdateOwnUser,)
 	filter_backends = (filters.SearchFilter,)
 	search_fields = ('name', 'email', )
-
+	
 	def get_permissions(self):
 		if self.action == 'create':
 			return [AllowAny()]
@@ -96,3 +96,9 @@ class UserDetail(generics.RetrieveAPIView):
 def hello(request):
     if request.method == 'GET':
     	return JsonResponse({'message':'hello world'})
+
+def test_view(request):
+    if request.user.is_authenticated:
+        request.user.update_last_request()
+        print(f"Authenticated User: {request.user.username}")
+    return HttpResponse("Last request updated")
