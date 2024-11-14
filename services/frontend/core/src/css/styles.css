@@ -92,6 +92,28 @@ h1 {
 	font-weight: bold;
 }
 
+/* ========= Friendlist ========= */
+
+.row-selected {
+	background-color: lightblue;
+}
+
+#friends .row:last-child {
+	margin-bottom: 0;
+}
+
+#searchBar .dropdown-menu {
+	max-height: 200px;
+}
+
+#friends .row:hover, #searchBar .dropdown-menu li:hover {
+	background-color: lightgray;
+}
+
+#friends .accept-invitation, #friends .decline-invitation {
+	cursor: pointer;
+}
+
 /* ========= Custom Scrollbar ========= */
 
 /* Custom Scrollbar using CSS */

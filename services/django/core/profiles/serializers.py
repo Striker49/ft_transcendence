@@ -19,6 +19,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'lang',
             'username',
             'email',
+            'status',
             )
 
 class UserFriendshipSerializer(serializers.ModelSerializer):

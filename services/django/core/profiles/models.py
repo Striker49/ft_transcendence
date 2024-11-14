@@ -12,6 +12,12 @@ LANGUAGES = [
 	('nl', 'Dutch'),
 ]
 
+ONLINE_STATUS = [
+	('on', 'online'),
+	('off', 'offline'),
+	('ig', 'in game'),
+]
+
 def upload_to(instance, filename):
     return 'images/{filename}'.format(filename=filename)
 
@@ -23,9 +29,9 @@ class UserProfile(models.Model):
 	last_name=models.CharField(max_length=255, blank=True)
 	avatar_path=models.CharField(max_length=255, blank=True)
 	bio=models.TextField(editable=True, blank=True)
-	
 	lang= models.CharField(max_length=2, choices=LANGUAGES, default='en')
-
+	status=models.CharField(max_length=3, choices=ONLINE_STATUS, default='off')
+	
 	class Meta:
 		ordering = ['created']
 		verbose_name = "Profile"

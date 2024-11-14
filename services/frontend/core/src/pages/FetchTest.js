@@ -46,21 +46,21 @@ const submitForm = async form => {
 		// lang: "fr",
 		// avatar_path: "here/or/here"
 		// }
-			"user1_ID": 9,
-			"user2_ID": 36,
+			// "user1_ID": 9,
+			// "user2_ID": 36,
 			"type": "friends"
 	};
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization":"Token 14dad9f3042f23c6952fff339973f73f2cef38cc"
+		"Authorization": "Token 14dad9f3042f23c6952fff339973f73f2cef38cc"
 	});
 
 	const url = 'https://localhost/api/game/stats/';
 
 	const options = {
-		method: "GET",
-		// body: JSON.stringify(formData),
+		method: "PATCH",
+		body: JSON.stringify(formData),
 		headers: headers
 	};
 

@@ -43,6 +43,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	username=models.CharField(max_length=255, unique=True) #users unique username
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
+	last_request=models.DateTimeField(null=True, blank=True)
 
 	objects = UserManager()
 
@@ -52,6 +53,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	def formatted_created(self):
 		local_created = timezone.localtime(self.created)
 		return local_created.strftime("%Y-%m-%d %H:%M:%S")
+
+	def formatted_last_request(self):
+		local_created = timezone.localtime(self.last_request)
+		return local_created.strftime("%Y-%m-%d %H:%M:%S")
+
+	def update_last_request(self):
+		self.last_request= timezone.now()
+		self.save(update_fields=['last_request'])
 
 	class Meta:
 		ordering = ['id']

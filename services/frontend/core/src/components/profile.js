@@ -1,6 +1,8 @@
 import { login } from "./login.js";
 import { translatePage, fetchTranslationsFor, setLanguage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
+import { handleFetch } from "../api/api.js";
+import { updateFriendlistSection } from "./friendlist.js"
 
 let upload = false;
 let userProfile = {
@@ -127,23 +129,6 @@ const submitRegistrationForm = async form => {
     } catch (error) {
         console.error(error.message);
     }
-};
-
-const handleFetch = async (url, method, body, headers) => {
-
-	const options = {
-		method: method,
-		headers: headers
-	};
-	if (method === "POST" || method === "PUT" || method == "PATCH") {
-		options.body = body;
-	}
-
-	const response = await fetch(url, options);
-	if (!response.ok) {
-		throw new Error(`Response status: ${response.status}`);
-	}
-	return response.json();
 };
 
 const submitProfileForm = async form => {
@@ -550,9 +535,11 @@ export const updateProfile = () => {
 			userProfile = info;
 			displayUserProfile();
 		});
+		updateFriendlistSection(true);
 	} else {
 		clearUserProfile();
 		displayProfileForm(false);
+		updateFriendlistSection(false);
 	}
 };
 

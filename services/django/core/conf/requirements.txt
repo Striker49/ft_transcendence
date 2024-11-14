@@ -6,3 +6,4 @@ django_extensions==3.2.3
 django_debug_toolbar==4.4.6
 django-cors-headers==3.14.0
 pillow==11.0.0
+schedule==1.2.2

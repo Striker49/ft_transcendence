@@ -46,14 +46,14 @@ export const login = async form => {
 
 		localStorage.setItem("authToken", json.token);
 		localStorage.setItem("UID", json.UID);
+		localStorage.setItem("username", json.username);
 		localStorage.setItem("lang", json.lang_pref);
 
 		updateLogin();
-		// updateFriendlist();
-		if (window.location.pathname === "/profile") {
+		// if (window.location.pathname === "/profile") {
 			updateProfile();
-		}
-		//Changes language to user preferred language
+		// }
+		// Changes language to user preferred language
 		setLanguage();
 		return true;
 
@@ -71,13 +71,9 @@ export const login = async form => {
 };
 
 const logout = () => {
-	if (localStorage.getItem("authToken")) {
-		localStorage.clear();
-		updateLogin();
-		if (window.location.pathname === "/profile") {
-			updateProfile();
-		}
-	}
+	localStorage.clear();
+	updateLogin();
+	updateProfile();
 };
 
 const loginContent = () => {
@@ -127,6 +123,7 @@ const updateLogin = () => {
 
 const html = () => {
 	return `
+		<!-- Login -->
 		<section id="login">${loginContent()}</section>
 	`;
 };
