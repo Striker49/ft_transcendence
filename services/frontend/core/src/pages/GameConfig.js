@@ -78,7 +78,7 @@ export default class extends Abstract {
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-				<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
+				<label class="d-flex justify-content-center fw-bold " id="p2Form" class="form-label">
 				<span data-i18n-key="playerOne">Player 1</label>
 				<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
 				${p2NameField}
@@ -161,10 +161,11 @@ document.addEventListener("click", (event) => {
 		}
 	}
     if (event.target.matches("#startBtn")) {
-		console.log("text field value", document.getElementById("player2").value);
-		const input = document.getElementById("player2").value;
+		let input;
+		if (document.getElementById("player2"))
+			input = document.getElementById("player2").value;
 
-		if (input != "" && input.length < 13 && input.trim().length > 0)
+		if (input && input != "" && input.length < 13 && input.trim().length > 0)
 			username2 = input;
 		const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
 		
