@@ -64,12 +64,27 @@ const addImage = (src, alt, id) => {
 	return img;
 };
 
-const searchProfile = async user => {
+const fetchUserStats = async username => {
+
+	const headers = new Headers({
+		"Content-Type": "application/json",
+	});
+	const url = `https://localhost/api/game/stats/?search=${username}`;
+
+	try {
+		const json = await handleFetch(url, "GET", "", headers);
+		return json;
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+const searchProfile = async username => {
 
 	const headers = new Headers({
         "Content-Type": "application/json"
     });
-	const url = `https://localhost/api/profiles/?search=${user}`;
+	const url = `https://localhost/api/profiles/?search=${username}`;
 
 	try {
 		const json = await handleFetch(url, "GET", "", headers);
@@ -88,14 +103,15 @@ const addFriendshipIcons = async friendship => {
 	if (friendship.type == "friends") {
 		const username = uid == friendship.user2_ID ? friendship.user1_username : friendship.user2_username;
 		const profile = await searchProfile(username);
-		if (profile) {
-			if (profile.status === "online") {
-				icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online"));
-			} else if (profile.status === "in_game") {
-				icons.appendChild(addImage("/src/assets/icons/in-game.png", "In-game", "in-game"));
-			} else {
-				icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
-			}
+		if (profile && profile[0].status === "on") {
+			icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online"));
+			// if (profile.status === "on") {
+			// 	icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online"));
+			// } else if (profile.status === "in_game") {
+			// 	icons.appendChild(addImage("/src/assets/icons/in-game.png", "In-game", "in-game"));
+			// } else {
+			// 	icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
+			// }
 		} else {
 			icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
 		}
@@ -390,9 +406,13 @@ const addFriendlist = async () => {
 
 	for (const friend of friendlist) {
 		if (uid == friend.user1_ID) {
-			fragment.appendChild(await createUserSnippet("", friend.user2_username, "", friend));
+			const userProfile = await searchProfile(friend.user2_username);
+			const userStats = await fetchUserStats(friend.user2_username);
+			fragment.appendChild(await createUserSnippet(userProfile[0].avatar_path, friend.user2_username, userStats[0].rank, friend));
 		} else {
-			fragment.appendChild(await createUserSnippet("", friend.user1_username, "", friend));
+			const userProfile = await searchProfile(friend.user1_username);
+			const userStats = await fetchUserStats(friend.user1_username);
+			fragment.appendChild(await createUserSnippet(userProfile[0].avatar_path, friend.user1_username, userStats[0].rank, friend));
 		}
 	}
 

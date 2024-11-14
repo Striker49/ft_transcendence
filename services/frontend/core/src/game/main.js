@@ -708,7 +708,7 @@ async function sendGameStats() {
 				score_player2: scoreP2
 			})
 		});
-        console.log(ai == true ? null : nameP2);
+        // console.log(ai == true ? null : nameP2);
 		if(!response.ok) { 
 			throw new Error(`Response status: ${response.status}`);
 		}

@@ -11,6 +11,33 @@ const getCustomErrorMessage = statusCode => {
 	}
 };
 
+const changeStatusOffline = async (token, uid) => {
+
+	const body = {
+		"status": "off"
+	};
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+	const url = `https://localhost/api/profiles/${uid}/`;
+
+	try {
+		const response = await fetch(url, {
+			method: "PATCH",
+			body: JSON.stringify(body),
+			headers: headers
+		});
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+		console.log(await response.json());
+
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
 const hideLoginModal = () => {
 	const modalElement = document.querySelector("#loginModal");
 	const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -71,6 +98,7 @@ export const login = async (form, updateProf) => {
 };
 
 const logout = () => {
+	changeStatusOffline(localStorage.getItem("authToken"), localStorage.getItem("UID"));
 	localStorage.clear();
 	updateLogin();
 	updateProfile();
