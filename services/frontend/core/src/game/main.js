@@ -124,7 +124,7 @@ function startGame() {
 function getUsername(queryName) {
     let username = "No name";
     const params = new URLSearchParams(window.location.search);
-    if (params.get(queryName))
+    if (params.get(queryName) && params.get(queryName).length < 13)
         username = params.get(queryName);
     return (username);
 }
