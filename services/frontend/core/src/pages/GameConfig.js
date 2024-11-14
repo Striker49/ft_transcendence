@@ -49,14 +49,13 @@ async function getNbPlayer(queryName) {
 	{
 		console.debug("Two players detected");
 		nbPlayer = false;
-		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" maxlength=\"12\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.debug("No player detected");
-		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
-		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" maxlength=\"12\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
     return (nbPlayer);
@@ -76,9 +75,6 @@ export default class extends Abstract {
 		const ai = await getNbPlayer("nbPlayer");
 		username = (userData ? userData.username : localTranslations["playerOne"])
 		username2 = localTranslations["playerTwo"] || "Player 2";
-		// console.log("user name: ", userData.username);
-		// console.debug("local storage: ", localStorage);
-		// console.debug("token: ", localStorage.authToken);
 		return `
 			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
@@ -165,19 +161,15 @@ document.addEventListener("click", (event) => {
 		}
 	}
     if (event.target.matches("#startBtn")) {
-        // Prevent default link behavior if it's an <a> tag
-        // event.preventDefault();
-		// document.addEventListener("submit", e => {
+		console.log("text field value", document.getElementById("player2").value);
+		const input = document.getElementById("player2").value;
 
-		// 	// Retrieve username and username2 values from the input fields
-		// 	username2 = e.target.value || '';
-			
-			// console.log("Form is being submitted with names:", username, username2);
-			// Build the URL with query parameters
-			const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
-			
-			// Navigate to the URL
-			navigateTo(url);
+		if (input != "" && input.length < 13 && input.trim().length > 0)
+			username2 = input;
+		const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
+		
+		// Navigate to the URL
+		navigateTo(url);
 		// });
     }
 });
