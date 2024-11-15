@@ -121,6 +121,7 @@ const createUserSnippet = (avatar_path, username, rank, friendship) => {
 	} else {
 		userRank.textContent = "-42";
 	}
+	userDescription.setAttribute("data-i18n-key", "rank");
 	userDescription.textContent = "Rank: ";
 	userDescription.appendChild(userRank);
 
@@ -514,6 +515,7 @@ const addFriendlistSection = async () => {
 	];
 	headerTitle.id = "friendlistLabel";
 	headerTitle.classList.add(...headerTitleClasses);
+	headerTitle.setAttribute("data-i18n-key", "friends");
 	headerTitle.textContent = "Friends";
 
 	headerCloseBtn.setAttribute("type", "button");

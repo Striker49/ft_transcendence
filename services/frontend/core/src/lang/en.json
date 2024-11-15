@@ -39,8 +39,6 @@
 
   "newUser": "New User ?",
 
-  "addFriend": "Add friend",
-
   "name": "Name",
 
   "username": "Username",
@@ -88,6 +86,13 @@
   "cancel": "Cancel",
 
   "save": "Save",
+
+
+  "friends": "Friends",
+
+  "removeFriend": "Remove friend",
+
+  "addFriend": "Add friend",
 
 
   "singleGame": "Single Game",

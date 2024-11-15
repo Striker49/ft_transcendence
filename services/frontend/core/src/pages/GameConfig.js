@@ -21,7 +21,7 @@ async function getUserProfile() {
 	if (!localStorage.getItem("authToken"))
 		return;
 	const uid = localStorage.getItem("UID");
-	const url = `https://localhost/api/profiles/${uid}`;
+	const url = `https://localhost/api/profiles/${uid}/`;
 	try {
 		const response = await fetch(url, options);
 		if(!response.ok) { 
