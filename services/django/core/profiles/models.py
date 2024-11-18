@@ -16,6 +16,7 @@ ONLINE_STATUS = [
 	('on', 'online'),
 	('off', 'offline'),
 	('ig', 'in game'),
+	('aw', 'away'),
 ]
 
 def upload_to(instance, filename):
