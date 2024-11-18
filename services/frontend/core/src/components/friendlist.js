@@ -2,7 +2,9 @@ import { handleFetch } from "../api/api.js";
 import { translatePage } from "../localization.js";
 import { addSpan, clearSpan, printError } from "../utils/validation.js";
 
-const getSpan = () => document.querySelector("#friendlist .form-error");
+let profileList;
+
+const getSpan = () => document.querySelector("#friendlist .offcanvas-body .d-block .form-error");
 
 const hasParent = (parent, element) => {
 
@@ -76,6 +78,7 @@ const fetchUserStats = async username => {
 		return json;
 	} catch (error) {
 		console.error(error.message);
+		return null;
 	}
 };
 
@@ -103,15 +106,13 @@ const addFriendshipIcons = async friendship => {
 	if (friendship.type == "friends") {
 		const username = uid == friendship.user2_ID ? friendship.user1_username : friendship.user2_username;
 		const profile = await searchProfile(username);
-		if (profile && profile[0].status === "on") {
-			icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online"));
-			// if (profile.status === "on") {
-			// 	icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online"));
-			// } else if (profile.status === "in_game") {
-			// 	icons.appendChild(addImage("/src/assets/icons/in-game.png", "In-game", "in-game"));
-			// } else {
-			// 	icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
-			// }
+		if (profile) {
+			switch (profile[0].status) {
+				case "on": icons.appendChild(addImage("/src/assets/icons/online.png", "Online", "online")); break;
+				case "aw": icons.appendChild(addImage("/src/assets/icons/away.png", "Away", "away")); break;
+				case "ig": icons.appendChild(addImage("/src/assets/icons/in-game.png", "In-game", "in-game")); break;
+				default: icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
+			}
 		} else {
 			icons.appendChild(addImage("/src/assets/icons/offline.png", "Offline", "offline"));
 		}
@@ -138,7 +139,9 @@ const createUserSnippet = async (avatar_path, username, rank, friendship) => {
 	const img = document.createElement("img");
 	const userTitle = document.createElement("h4");
 	const userDescription = document.createElement("p");
-	const userRank = document.createElement("span");
+	const userRank1 = document.createElement("span");
+	const userRank2	= document.createTextNode(" : ");
+	const userRank3 = document.createElement("span");
 
 	row.classList.add("row", "py-1", "mb-2");
 	col1.className = "col-4";
@@ -147,7 +150,7 @@ const createUserSnippet = async (avatar_path, username, rank, friendship) => {
 
 	img.classList.add("border-orange", "w-100");
 	userDescription.classList.add("fst-italic");
-	userRank.classList.add("fw-bold");
+	userRank3.classList.add("fw-bold");
 
 	if (avatar_path) {
 		img.src = avatar_path;
@@ -164,13 +167,15 @@ const createUserSnippet = async (avatar_path, username, rank, friendship) => {
 	}
 
 	if (rank) {
-		userRank.textContent = rank;
+		userRank3.textContent = rank;
 	} else {
-		userRank.textContent = "-42";
+		userRank3.textContent = "-42";
 	}
-	userDescription.textContent = "Rank: ";
-	// userDescription.setAttribute("data-i18n-key", "rank");
-	userDescription.appendChild(userRank);
+	userRank1.textContent = "Rank";
+	userRank1.setAttribute("data-i18n-key", "rank");
+	userDescription.appendChild(userRank1);
+	userDescription.appendChild(userRank2);
+	userDescription.appendChild(userRank3);
 
 	if (friendship) {		
 		col3.appendChild(await addFriendshipIcons(friendship));
@@ -204,6 +209,7 @@ const acceptFriendship = async (friendshipId, element) => {
 		console.log(json);
 	} catch (error) {
 		console.error(error.message);
+		printError(getSpan(), "unexpectedError", "Unexpected error");
 	}
 };
 
@@ -228,6 +234,7 @@ const removeFriendship = async (friendshipId, element) => {
 		element.remove();
 	} catch (error) {
 		console.error(error.message);
+		printError(getSpan(), "unexpectedError", "Unexpected error");
 	}
 };
 
@@ -236,6 +243,7 @@ const createFriendship = async uid2 => {
 	const token = localStorage.getItem("authToken");
 	const uid1 = localStorage.getItem("UID");
 
+	// This can be problematic if we edit the value in the local storage
 	const data = {
 		"user1_ID": uid1 < uid2 ? uid1 : uid2,
 		"user2_ID": uid1 > uid2 ? uid1 : uid2,
@@ -245,13 +253,16 @@ const createFriendship = async uid2 => {
 		"Content-Type": "application/json",
 		"Authorization": `Token ${token}`
 	});
-    const url = "https://localhost/api/profiles/friendship/";
+	const url = "https://localhost/api/profiles/friendship/";
 
 	try {
 		const json = await handleFetch(url, "POST", JSON.stringify(data), headers);
 		console.log("======= Friend Request Sent =======");
 		console.log(json);
-		document.querySelector("#friendlist .offcanvas-body").appendChild(await toggleContent(false));
+		if (document.getElementById("friends")) {
+			document.querySelector("#friends").replaceChildren(await updateFriendlist());
+		}
+		toggleContent(false);
 	} catch (error) {
 		console.error(error.message);
 	}
@@ -313,9 +324,11 @@ const getRow = element => {
 
 const getUser = row => {
 
-	for (const child of row.children) {
-		if (child.classList.contains("friend-info")) {
-			return child.firstElementChild.textContent;
+	if (row) {
+		for (const child of row.children) {
+			if (child.classList.contains("friend-info")) {
+				return child.firstElementChild.textContent;
+			}
 		}
 	}
 	return null;
@@ -334,10 +347,12 @@ const handleFriendship = (element, status) => {
 				} else {
 					removeFriendship(id, row);
 				}
+			} else {
+				printError(getSpan(), "friendshipHandlingProblem", "Not able to handle friendship");
 			}
 		});
 	} else {
-		alert ("No user selected !");
+		printError(getSpan(), "noUserSelected", "No user selected");
 	}
 };
 
@@ -367,59 +382,95 @@ const checkIfUserExists = async input => {
 		return json;
 	} catch (error) {
 		console.error(error.message);
-		return "";
+		return null;
 	}
 };
 
-const displayProfiles = async input => {
+const updateProfileList = async () => {
 
 	const headers = new Headers({
         "Content-Type": "application/json"
     });
 	const url = "https://localhost/api/profiles/";
 
-	let json;
+	profileList = [];
 
 	try {
-		json = await handleFetch(url, "GET", "", headers);
+		const json = await handleFetch(url, "GET", "", headers);
+		for (let i = 0; i < json.length; ++i) {
+			profileList[i] = json[i].username;
+		}
 	} catch (error) {
 		console.error(error.message);
 	}
+};
+
+const displayProfiles = input => {
+
+	// const headers = new Headers({
+    //     "Content-Type": "application/json"
+    // });
+	// const url = "https://localhost/api/profiles/";
+
+	// let json;
+
+	// try {
+	// 	json = await handleFetch(url, "GET", "", headers);
+	// } catch (error) {
+	// 	console.error(error.message);
+	// }
 
 	const fragment = document.createDocumentFragment();
-	json.forEach(profile => {
-		if (profile.username.startsWith(input)) {
+	profileList.forEach(username => {
+		if (username.startsWith(input)) {
 			const entry = document.createElement("li");
 			entry.classList.add("px-1");
-			entry.textContent = profile.username;
+			entry.textContent = username;
 			fragment.appendChild(entry);
 		}
 	});
 	return fragment;
 };
 
-const addFriendlist = async () => {
+const updateFriendlist = async () => {
 
 	const friendlist = await getFriendlist();
 	const fragment = document.createDocumentFragment();
 	const uid = localStorage.getItem("UID");
 
-	for (const friend of friendlist) {
-		if (uid == friend.user1_ID) {
-			const userProfile = await searchProfile(friend.user2_username);
-			const userStats = await fetchUserStats(friend.user2_username);
-			fragment.appendChild(await createUserSnippet(userProfile[0].avatar_path, friend.user2_username, userStats[0].rank, friend));
-		} else {
-			const userProfile = await searchProfile(friend.user1_username);
-			const userStats = await fetchUserStats(friend.user1_username);
-			fragment.appendChild(await createUserSnippet(userProfile[0].avatar_path, friend.user1_username, userStats[0].rank, friend));
+	// In retrospect, it's kind of weird that I need to get the uid from local storage to display correct friend info 
+	if (uid) {
+		for (const friend of friendlist) {
+			if (uid == friend.user1_ID) {
+				const userProfile = await searchProfile(friend.user2_username);
+				const userStats = await fetchUserStats(friend.user2_username);
+				fragment.appendChild(await createUserSnippet(
+					userProfile ? userProfile[0].avatar_path : null,
+					friend.user2_username,
+					userStats ? userStats[0].rank : null,
+					friend
+				));
+			} else {
+				const userProfile = await searchProfile(friend.user1_username);
+				const userStats = await fetchUserStats(friend.user1_username);
+				fragment.appendChild(await createUserSnippet(
+					userProfile ? userProfile[0].avatar_path : null,
+					friend.user1_username,
+					userStats ? userStats[0].rank : null,
+					friend
+				));
+			}
 		}
 	}
+	return fragment;
+};
+
+const addFriendlist = async () => {
 
 	const container = document.createElement("div");
 	container.id = "friends";
 	container.classList.add("box-shadow-inset", "p-4", "mt-4", "mb-3", "rounded-3", "bg-light");
-	container.appendChild(fragment);
+	container.appendChild(await updateFriendlist());
 	return container;
 };
 
@@ -482,53 +533,107 @@ const addCurrentUser = async () => {
 	return currentUser;
 };
 
-const toggleContent = async isSearchMode => {
+const addContent = async () => {
 
 	const fragment = document.createDocumentFragment();
-	const friendlist = document.querySelector("#friendlist .offcanvas-body");
+	const friendlist = document.createElement("div");
+	const search = document.createElement("div");
+
+	// Friendlist
+	friendlist.id = "friendlist-part";
+	friendlist.className = "d-block";
+	friendlist.appendChild(await addFriendlist());
+	friendlist.appendChild(addSpan());
+	friendlist.appendChild(addButtons([
+	{
+		id: "remove-friend-btn",
+		text: "Remove friend",
+		langClass: "removeFriend"
+	},
+	{
+		id: "add-friend-btn",
+		text: "Add friend",
+		langClass: "addFriend"
+	}
+	]));
+
+	// Search
+	search.id = "search-part";
+	search.className = "d-none";
+	search.appendChild(addSearchBar());
+	search.appendChild(addSpan());
+	search.appendChild(addButtons([
+	{
+		id: "cancel-friend-btn",
+		text: "Cancel",
+		langClass: "cancel"
+	},
+	{
+		id: "invite-friend-btn",
+		text: "Invite",
+		langClass: "invite"
+	}
+	]));
+
+	fragment.appendChild(friendlist);
+	fragment.appendChild(search);
+
+	// if (isSearchMode) {
+	// 	if (friendlist) {
+	// 		friendlist.removeChild(document.getElementById("friends"));
+	// 		friendlist.removeChild(document.querySelector("#friendlist .form-error"));
+	// 		friendlist.removeChild(document.getElementById("friendlistButtons"));
+	// 	}
+	// 	fragment.appendChild(addSearchBar());
+	// 	fragment.appendChild(addSpan());
+	// 	fragment.appendChild(addButtons([
+	// 	{
+	// 		id: "cancel-friend-btn",
+	// 		text: "Cancel",
+	// 		langClass: "cancel"
+	// 	},
+	// 	{
+	// 		id: "invite-friend-btn",
+	// 		text: "Invite",
+	// 		langClass: "invite"
+	// 	}
+	// 	]));
+	// } else {
+	// 	if (friendlist) {
+	// 		friendlist.removeChild(document.getElementById("searchBar"));
+	// 		friendlist.removeChild(document.querySelector("#friendlist .form-error"));
+	// 		friendlist.removeChild(document.getElementById("friendlistButtons"));
+	// 	}
+	// 	fragment.appendChild(await addFriendlist());
+	// 	fragment.appendChild(addSpan());
+	// 	fragment.appendChild(addButtons([
+	// 	{
+	// 		id: "remove-friend-btn",
+	// 		text: "Remove friend",
+	// 		langClass: "removeFriend"
+	// 	},
+	// 	{
+	// 		id: "add-friend-btn",
+	// 		text: "Add friend",
+	// 		langClass: "addFriend"
+	// 	}
+	// 	]));
+	// }
+	return fragment;
+};
+
+const toggleContent = isSearchMode => {
+
+	const friendlist = document.querySelector("#friendlist-part");
+	const search = document.querySelector("#search-part");
 
 	if (isSearchMode) {
-		if (friendlist) {
-			friendlist.removeChild(document.getElementById("friends"));
-			friendlist.removeChild(document.querySelector("#friendlist .form-error"));
-			friendlist.removeChild(document.getElementById("friendlistButtons"));
-		}
-		fragment.appendChild(addSearchBar());
-		fragment.appendChild(addSpan());
-		fragment.appendChild(addButtons([
-		{
-			id: "cancel-friend-btn",
-			text: "Cancel",
-			langClass: "cancel"
-		},
-		{
-			id: "invite-friend-btn",
-			text: "Invite",
-			langClass: "invite"
-		}
-		]));
+		friendlist.className = "d-none";
+		search.className = "d-block";
 	} else {
-		if (friendlist) {
-			friendlist.removeChild(document.getElementById("searchBar"));
-			friendlist.removeChild(document.querySelector("#friendlist .form-error"));
-			friendlist.removeChild(document.getElementById("friendlistButtons"));
-		}
-		fragment.appendChild(await addFriendlist());
-		fragment.appendChild(addSpan());
-		fragment.appendChild(addButtons([
-		{
-			id: "remove-friend-btn",
-			text: "Remove friend",
-			langClass: "removeFriend"
-		},
-		{
-			id: "add-friend-btn",
-			text: "Add friend",
-			langClass: "addFriend"
-		}
-		]));
+		friendlist.className = "d-block";
+		search.className = "d-none";
 	}
-	return fragment;
 };
 
 const removeFriendlistSection = () => {
@@ -547,7 +652,6 @@ const addFriendlistSection = async () => {
 	const headerTitle = document.createElement("h3");
 	const headerCloseBtn = document.createElement("button");
 	const body = document.createElement("div");
-	const buttons = document.createElement("div");
 
 	friendlist.id = "friendlist";
 	friendlist.setAttribute("tabindex", "-1");
@@ -582,12 +686,17 @@ const addFriendlistSection = async () => {
 	header.appendChild(headerCloseBtn);
 	
 	body.appendChild(await addCurrentUser());
-	body.appendChild(await toggleContent(false));
+	body.appendChild(await addContent());
+	// body.appendChild(await toggleContent(false));
 	
 	friendlist.appendChild(header);
 	friendlist.appendChild(body);
 
-	document.querySelector("#profile").insertAdjacentElement("afterend", friendlist);
+	if (document.getElementById("profile")) {
+		document.getElementById("profile").insertAdjacentElement("afterend", friendlist);
+	} else {
+		document.body.appendChild(friendlist);
+	}
 };
 
 export const updateFriendlistSection = isLoggedIn => {
@@ -611,40 +720,33 @@ document.addEventListener("click", e => {
 
 		case element.matches("#add-friend-btn"):
 			e.preventDefault();
-			toggleContent(true).then(content => {
-				document.querySelector("#friendlist .offcanvas-body").appendChild(content);
-				translatePage();
-			});
+			toggleContent(true);
+			updateProfileList();
 			break;
 
 		case element.matches("#cancel-friend-btn"):
 			e.preventDefault();
-			toggleContent(false).then(content => {
-				document.querySelector("#friendlist .offcanvas-body").appendChild(content);
-				translatePage();
-			});
+			toggleContent(false);
 			break;
 		
 		case element.matches("#invite-friend-btn"):
 			e.preventDefault();
 			const input = document.querySelector("#searchBar input").value;
 			if (input) {
+				// Should I put the username in a variable ?
 				if (input == localStorage.getItem("username")) {
 					printError(getSpan(), "sameUser", "Cannot add yourself as a friend.");
-					// alert("Cannot add yourself as a friend.");
 				} else {
 					checkIfUserExists(input).then(user => {
 						if (user) {
 							createFriendship(user[0].UID);
 						} else {
 							printError(getSpan(), "userNotFound", "Username not found. Please provide an existing username");
-							// alert("Username not found. Please provide an existing username");
 						}
 					});
 				}
 			} else {
 				printError(getSpan(), "usernameRequired", "Username is required");
-				// alert ("Please provide a username");
 			}
 			break;
 		
@@ -654,11 +756,11 @@ document.addEventListener("click", e => {
 			if (rows.length) {
 				clearSpan(getSpan());
 				rows.forEach(friend => {
+					// Not clear
 					handleFriendship(friend, false);
 				});
 			} else {
 				printError(getSpan(), "selectFriends", "You must select friends first.");
-				// alert("You must select friends first.");
 			}
 			break;
 
@@ -693,9 +795,9 @@ document.addEventListener("input", e => {
 		case element.matches("#searchBar input"):
 			e.preventDefault();
 			if (element.value) {
-				displayProfiles(element.value).then(profiles => {
-					document.querySelector("#friendlist .dropdown-menu").replaceChildren(profiles);
-				});
+				// displayProfiles(element.value).then(profiles => {
+					document.querySelector("#friendlist .dropdown-menu").replaceChildren(displayProfiles(element.value));
+				// });
 			}
 			break;
 	}

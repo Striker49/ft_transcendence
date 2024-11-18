@@ -134,6 +134,12 @@
 
   "sameUser": "Entrez un nom d'utilisateur différent que le vôtre.",
   
-  "selectFriends": "Veuillez sélectionner les utilisateurs à supprimer."
+  "selectFriends": "Veuillez sélectionner les utilisateurs à supprimer.",
+
+  "noUserSelected": "Aucun utilisateur sélectionné",
+
+  "friendshipHandlingProblem": "Impossible de traiter l'amitié",
+
+  "unexpectedError": "Erreur inattendue"
   
   }

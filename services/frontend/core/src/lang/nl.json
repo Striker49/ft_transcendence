@@ -129,6 +129,12 @@
 
   "sameUser": "Cannot add yourself as a friend.",
 
-  "selectFriends": "You must select friends first."
+  "selectFriends": "You must select friends first.",
+
+  "noUserSelected": "No user selected",
+
+  "friendshipHandlingProblem": "Not able to handle friendship",
+
+  "unexpectedError": "Erreur inattendue"
 
   }
