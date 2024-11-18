@@ -349,7 +349,7 @@ const setSelectedLanguage = option => {
 const displayButtons = isEditMode => {
 	if (isEditMode) {
 		return `
-			<button type="button" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
+			<button type="button" id="edit-cancel-btn" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
 			<button type="submit" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="save">Save</button>
 		`;
 	} else {
@@ -550,7 +550,7 @@ document.addEventListener("click", e => {
 			translatePage();
 			break;
 
-		case element.matches(`#profile button[type="button"]`):
+		case element.matches("#edit-cancel-btn"):
 			e.preventDefault();
 			displayUserProfile();
 			break;
