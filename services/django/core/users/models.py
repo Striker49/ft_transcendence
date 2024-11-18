@@ -20,7 +20,10 @@ class UserManager(BaseUserManager):
 		email = self.normalize_email(email)
 		user = self.model(email=email, username=username)
 
-		user.set_password(password)
+		if password:
+			user.set_password(password)
+		else:
+			user.set_password(self.make_random_password())
 		user.save(using=self._db)
 
 		return user
@@ -34,6 +37,10 @@ class UserManager(BaseUserManager):
 		user.save(using=self._db)
 
 		return user
+	
+	def make_random_password(self):
+		"""Generate a random password"""
+		return self.model.objects.make_random_password()
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 	"""Database model for the users that will be created"""
