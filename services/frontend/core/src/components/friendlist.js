@@ -2,17 +2,19 @@ import { handleFetch } from "../api/api.js";
 import { translatePage } from "../localization.js";
 import { addSpan, clearSpan, printError } from "../utils/validation.js";
 
-let profileList;
+let profileList = [];
 
-const getSpan = () => document.querySelector("#friendlist .offcanvas-body .d-block .form-error");
+const getSpan = () => document.querySelector("#friendlist .offcanvas-body .form-error");
 
 const hasParent = (parent, element) => {
 
-	while (element) {
-		if (element === parent) {
-			return true;
+	if (element !== parent) {
+		while (element) {
+			if (element === parent) {
+				return true;
+			}
+			element = element.parentElement;
 		}
-		element = element.parentElement;
 	}
 	return false;
 };
@@ -259,9 +261,10 @@ const createFriendship = async uid2 => {
 		const json = await handleFetch(url, "POST", JSON.stringify(data), headers);
 		console.log("======= Friend Request Sent =======");
 		console.log(json);
-		if (document.getElementById("friends")) {
-			document.querySelector("#friends").replaceChildren(await updateFriendlist());
-		}
+		// if (document.getElementById("friends")) {
+		// 	document.querySelector("#friends").replaceChildren(await updateFriendlist());
+		// 	translatePage();
+		// }
 		toggleContent(false);
 	} catch (error) {
 		console.error(error.message);
@@ -348,7 +351,7 @@ const handleFriendship = (element, status) => {
 					removeFriendship(id, row);
 				}
 			} else {
-				printError(getSpan(), "friendshipHandlingProblem", "Not able to handle friendship");
+				printError(getSpan(), "unexpectedError", "Unexpected error");
 			}
 		});
 	} else {
@@ -406,19 +409,6 @@ const updateProfileList = async () => {
 };
 
 const displayProfiles = input => {
-
-	// const headers = new Headers({
-    //     "Content-Type": "application/json"
-    // });
-	// const url = "https://localhost/api/profiles/";
-
-	// let json;
-
-	// try {
-	// 	json = await handleFetch(url, "GET", "", headers);
-	// } catch (error) {
-	// 	console.error(error.message);
-	// }
 
 	const fragment = document.createDocumentFragment();
 	profileList.forEach(username => {
@@ -490,7 +480,6 @@ const addSearchBar = () => {
 
 	input.classList.add("form-control", "dropdown-toggle");
 	input.setAttribute("type", "text");
-	input.setAttribute("placeholder", "Search");
 	input.setAttribute("aria-label", "Search");
 	input.setAttribute("aria-describedby", "search");
 	input.setAttribute("data-bs-toggle", "dropdown");
@@ -536,104 +525,73 @@ const addCurrentUser = async () => {
 const addContent = async () => {
 
 	const fragment = document.createDocumentFragment();
-	const friendlist = document.createElement("div");
-	const search = document.createElement("div");
+	// const friendlist = document.createElement("div");
+	// const search = document.createElement("div");
 
-	// Friendlist
-	friendlist.id = "friendlist-part";
-	friendlist.className = "d-block";
-	friendlist.appendChild(await addFriendlist());
-	friendlist.appendChild(addSpan());
-	friendlist.appendChild(addButtons([
-	{
-		id: "remove-friend-btn",
-		text: "Remove friend",
-		langClass: "removeFriend"
-	},
-	{
-		id: "add-friend-btn",
-		text: "Add friend",
-		langClass: "addFriend"
+	const body = document.querySelector("#friendlist .offcanvas-body");
+
+	if (body.classList.contains("search-mode")) {
+		// search.id = "search-part";
+		// search.className = "d-none";
+		fragment.appendChild(addSearchBar());
+		fragment.appendChild(addSpan());
+		fragment.appendChild(addButtons([
+		{
+			id: "cancel-friend-btn",
+			text: "Cancel",
+			langClass: "cancel"
+		},
+		{
+			id: "invite-friend-btn",
+			text: "Invite",
+			langClass: "invite"
+		}
+		]));
+	} else {
+		// friendlist.id = "friendlist-part";
+		// friendlist.className = "d-block";
+		fragment.appendChild(await addFriendlist());
+		fragment.appendChild(addSpan());
+		fragment.appendChild(addButtons([
+		{
+			id: "remove-friend-btn",
+			text: "Remove friend",
+			langClass: "removeFriend"
+		},
+		{
+			id: "add-friend-btn",
+			text: "Add friend",
+			langClass: "addFriend"
+		}
+		]));
 	}
-	]));
 
-	// Search
-	search.id = "search-part";
-	search.className = "d-none";
-	search.appendChild(addSearchBar());
-	search.appendChild(addSpan());
-	search.appendChild(addButtons([
-	{
-		id: "cancel-friend-btn",
-		text: "Cancel",
-		langClass: "cancel"
-	},
-	{
-		id: "invite-friend-btn",
-		text: "Invite",
-		langClass: "invite"
-	}
-	]));
-
-	fragment.appendChild(friendlist);
-	fragment.appendChild(search);
-
-	// if (isSearchMode) {
-	// 	if (friendlist) {
-	// 		friendlist.removeChild(document.getElementById("friends"));
-	// 		friendlist.removeChild(document.querySelector("#friendlist .form-error"));
-	// 		friendlist.removeChild(document.getElementById("friendlistButtons"));
-	// 	}
-	// 	fragment.appendChild(addSearchBar());
-	// 	fragment.appendChild(addSpan());
-	// 	fragment.appendChild(addButtons([
-	// 	{
-	// 		id: "cancel-friend-btn",
-	// 		text: "Cancel",
-	// 		langClass: "cancel"
-	// 	},
-	// 	{
-	// 		id: "invite-friend-btn",
-	// 		text: "Invite",
-	// 		langClass: "invite"
-	// 	}
-	// 	]));
-	// } else {
-	// 	if (friendlist) {
-	// 		friendlist.removeChild(document.getElementById("searchBar"));
-	// 		friendlist.removeChild(document.querySelector("#friendlist .form-error"));
-	// 		friendlist.removeChild(document.getElementById("friendlistButtons"));
-	// 	}
-	// 	fragment.appendChild(await addFriendlist());
-	// 	fragment.appendChild(addSpan());
-	// 	fragment.appendChild(addButtons([
-	// 	{
-	// 		id: "remove-friend-btn",
-	// 		text: "Remove friend",
-	// 		langClass: "removeFriend"
-	// 	},
-	// 	{
-	// 		id: "add-friend-btn",
-	// 		text: "Add friend",
-	// 		langClass: "addFriend"
-	// 	}
-	// 	]));
-	// }
+	// fragment.appendChild(friendlist);
+	// fragment.appendChild(search);
 	return fragment;
 };
 
-const toggleContent = isSearchMode => {
+const toggleContent = async isSearchMode => {
 
-	const friendlist = document.querySelector("#friendlist-part");
-	const search = document.querySelector("#search-part");
+	const body = document.querySelector("#friendlist .offcanvas-body");
 
 	if (isSearchMode) {
-		friendlist.className = "d-none";
-		search.className = "d-block";
+		body.classList.add("search-mode");
 	} else {
-		friendlist.className = "d-block";
-		search.className = "d-none";
+		body.classList.remove("search-mode");
 	}
+	body.replaceChildren(await addCurrentUser(), await addContent());
+	translatePage();
+	// const friendlist = document.querySelector("#friendlist-part");
+	// const search = document.querySelector("#search-part");
+
+	// if (isSearchMode) {
+	// 	friendlist.className = "d-none";
+	// 	search.className = "d-block";
+	// } else {
+	// 	friendlist.className = "d-block";
+	// 	search.className = "d-none";
+	// }
 };
 
 const removeFriendlistSection = () => {
@@ -645,7 +603,7 @@ const removeFriendlistSection = () => {
 	}
 };
 
-const addFriendlistSection = async () => {
+const addFriendlistSection = () => {
 
 	const friendlist = document.createElement("section");
 	const header = document.createElement("div");
@@ -680,14 +638,13 @@ const addFriendlistSection = async () => {
 	headerCloseBtn.setAttribute("aria-label", "Close");
 	headerCloseBtn.setAttribute("data-bs-dismiss", "offcanvas");
 	headerCloseBtn.classList.add("btn-close", "m-2", "position-absolute", "end-0");
-	body.classList.add("offcanvas-body", "container", "p-4");
+	body.classList.add("offcanvas-body", "container", "p-4", "friendlist-mode");
 
 	header.appendChild(headerTitle);
 	header.appendChild(headerCloseBtn);
 	
-	body.appendChild(await addCurrentUser());
-	body.appendChild(await addContent());
-	// body.appendChild(await toggleContent(false));
+	// body.appendChild(await addCurrentUser());
+	// body.appendChild(await addContent());
 	
 	friendlist.appendChild(header);
 	friendlist.appendChild(body);
@@ -711,6 +668,15 @@ export const updateFriendlistSection = isLoggedIn => {
 };
 
 // ============ Events ==============
+
+document.addEventListener("show.bs.offcanvas", async e => {
+
+	if (e.target.matches("#friendlist")) {
+		const body = document.querySelector("#friendlist .offcanvas-body");
+		body.replaceChildren(await addCurrentUser(), await addContent());
+		translatePage();
+	}
+});
 
 document.addEventListener("click", e => {
 
@@ -739,6 +705,7 @@ document.addEventListener("click", e => {
 				} else {
 					checkIfUserExists(input).then(user => {
 						if (user) {
+							clearSpan(getSpan());
 							createFriendship(user[0].UID);
 						} else {
 							printError(getSpan(), "userNotFound", "Username not found. Please provide an existing username");
@@ -756,7 +723,6 @@ document.addEventListener("click", e => {
 			if (rows.length) {
 				clearSpan(getSpan());
 				rows.forEach(friend => {
-					// Not clear
 					handleFriendship(friend, false);
 				});
 			} else {
@@ -795,9 +761,7 @@ document.addEventListener("input", e => {
 		case element.matches("#searchBar input"):
 			e.preventDefault();
 			if (element.value) {
-				// displayProfiles(element.value).then(profiles => {
-					document.querySelector("#friendlist .dropdown-menu").replaceChildren(displayProfiles(element.value));
-				// });
+				document.querySelector("#friendlist .dropdown-menu").replaceChildren(displayProfiles(element.value));
 			}
 			break;
 	}
