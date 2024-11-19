@@ -261,10 +261,6 @@ const createFriendship = async uid2 => {
 		const json = await handleFetch(url, "POST", JSON.stringify(data), headers);
 		console.log("======= Friend Request Sent =======");
 		console.log(json);
-		// if (document.getElementById("friends")) {
-		// 	document.querySelector("#friends").replaceChildren(await updateFriendlist());
-		// 	translatePage();
-		// }
 		toggleContent(false);
 	} catch (error) {
 		console.error(error.message);
@@ -525,14 +521,10 @@ const addCurrentUser = async () => {
 const addContent = async () => {
 
 	const fragment = document.createDocumentFragment();
-	// const friendlist = document.createElement("div");
-	// const search = document.createElement("div");
 
 	const body = document.querySelector("#friendlist .offcanvas-body");
 
 	if (body.classList.contains("search-mode")) {
-		// search.id = "search-part";
-		// search.className = "d-none";
 		fragment.appendChild(addSearchBar());
 		fragment.appendChild(addSpan());
 		fragment.appendChild(addButtons([
@@ -548,8 +540,6 @@ const addContent = async () => {
 		}
 		]));
 	} else {
-		// friendlist.id = "friendlist-part";
-		// friendlist.className = "d-block";
 		fragment.appendChild(await addFriendlist());
 		fragment.appendChild(addSpan());
 		fragment.appendChild(addButtons([
@@ -565,9 +555,6 @@ const addContent = async () => {
 		}
 		]));
 	}
-
-	// fragment.appendChild(friendlist);
-	// fragment.appendChild(search);
 	return fragment;
 };
 
@@ -582,16 +569,6 @@ const toggleContent = async isSearchMode => {
 	}
 	body.replaceChildren(await addCurrentUser(), await addContent());
 	translatePage();
-	// const friendlist = document.querySelector("#friendlist-part");
-	// const search = document.querySelector("#search-part");
-
-	// if (isSearchMode) {
-	// 	friendlist.className = "d-none";
-	// 	search.className = "d-block";
-	// } else {
-	// 	friendlist.className = "d-block";
-	// 	search.className = "d-none";
-	// }
 };
 
 const removeFriendlistSection = () => {
@@ -642,9 +619,6 @@ const addFriendlistSection = () => {
 
 	header.appendChild(headerTitle);
 	header.appendChild(headerCloseBtn);
-	
-	// body.appendChild(await addCurrentUser());
-	// body.appendChild(await addContent());
 	
 	friendlist.appendChild(header);
 	friendlist.appendChild(body);
