@@ -80,39 +80,80 @@ export default class extends Abstract {
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.authToken);
 		return `
-			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
-				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-				<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
-				<span data-i18n-key="playerOne">Player 1</label>
-				<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
-				${p2NameField}
-				<div class="slidecontainer">
-					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
-					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
+			<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+				<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold">
+					<div class="row m-0 mt-4">
+						<span class="bg-info rounded-end-5 px-2 text-end" style="width: 50px;">\<\<</span>
 					</div>
-					<div>
-						<class="flex-column" data-bs-theme="dark">
-						<span data-i18n-key="theme" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text">Theme</span>
-						<div class="d-flex justify-content-center">
-							<select id="theme" class="form-select auto-width-select" aria-label="Winter">
-								<option data-i18n-key="none" value="None" ${localStorage.getItem('theme') === 'None' ? 'selected' : ''}>None</option>
-								<option data-i18n-key="custom" value="Custom" ${localStorage.getItem('theme') === 'Custom' ? 'selected' : ''}>Custom</option>
-								<option data-i18n-key="christmas" value="Christmas" ${localStorage.getItem('theme') === 'Christmas' ? 'selected' : ''}>Christmas</option>
-								<option data-i18n-key="halloween" value="Halloween" ${localStorage.getItem('theme') === 'Halloween' ? 'selected' : ''}>Halloween</option>
-								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
-							</select>
+					<div class="row m-0 mt-4">
+						<div class="col-5 col-md-4 text-end p-4">
+							<p><label id="p2Form" for="player1" class="form-label" data-i18n-key="playerOne">Player 1</label></p>
+							<p><label for="winRange" class="form-label"><span data-i18n-key="numberOfWins">Number of wins</span></label></p>
+							<p><span data-i18n-key="theme" role="text">Theme</span></p>
+							<p><label for="powerUps">Power-Ups</label></p>
 						</div>
-					<div class="d-flex justify-content-center mt-4" >
-						<label class="me-2">Power-Ups</label>
-						<input type="checkbox" id="powerUps" value="false">
+						<div class="col-7 col-md-8 bg-info rounded-start-5 p-4">
+							<p><span id="player1" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span></p>
+							<p>
+								<input type="range" class="form-range" style="width: 85%;" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
+								<span id="demo" class="float-end">${localStorage.getItem('numberOfWins') || '3'}</span>
+							</p>
+							<p>
+								<select id="theme" class="form-select auto-width-select" aria-label="Winter">
+									<option data-i18n-key="none" value="None" ${localStorage.getItem('theme') === 'None' ? 'selected' : ''}>None</option>
+									<option data-i18n-key="custom" value="Custom" ${localStorage.getItem('theme') === 'Custom' ? 'selected' : ''}>Custom</option>
+									<option data-i18n-key="christmas" value="Christmas" ${localStorage.getItem('theme') === 'Christmas' ? 'selected' : ''}>Christmas</option>
+									<option data-i18n-key="halloween" value="Halloween" ${localStorage.getItem('theme') === 'Halloween' ? 'selected' : ''}>Halloween</option>
+									<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
+								</select>
+							</p>
+							<p><input type="checkbox" id="powerUps" value="false"></p>
+						</div>
+						${p2NameField}
 					</div>
-					<div class="mt-4 d-flex justify-content-center">
-						<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
+					<div class="row m-0 mt-5">
+						<div class="bg-info text-center p-2 rounded-bottom-4">
+							<a href="#" data-i18n-key="start" id="startBtn" class="d-block text-decoration-none text-black">START</a>
+						</div>
 					</div>
-					</div>
-					<script>
-					</script>
-					`;
+				</div>
+			</div>
+		`;
+
+		// return `
+		// 	<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
+		// 		<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
+		// 		<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
+		// 		<span data-i18n-key="playerOne">Player 1</label>
+		// 		<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+		// 		${p2NameField}
+		// 		<div class="slidecontainer">
+		// 			<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
+		// 			<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
+		// 			</div>
+		// 			<div>
+		// 				<class="flex-column" data-bs-theme="dark">
+		// 				<span data-i18n-key="theme" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text">Theme</span>
+		// 				<div class="d-flex justify-content-center">
+		// 					<select id="theme" class="form-select auto-width-select" aria-label="Winter">
+		// 						<option data-i18n-key="none" value="None" ${localStorage.getItem('theme') === 'None' ? 'selected' : ''}>None</option>
+		// 						<option data-i18n-key="custom" value="Custom" ${localStorage.getItem('theme') === 'Custom' ? 'selected' : ''}>Custom</option>
+		// 						<option data-i18n-key="christmas" value="Christmas" ${localStorage.getItem('theme') === 'Christmas' ? 'selected' : ''}>Christmas</option>
+		// 						<option data-i18n-key="halloween" value="Halloween" ${localStorage.getItem('theme') === 'Halloween' ? 'selected' : ''}>Halloween</option>
+		// 						<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
+		// 					</select>
+		// 				</div>
+		// 			<div class="d-flex justify-content-center mt-4" >
+		// 				<label class="me-2">Power-Ups</label>
+		// 				<input type="checkbox" id="powerUps" value="false">
+		// 			</div>
+		// 			<div class="mt-4 d-flex justify-content-center">
+		// 				<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
+		// 			</div>
+		// 			</div>
+		// 			<script>
+		// 			</script>
+		// 			`;
 	}
 }
 
@@ -164,7 +205,7 @@ document.addEventListener("click", (event) => {
 	}
     if (event.target.matches("#startBtn")) {
         // Prevent default link behavior if it's an <a> tag
-        // event.preventDefault();
+        event.preventDefault();
 		// document.addEventListener("submit", e => {
 
 		// 	// Retrieve username and username2 values from the input fields
