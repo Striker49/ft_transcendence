@@ -106,6 +106,10 @@
   
   "tournament": "Toernooi",
 
+  "invite": "Invite",
+
+  "removeFriend": "Remove friend",
+
 
   "player": "Speler",
   
@@ -131,6 +135,16 @@
 
   "ranking": "RANGLIJST",
 
-  "playAgain": "NOGMAALS SPELEN"
+  "playAgain": "NOGMAALS SPELEN",
+
+  "userNotFound": "Username not found. Please provide an existing username",
+
+  "sameUser": "Cannot add yourself as a friend.",
+
+  "selectFriends": "You must select friends first.",
+
+  "noUserSelected": "No user selected",
+
+  "unexpectedError": "Erreur inattendue"
 
   }

@@ -11,13 +11,40 @@ const getCustomErrorMessage = statusCode => {
 	}
 };
 
+const changeStatusOffline = async (token, uid) => {
+
+	const body = {
+		"status": "off"
+	};
+	const headers = new Headers({
+		"Content-Type": "application/json",
+		"Authorization": `Token ${token}`,
+	});
+	const url = `https://localhost/api/profiles/${uid}/`;
+
+	try {
+		const response = await fetch(url, {
+			method: "PATCH",
+			body: JSON.stringify(body),
+			headers: headers
+		});
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+		console.log(await response.json());
+
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
 const hideLoginModal = () => {
 	const modalElement = document.querySelector("#loginModal");
 	const modalInstance = bootstrap.Modal.getInstance(modalElement);
 	modalInstance.hide();
 };
 
-export const login = async form => {
+export const login = async (form, updateProf) => {
 
 	const formData = {
 		email_or_username: form.username.value,
@@ -50,9 +77,9 @@ export const login = async form => {
 		localStorage.setItem("lang", json.lang_pref);
 
 		updateLogin();
-		// if (window.location.pathname === "/profile") {
+		if (updateProf) {
 			updateProfile();
-		// }
+		}
 		// Changes language to user preferred language
 		setLanguage();
 		return true;
@@ -71,6 +98,7 @@ export const login = async form => {
 };
 
 const logout = () => {
+	changeStatusOffline(localStorage.getItem("authToken"), localStorage.getItem("UID"));
 	localStorage.clear();
 	updateLogin();
 	updateProfile();
@@ -141,7 +169,7 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		if (validateForm(e.target) && login(e.target)) {
+		if (validateForm(e.target) && login(e.target, true)) {
 			hideLoginModal();
 		}
 	}

@@ -43,7 +43,7 @@ const avatarPath = customURL => {
         // =========== Custom avatar url ============
         return `https://localhost/api/media/images/${customURL}/`;
     }
-    return "/src/assets/avatar/avatar1.jpg";
+    return null;
 };
 
 const uploadAvatar = async avatar => {
@@ -68,8 +68,8 @@ const uploadAvatar = async avatar => {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-
         console.log("Image Upload Successful");
+		return await response.json();
 
     } catch (error) {
         console.error(error.message);
@@ -105,26 +105,16 @@ const submitRegistrationForm = async form => {
     const url = "https://localhost/api/users/registration/";
 
     try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(formData),
-            headers: headers
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-		await login(form);
+		const response = await handleFetch(url, "POST", JSON.stringify(formData), headers);
+		await login(form, false);
 
         // ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
             await uploadAvatar(data.get("avatar"));
 			upload = false;
         }
-
-        const json = await response.json();
-        console.log(json);
         alert("Registration successful!");
+		updateProfile();
 
     } catch (error) {
         console.error(error.message);
@@ -134,31 +124,6 @@ const submitRegistrationForm = async form => {
 const submitProfileForm = async form => {
 
 	const data = new FormData(form);
-
-	// const formAvatar = {};
-	// const formProfiles = {};
-	// const formUsers = {};
-
-	// for (const [key, value] of data.entries()) {
-	
-	// 	switch (key) {
-
-	// 		case "email": case "username":
-	// 			// if (value !== userProfile[key]) {
-	// 				formUsers[key] = value;
-	// 			// }
-	// 			break;
-
-	// 		case "avatar":
-	// 			formAvatar[key] = value;
-	// 			break;
-
-	// 		default:
-	// 			// if (value !== userProfile[key]) {
-	// 				formProfiles[key] = value;
-	// 			// }
-	// 	}
-	// }
 
 	console.log("========= Avatar =========");
     console.log("Custom avatar name : ", data.get("avatar").name);
@@ -174,10 +139,12 @@ const submitProfileForm = async form => {
 	const formProfiles = {
 		"first_name": form.first_name.value,
 		"last_name": form.last_name.value,
-		"avatar_path": avatar,
 		"bio": form.bio.value,
 		"lang": form.lang.value
 	};
+	if (avatar) {
+		formProfiles.avatar_path = avatar;
+	}
 
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
@@ -195,18 +162,14 @@ const submitProfileForm = async form => {
 
 		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
 		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
+		Object.assign(userProfile, json_profiles);
 
 		// ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
-            await uploadAvatar(data.get("avatar"));
+            const newAvatar = await uploadAvatar(data.get("avatar"));
+			userProfile.avatar_path = newAvatar.image_url;
 			upload = false;
         }
-
-		console.log("======= Submitted Profile Form =======");
-		console.log(json_users);
-		console.log(json_profiles);
-		Object.assign(userProfile, json_profiles);
-
 		displayUserProfile();
 
 	} catch (error) {
@@ -270,14 +233,13 @@ const listGamesHistory = async () => {
 
 		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
-			const date = game.created.substring(0, 10);
 			let player2 = game.username_player2 || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
 			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
 				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
 			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
 			gamesHistoryDiv.innerHTML += `
 				<div class="row">
-					<p class="col date">${date}</p>
+					<p class="col date">${game.created}</p>
 					<p class="col vs">vs. ${player2}</p>
 					<p class="col score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
 					<p class="col status">${status}</p>
@@ -352,15 +314,16 @@ const toggleAvatarSection = isCustom => {
 	}
 };
 
-const addAvatarSection = () => {
+const addAvatarSection = isEditMode => {
 
 	const imgSize = "25%";
+	const setBorder = !isEditMode ? "border border-4" : "";
 
 	return `
 		<div class="pb-4 border-bottom border-2 border-dark fw-bold">
 			<p>Avatar</p>
 			<div id="avatar-section-1" class="text-center">
-				<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow border border-4">
+				<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow ${setBorder}">
 				<img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
 				<img src="/src/assets/avatar/avatar3.jpg" alt="Avatar image 3" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
 				<img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
@@ -386,7 +349,7 @@ const setSelectedLanguage = option => {
 const displayButtons = isEditMode => {
 	if (isEditMode) {
 		return `
-			<button type="button" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
+			<button type="button" id="edit-cancel-btn" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
 			<button type="submit" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="save">Save</button>
 		`;
 	} else {
@@ -455,7 +418,7 @@ const displayProfileForm = isEditMode => {
 				</div>
 				<div class="col-md-6 mt-4 mt-md-0">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-						${addAvatarSection()}
+						${addAvatarSection(isEditMode)}
 						<div class="py-4 border-bottom border-2 border-dark">
 							<label for="bio" class="form-label">Bio</label>
 							<textarea class="form-control" name="bio" id="bio">${userProfile.bio}</textarea>
@@ -587,7 +550,7 @@ document.addEventListener("click", e => {
 			translatePage();
 			break;
 
-		case element.matches(`#profile button[type="button"]`):
+		case element.matches("#edit-cancel-btn"):
 			e.preventDefault();
 			displayUserProfile();
 			break;

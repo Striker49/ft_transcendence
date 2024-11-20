@@ -107,6 +107,10 @@
   
   "tournament": "Tournoi",
 
+  "invite": "Inviter",
+
+  "removeFriend": "Supprimer un ami",
+
   
   "player": "Joueur",
   
@@ -132,6 +136,16 @@
 
   "ranking": "CLASSEMENT",
 
-  "playAgain": "REJOUER"
+  "playAgain": "REJOUER",
+
+  "userNotFound": "Veuillez entrer un nom d'utilisateur existant.",
+
+  "sameUser": "Entrez un nom d'utilisateur différent que le vôtre.",
+  
+  "selectFriends": "Veuillez sélectionner les utilisateurs à supprimer.",
+
+  "noUserSelected": "Aucun utilisateur sélectionné",
+
+  "unexpectedError": "Erreur inattendue"
   
   }
