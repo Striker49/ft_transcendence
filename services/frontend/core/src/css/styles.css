@@ -59,6 +59,25 @@ h1 {
 	min-width: 10px;
 }
 
+/* ========= Game ========= */
+
+#game-section .selected {
+	background-color: #0dcaf0 !important;
+}
+
+#game-section .selected .nav-link {
+	font-size: 24px !important;
+}
+
+#game-section .selected div {
+	display: block !important;
+}
+
+.corner-back {
+	border-bottom-left-radius: 0 !important; 
+	border-top-right-radius: 0 !important;
+}
+
 /* ========= Profile ========= */
 
 #profile img {

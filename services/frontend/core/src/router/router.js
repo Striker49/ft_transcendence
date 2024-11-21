@@ -1,4 +1,5 @@
 import About from "../pages/About.js";
+import CallBack from "../pages/CallBack.js";
 import EndGame from "../pages/EndGame.js";
 import Game from "../pages/Game.js";
 import GameConfig from "../pages/GameConfig.js";
@@ -21,6 +22,7 @@ const router = async () => {
 	const routes = [
 		{ path: "/", page: Index },
 		{ path: "/about", page: About },
+		{ path: "/callback", page: CallBack },
 		{ path: "/endGame", page: EndGame },
 		{ path: "/game", page: Game },
 		{ path: "/gameConfig", page: GameConfig },

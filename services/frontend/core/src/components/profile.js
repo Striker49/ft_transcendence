@@ -399,11 +399,11 @@ const displayProfileForm = isEditMode => {
 						</div>
 						${displayPassword(isEditMode)}
 						<div class="py-2 border-top border-2 border-dark">
-							<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
+							<label for="first_name" class="form-label" data-i18n-key="firstName">First name</label>
 							<input type="text" class="form-control" name="first_name" id="first_name" value="${userProfile.first_name}">
 						</div>
 						<div class="py-2">
-							<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
+							<label for="last_name" class="form-label" data-i18n-key="lastName">Last name</label>
 							<input type="text" class="form-control" name="last_name" id="last_name" value="${userProfile.last_name}">
 						</div>
 						<div class="pb-2">
@@ -446,6 +446,7 @@ const displayUserProfile = () => {
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
 						<p class="m-0 mt-4 text-center">
+							<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>
 							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
 						</p>
