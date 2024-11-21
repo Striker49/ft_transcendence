@@ -14,10 +14,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
     """serialises a user profile object"""
     created = serializers.ReadOnlyField(source='formatted_created')
     last_request = serializers.ReadOnlyField(source='formatted_last_request')
+    id_42 = serializers.ReadOnlyField()
     
     class Meta:
         model = CustomUser
-        fields = ('id', 'created','email', 'username', 'password', 'last_login', 'last_request')
+        fields = ('id', 'created','email', 'username', 'password', 'last_login', 'last_request', 'id_42')
         extra_kwargs = {
 			'password': {
 				'write_only': True,

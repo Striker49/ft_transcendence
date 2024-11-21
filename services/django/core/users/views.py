@@ -125,6 +125,11 @@ class User42CallbackView(APIView):
 
 		user = self.request.user
 		if user.is_authenticated:
+			id_42 = user_data['id']
+			old_user = models.CustomUser.objects.get(id_42=id_42)
+			if old_user:
+				old_user.id_42 = 0
+				old_user.save()
 			user.id_42 = user_data['id']
 			user.save()
 			return Response({

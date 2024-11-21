@@ -183,7 +183,7 @@ REST_FRAMEWORK = {
 
 OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID")
 OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET")
-OAUTH_REDIRECT_URI = 'https://localhost/profile'
+OAUTH_REDIRECT_URI = 'https://localhost/callback'
 
 OAUTH_AUTHORIZE_URL = 'https://api.intra.42.fr/oauth/authorize'
 OAUTH_USER_INFO_URL = 'https://api.intra.42.fr/v2/me'
