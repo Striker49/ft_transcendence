@@ -1,10 +1,12 @@
 import Abstract from "./Abstract.js";
 import { navigateTo } from "../router/router.js";
+import { updateLogin } from "../components/login.js";
 
 export default class extends Abstract {
 	constructor() {
 		super();
 		this.setTitle("CallBack");
+		authenticate42();
 	}
 
 	async getHtml() {
@@ -22,23 +24,20 @@ const authenticate42 = async () => {
 
 	const queryString = window.location.search;
 	const query = new URLSearchParams(queryString);	
-	console.log("code: ", query.get("code"));
 
 	const token = localStorage.getItem("authToken");
 
-	const body = {
-		"code": query.get("code")
-	};
 	const headers = new Headers({
-		"Content-Type": "application/json",
-		"Authorization": `Token ${token}`
+		"Content-Type": "application/json"
 	});
+	if (token) {
+		headers.append("Authorization", `Token ${token}`);
+	}
 
-	const url = 'https://localhost/api/42/login/';
+	const url = `https://localhost/api/users/42/callback?code=${query.get("code")}`;
 
 	const options = {
-		method: "POST",
-		body: JSON.stringify(body),
+		method: "GET",
 		headers: headers
 	};
 
@@ -48,13 +47,16 @@ const authenticate42 = async () => {
 			throw new Error(`Response status: ${response.status}`);
 		}
 		const data = await response.json();
-		console.log(data);
-		alert("42 authentication successful");
+
+		if (data.token) {
+			localStorage.setItem("authToken", data.token);
+		}
+		localStorage.setItem("UID", data.UID);
+		localStorage.setItem("username", data.username);
+		localStorage.setItem("lang", data.lang_pref);
+		updateLogin();
 	} catch (error) {
 		console.error(error.message);
-		alert("42 authentication failed");
 	}
 	navigateTo("/profile");
 };
-
-authenticate42();
