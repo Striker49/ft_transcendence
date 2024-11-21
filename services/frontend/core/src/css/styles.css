@@ -73,6 +73,11 @@ h1 {
 	display: block !important;
 }
 
+.corner-back {
+	border-bottom-left-radius: 0 !important; 
+	border-top-right-radius: 0 !important;
+}
+
 /* ========= Profile ========= */
 
 #profile img {

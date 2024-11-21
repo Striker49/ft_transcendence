@@ -134,7 +134,8 @@ const loginContent = () => {
 						</form>
 					</div>
 					<div class="modal-footer">
-						<a href="/profile" data-i18n-key="newUser" class="btn btn-secondary" data-bs-dismiss="modal" data-link>New User ?</a>
+						<a href="/profile" data-i18n-key="newUser" class="btn btn-secondary float-start" data-bs-dismiss="modal" data-link>New User ?</a>
+						<a href="https://localhost/api/users/42/callback/" class="btn btn-primary">Login with 42</a>
 						<button type="submit" data-i18n-key="login" class="btn btn-primary" form="login-form">Login</button>
 					</div>
 				</div>

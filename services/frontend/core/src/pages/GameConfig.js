@@ -2,6 +2,7 @@ import Abstract from "./Abstract.js";
 import { navigateTo } from "../router/router.js";
 import { fetchTranslationsFor } from "../localization.js";
 
+let p2NameLabel;
 let p2NameField;
 let p2Name;
 let username;
@@ -42,6 +43,7 @@ async function getNbPlayer(queryName) {
 	{
 		console.log("One player detected");
 		nbPlayer = true;
+		p2NameLabel = "";
 		p2NameField = "";
 		localStorage.setItem("nbPlayer", "1");
 	}
@@ -49,13 +51,15 @@ async function getNbPlayer(queryName) {
 	{
 		console.log("Two players detected");
 		nbPlayer = false;
-		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
+		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
+		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.log("No player detected");
-		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
+		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
+		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -82,20 +86,22 @@ export default class extends Abstract {
 		return `
 			<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
 				<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold">
-					<div class="row m-0 mt-4">
-						<span class="bg-info rounded-end-5 px-2 text-end" style="width: 50px;">\<\<</span>
+					<div class="row m-0">
+						<a href="/select" class="bg-info rounded-4 px-3 py-2 corner-back text-decoration-none text-black" style="width: 50px;" data-link>\<\<</a>
 					</div>
 					<div class="row m-0 mt-4">
 						<div class="col-5 col-md-4 text-end p-4">
-							<p><label id="p2Form" for="player1" class="form-label" data-i18n-key="playerOne">Player 1</label></p>
+							<p data-i18n-key="playerOne">Player 1</p>
+							${p2NameLabel}
 							<p><label for="winRange" class="form-label"><span data-i18n-key="numberOfWins">Number of wins</span></label></p>
 							<p><span data-i18n-key="theme" role="text">Theme</span></p>
 							<p><label for="powerUps">Power-Ups</label></p>
 						</div>
 						<div class="col-7 col-md-8 bg-info rounded-start-5 p-4">
 							<p><span id="player1" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span></p>
+							${p2NameField}
 							<p>
-								<input type="range" class="form-range" style="width: 85%;" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
+								<input type="range" class="form-range w-75" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
 								<span id="demo" class="float-end">${localStorage.getItem('numberOfWins') || '3'}</span>
 							</p>
 							<p>
@@ -109,9 +115,8 @@ export default class extends Abstract {
 							</p>
 							<p><input type="checkbox" id="powerUps" value="false"></p>
 						</div>
-						${p2NameField}
 					</div>
-					<div class="row m-0 mt-5">
+					<div class="row m-0 mt-4">
 						<div class="bg-info text-center p-2 rounded-bottom-4">
 							<a href="#" data-i18n-key="start" id="startBtn" class="d-block text-decoration-none text-black">START</a>
 						</div>
