@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'oauth2_provider',
     'debug_toolbar',
     'profiles.apps.ProfilesConfig',
     'django_extensions',
@@ -166,3 +167,24 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'mediafiles')
 
 MEDIA_URL = '/api/media/'
+
+
+#oauth settings
+SITE_ID = 1
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID")
+OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET")
+OAUTH_REDIRECT_URI = 'https://localhost/profile'
+
+OAUTH_AUTHORIZE_URL = 'https://api.intra.42.fr/oauth/authorize'
+OAUTH_USER_INFO_URL = 'https://api.intra.42.fr/v2/me'
+OAUTH_TOKEN_URL = 'https://api.intra.42.fr/oauth/token'
