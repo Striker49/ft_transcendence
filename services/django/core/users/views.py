@@ -123,18 +123,31 @@ class User42CallbackView(APIView):
 		if 'error' in user_data:
 			return Response({'error': user_data['error']}, status=status.HTTP_400_BAD_REQUEST)
 
-		# Authenticate or create the user
-		user = self.authenticate_or_register_user(user_data)
-
-		# Generate a token for the user
-		token, _ = Token.objects.get_or_create(user=user)
-
-		return Response({
-			'message': 'User authenticated successfully',
-			'token': token.key,
+		user = self.request.user
+		if user.is_authenticated:
+			user.id_42 = user_data['id']
+			user.save()
+			return Response({
+			'message': 'User linked to 42',
 			'UID': user.id,
-			'username': user.username,
-		})
+			'id_42': user_data['id'],
+			'username': user_data['login'],
+			})
+   
+		# Authenticate or create the user
+		else:
+			user = self.authenticate_or_register_user(user_data)
+
+			# Generate a token for the user
+			token, created = Token.objects.get_or_create(user=user)
+
+			return Response({
+				'message': 'User connected successfully',
+				'token': token.key,
+				'UID': user.id,
+				'username': user.username,
+				'lang_pref': user.profile.lang,
+			})
 
 	def get_access_token(self, code):
 		"""Exchange authorization code for an access token."""
@@ -156,17 +169,15 @@ class User42CallbackView(APIView):
 
 	def authenticate_or_register_user(self, user_data):
 		"""Authenticate the user, but do not register them if they don't exist."""
-		email = user_data['email']
+		id_42 = user_data['id']
 		username = user_data['login']
 
 		# Try to find the user by email or username
 		try:
-			user = models.CustomUser.objects.get(email=email)  # You can also try with username if needed
+			user = models.CustomUser.objects.get(id_42=id_42)  # You can also try with username if needed
 		except models.CustomUser.DoesNotExist:
 			# If user does not exist, return an error response
 			raise PermissionDenied('User not found. Please register first.')
-
-		# Optionally, you can add additional checks or actions, like ensuring the account is active.
 
 		return user
 
