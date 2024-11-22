@@ -32,42 +32,26 @@ export default class extends Abstract {
 	async getHtml() {
 	const ranking = await getRanking();
 	// console.log(ranking);
-
-	const btnClasses = [
-		"btn",
-		"btn-dark",
-		"rounded-pill",
-		"px-4",
-		"my-3",
-		"bg-orange",
-		"border-0",
-		"text-dark",
-		"fw-bold",
-		"box-shadow-subtle",
-		"text-center",
-		"mx-2"
-	];
-
 	return `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5" id="instructions">
 			<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold text-center">
-				<div class="row mb-4">
-					<h2 data-i18n-key="ranking">RANKING</h2>
+				<div class="row mb-4 justify-content-center">
+					<h4 class="bg-info w-auto px-4 py-2 rounded-bottom-4 fw-bold" data-i18n-key="ranking">Ranking</h4>
 				</div>
 				<div class="row bg-info my-3 mx-0 p-2 align-items-center">
-					<div class="col-3"><span data-i18n-key="rank">Rank</span> 1</div>
-					<div class="col-9 bg-info-subtle p-2">${ranking && ranking.length > 0 ? ranking[0].username : "N/A"}</div>
+					<div class="col-4"><span data-i18n-key="rank">Rank</span> 1</div>
+					<div class="col-8 bg-alt-blue rounded-2 p-2">${ranking && ranking.length > 0 ? ranking[0].username : "N/A"}</div>
 				</div>
 				<div class="row bg-info my-3 mx-0 p-2 align-items-center">
-					<div class="col-3 p-2"><span data-i18n-key="rank">Rank</span> 2</div>
-					<div class="col-9 bg-info-subtle p-2">${ranking && ranking.length > 1 ? ranking[1].username : "N/A"}</div>
+					<div class="col-4 p-2"><span data-i18n-key="rank">Rank</span> 2</div>
+					<div class="col-8 bg-alt-blue rounded-2 p-2">${ranking && ranking.length > 1 ? ranking[1].username : "N/A"}</div>
 				</div>
 				<div class="row bg-info my-3 mx-0 p-2 align-items-center">
-					<div class="col-3 p-2"><span data-i18n-key="rank">Rank</span> 3</div>
-					<div class="col-9 bg-info-subtle p-2">${ranking && ranking.length > 2 ? ranking[2].username : "N/A"}</div>
+					<div class="col-4 p-2"><span data-i18n-key="rank">Rank</span> 3</div>
+					<div class="col-8 bg-alt-blue rounded-2 p-2">${ranking && ranking.length > 2 ? ranking[2].username : "N/A"}</div>
 				</div>
 				<div class="row mx-0 my-4 justify-content-center">
-					<a href="/gameConfig" data-i18n-key="playAgain" id="playAgain" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0" style="width: 150px;" data-link>PLAY AGAIN</a>
+					<a href="/gameConfig" data-i18n-key="playAgain" id="playAgain" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto" data-link>PLAY AGAIN</a>
 				</div>
 			</div>
 		</div>

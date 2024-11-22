@@ -89,6 +89,10 @@ h1 {
 	font-weight: bold;
 }
 
+.bg-alt-blue {
+	background-color: #009dbc;
+}
+
 /* ========= Profile ========= */
 
 #profile img {

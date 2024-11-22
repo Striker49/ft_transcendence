@@ -15,12 +15,12 @@ export default class extends Abstract {
 						<a href="/select" class="bg-info rounded-4 px-3 py-2 corner-back text-decoration-none text-black" style="width: 50px;" data-link>\<\<</a>
 					</div>
 					<div class="row justify-content-center mx-0 my-4">
-						<div class="col col-sm-6 p-4 text-center border-4 border-end border-info">
+						<div class="col col-sm-6 p-2 text-center border-4 border-end border-info">
 							<h3 class="mb-4 fw-bold" data-i18n-key="playerOne">Player 1</h3>
 							<div class="keyboard-icon box-shadow" id="keyW">W</div>
 							<div class="keyboard-icon box-shadow" id="keyS">S</div>
 						</div>
-						<div class="col col-sm-6 p-4 text-center">
+						<div class="col col-sm-6 p-2 text-center">
 							<h3 class="mb-4 fw-bold" data-i18n-key="playerTwo">Player 2</h3>
 							<div class="keyboard-icon box-shadow" id="keyUp"><i class="bi bi-caret-up-fill"></i></div>
 							<div class="keyboard-icon box-shadow" id="keyDown"><i class="bi bi-caret-down-fill"></i></div>

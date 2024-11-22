@@ -89,15 +89,15 @@ export default class extends Abstract {
 					<div class="row m-0">
 						<a href="/select" class="bg-info rounded-4 px-3 py-2 corner-back text-decoration-none text-black" style="width: 50px;" data-link>\<\<</a>
 					</div>
-					<div class="row m-0 mt-4">
-						<div class="col-5 col-md-4 text-end p-4">
+					<div class="row m-0 mt-4 p-2 bg-info">
+						<div class="col-4 text-end p-4 fst-italic">
 							<p data-i18n-key="playerOne">Player 1</p>
 							${p2NameLabel}
 							<p><label for="winRange" class="form-label"><span data-i18n-key="numberOfWins">Number of wins</span></label></p>
 							<p><span data-i18n-key="theme" role="text">Theme</span></p>
 							<p><label for="powerUps">Power-Ups</label></p>
 						</div>
-						<div class="col-7 col-md-8 bg-info rounded-start-5 p-4">
+						<div class="col-8 bg-alt-blue rounded-4 p-4">
 							<p><span id="player1" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span></p>
 							${p2NameField}
 							<p>
@@ -116,10 +116,8 @@ export default class extends Abstract {
 							<p><input type="checkbox" id="powerUps" value="false"></p>
 						</div>
 					</div>
-					<div class="row m-0 mt-4">
-						<div class="bg-info text-center p-2 rounded-bottom-4">
-							<a href="#" data-i18n-key="start" id="startBtn" class="d-block text-decoration-none text-black">START</a>
-						</div>
+					<div class="row mx-0 my-4 justify-content-center">
+						<a href="#" data-i18n-key="start" id="startBtn" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto">START</a>
 					</div>
 				</div>
 			</div>
