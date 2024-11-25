@@ -22,7 +22,7 @@ async function getUserProfile() {
 	if (!localStorage.getItem("authToken"))
 		return;
 	const uid = localStorage.getItem("UID");
-	const url = `https://localhost/api/profiles/${uid}`;
+	const url = `https://localhost/api/profiles/${uid}/`;
 	try {
 		const response = await fetch(url, options);
 		if(!response.ok) { 
@@ -39,9 +39,9 @@ async function getUserProfile() {
 async function getNbPlayer(queryName) {
 	let nbPlayer = false;
     const params = new URLSearchParams(window.location.search);
-    if (params.get(queryName) == "1")
+    if (params.get(queryName) == "1" || (!params.get(queryName) && localStorage.getItem("nbPlayer") == "1"))
 	{
-		console.log("One player detected");
+		console.debug("One player detected");
 		nbPlayer = true;
 		p2NameLabel = "";
 		p2NameField = "";
@@ -49,17 +49,15 @@ async function getNbPlayer(queryName) {
 	}
 	else if (params.get(queryName) == "2")
 	{
-		console.log("Two players detected");
+		console.debug("Two players detected");
 		nbPlayer = false;
-		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.log("No player detected");
-		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
+		p2NameField = "<label class=\"d-flex justify-content-center my-2 fw-bold p-1\" id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label><input type=\"text\" class=\"form-control w-auto mx-auto\" name=\"player2\" id=\"player2\">";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -80,14 +78,16 @@ export default class extends Abstract {
 		const ai = await getNbPlayer("nbPlayer");
 		username = (userData ? userData.username : localTranslations["playerOne"])
 		username2 = localTranslations["playerTwo"] || "Player 2";
-		// console.log("user name: ", userData.username);
-		// console.debug("local storage: ", localStorage);
-		// console.debug("token: ", localStorage.authToken);
 		return `
-			<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
-				<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold">
-					<div class="row m-0">
-						<a href="/select" class="bg-info rounded-4 px-3 py-2 corner-back text-decoration-none text-black" style="width: 50px;" data-link>\<\<</a>
+			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
+				<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
+				<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
+				<span data-i18n-key="playerOne">Player 1</label>
+				<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
+				${p2NameField}
+				<div class="slidecontainer">
+					<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
+					<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
 					</div>
 					<div class="row m-0 mt-4">
 						<div class="col-5 col-md-4 text-end p-4">
@@ -115,6 +115,9 @@ export default class extends Abstract {
 							</p>
 							<p><input type="checkbox" id="powerUps" value="false"></p>
 						</div>
+					<div class="d-flex justify-content-center mt-4" >
+						<label class="me-2">Power-Ups</label>
+						<input type="checkbox" id="powerUps" value="false">
 					</div>
 					<div class="row m-0 mt-4">
 						<div class="bg-info text-center p-2 rounded-bottom-4">
@@ -201,16 +204,18 @@ document.addEventListener("click", (event) => {
 		console.log("checkbox", checkBox);
 		if (checkBox.value == "true") {
 			checkBox.value = false;
+			checkBox.checked = false;
 			localStorage.setItem("powerUps", false);
 		}
 		else {
 			checkBox.value = true;
+			checkBox.checked = true;
 			localStorage.setItem("powerUps", true)
 		}
 	}
     if (event.target.matches("#startBtn")) {
         // Prevent default link behavior if it's an <a> tag
-        event.preventDefault();
+        // event.preventDefault();
 		// document.addEventListener("submit", e => {
 
 		// 	// Retrieve username and username2 values from the input fields

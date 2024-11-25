@@ -39,8 +39,6 @@
 
   "newUser": "New User ?",
 
-  "addFriend": "Add friend",
-
   "name": "Name",
 
   "username": "Username",
@@ -93,6 +91,13 @@
 
   "removeFriend": "Remove friend",
 
+  "friends": "Friends",
+
+  "removeFriend": "Remove friend",
+
+  "addFriend": "Add friend",
+
+
   "singleGame": "Single Game",
 
   "onePlayer": "1 Player",
@@ -119,6 +124,8 @@
   "start": "START",
 
   "none": "None",
+
+  "custom": "Custom",
 
   "christmas": "Christmas",
 
