@@ -1,6 +1,8 @@
 import { login } from "./login.js";
-import { translatePage } from "../localization.js";
+import { translatePage, fetchTranslationsFor, setLanguage } from "../localization.js";
 import { validateForm } from "../utils/validation.js";
+import { handleFetch } from "../api/api.js";
+import { updateFriendlistSection } from "./friendlist.js"
 
 let upload = false;
 let userProfile = {
@@ -41,7 +43,7 @@ const avatarPath = customURL => {
         // =========== Custom avatar url ============
         return `https://localhost/api/media/images/${customURL}/`;
     }
-    return "/src/assets/avatar/avatar1.jpg";
+    return null;
 };
 
 const uploadAvatar = async avatar => {
@@ -66,8 +68,8 @@ const uploadAvatar = async avatar => {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-
         console.log("Image Upload Successful");
+		return await response.json();
 
     } catch (error) {
         console.error(error.message);
@@ -103,77 +105,25 @@ const submitRegistrationForm = async form => {
     const url = "https://localhost/api/users/registration/";
 
     try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(formData),
-            headers: headers
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-		await login(form);
+		const response = await handleFetch(url, "POST", JSON.stringify(formData), headers);
+		await login(form, false);
 
         // ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
             await uploadAvatar(data.get("avatar"));
 			upload = false;
         }
-
-        const json = await response.json();
-        console.log(json);
         alert("Registration successful!");
+		updateProfile();
 
     } catch (error) {
         console.error(error.message);
     }
 };
 
-const handleFetch = async (url, method, body, headers) => {
-
-	const options = {
-		method: method,
-		headers: headers
-	};
-	if (method === "POST" || method === "PUT" || method == "PATCH") {
-		options.body = body;
-	}
-
-	const response = await fetch(url, options);
-	if (!response.ok) {
-		throw new Error(`Response status: ${response.status}`);
-	}
-	return response.json();
-};
-
 const submitProfileForm = async form => {
 
 	const data = new FormData(form);
-
-	// const formAvatar = {};
-	// const formProfiles = {};
-	// const formUsers = {};
-
-	// for (const [key, value] of data.entries()) {
-	
-	// 	switch (key) {
-
-	// 		case "email": case "username":
-	// 			// if (value !== userProfile[key]) {
-	// 				formUsers[key] = value;
-	// 			// }
-	// 			break;
-
-	// 		case "avatar":
-	// 			formAvatar[key] = value;
-	// 			break;
-
-	// 		default:
-	// 			// if (value !== userProfile[key]) {
-	// 				formProfiles[key] = value;
-	// 			// }
-	// 	}
-	// }
 
 	console.log("========= Avatar =========");
     console.log("Custom avatar name : ", data.get("avatar").name);
@@ -189,13 +139,16 @@ const submitProfileForm = async form => {
 	const formProfiles = {
 		"first_name": form.first_name.value,
 		"last_name": form.last_name.value,
-		"avatar_path": avatar,
 		"bio": form.bio.value,
 		"lang": form.lang.value
 	};
+	if (avatar) {
+		formProfiles.avatar_path = avatar;
+	}
 
 	const token = localStorage.getItem("authToken");
 	const uid = localStorage.getItem("UID");
+	localStorage.setItem("lang", form.lang.value);
 
 	const headers = new Headers({
 		"Content-Type": "application/json",
@@ -209,18 +162,14 @@ const submitProfileForm = async form => {
 
 		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
 		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
+		Object.assign(userProfile, json_profiles);
 
 		// ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
-            await uploadAvatar(data.get("avatar"));
+            const newAvatar = await uploadAvatar(data.get("avatar"));
+			userProfile.avatar_path = newAvatar.image_url;
 			upload = false;
         }
-
-		console.log("======= Submitted Profile Form =======");
-		console.log(json_users);
-		console.log(json_profiles);
-		Object.assign(userProfile, json_profiles);
-
 		displayUserProfile();
 
 	} catch (error) {
@@ -278,19 +227,21 @@ const listGamesHistory = async () => {
 	if (gamesHistory) {
 
 		const gamesHistoryDiv = document.querySelector("#games-history");
+		let localTranslations = JSON.parse(localStorage.getItem("translations"));
+		if (localTranslations == null)
+			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 
 		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
-
-			const date = game.created.substring(0, 10);
-			const player2 = game.username_player2 || "CPU";
-			const status = game.score_player1 > game.score_player2 ? "Won" : "Lost";
-
+			let player2 = game.username_player2 || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
+			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
+				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
+			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
 			gamesHistoryDiv.innerHTML += `
 				<div class="row">
-					<p class="col date">${date}</p>
+					<p class="col date">${game.created}</p>
 					<p class="col vs">vs. ${player2}</p>
-					<p class="col score">Score: ${game.score_player1} to ${game.score_player2}</p>
+					<p class="col score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
 					<p class="col status">${status}</p>
 				</div>
 			`;
@@ -298,7 +249,7 @@ const listGamesHistory = async () => {
 	} else {
 		document.querySelector("#games-history").innerHTML = `
 			<div class="row">
-				<p>No games done yet.</p>
+				<p data-i18n-key="noGamesPlayed">No games played yet.</p>
 			</div>
 		`;
 	}
@@ -363,15 +314,16 @@ const toggleAvatarSection = isCustom => {
 	}
 };
 
-const addAvatarSection = () => {
+const addAvatarSection = isEditMode => {
 
 	const imgSize = "25%";
+	const setBorder = !isEditMode ? "border border-4" : "";
 
 	return `
 		<div class="pb-4 border-bottom border-2 border-dark fw-bold">
 			<p>Avatar</p>
 			<div id="avatar-section-1" class="text-center">
-				<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow border border-4">
+				<img src="/src/assets/avatar/avatar1.jpg" alt="Avatar image 1" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow ${setBorder}">
 				<img src="/src/assets/avatar/avatar2.jpg" alt="Avatar image 2" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
 				<img src="/src/assets/avatar/avatar3.jpg" alt="Avatar image 3" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
 				<img src="/src/assets/avatar/avatar4.jpg" alt="Avatar image 4" width="${imgSize}" height="${imgSize}" class="m-2 box-shadow">
@@ -381,7 +333,7 @@ const addAvatarSection = () => {
 			</div>
 			<div id="avatar-section-2" class="d-none text-center">
 				<input type="file" class="form-control" name="avatar" id="avatar">
-				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image">Select default image</a>&nbsp;&nbsp; <--</span>
+				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image" data-i18n-key="selectDefaultImage">Select default image</a>&nbsp;&nbsp; <--</span>
 			</div>
 		</div>
 	`;
@@ -397,7 +349,7 @@ const setSelectedLanguage = option => {
 const displayButtons = isEditMode => {
 	if (isEditMode) {
 		return `
-			<button type="button" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
+			<button type="button" id="edit-cancel-btn" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
 			<button type="submit" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="save">Save</button>
 		`;
 	} else {
@@ -447,26 +399,26 @@ const displayProfileForm = isEditMode => {
 						</div>
 						${displayPassword(isEditMode)}
 						<div class="py-2 border-top border-2 border-dark">
-							<label for="firstname" class="form-label" data-i18n-key="firstName">First name</label>
+							<label for="first_name" class="form-label" data-i18n-key="firstName">First name</label>
 							<input type="text" class="form-control" name="first_name" id="first_name" value="${userProfile.first_name}">
 						</div>
 						<div class="py-2">
-							<label for="lastname" class="form-label" data-i18n-key="lastName">Last name</label>
+							<label for="last_name" class="form-label" data-i18n-key="lastName">Last name</label>
 							<input type="text" class="form-control" name="last_name" id="last_name" value="${userProfile.last_name}">
 						</div>
 						<div class="pb-2">
 							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>
 							<select class="form-select" name="lang" id="lang">
 								<option value="en" ${setSelectedLanguage("en")}>English</option>
-								<option value="fr" ${setSelectedLanguage("fr")}>French</option>
-								<option value="nl" ${setSelectedLanguage("nl")}>Dutch</option>
+								<option value="fr" ${setSelectedLanguage("fr")}>Français</option>
+								<option value="nl" ${setSelectedLanguage("nl")}>Nederlands</option>
 							</select>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-6 mt-4 mt-md-0">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
-						${addAvatarSection()}
+						${addAvatarSection(isEditMode)}
 						<div class="py-4 border-bottom border-2 border-dark">
 							<label for="bio" class="form-label">Bio</label>
 							<textarea class="form-control" name="bio" id="bio">${userProfile.bio}</textarea>
@@ -494,7 +446,8 @@ const displayUserProfile = () => {
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
 						<p class="m-0 mt-4 text-center">
-							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
+							<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>
+							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
 						</p>
 					</div>
@@ -528,7 +481,7 @@ const displayUserProfile = () => {
 						<p class="m-0 text-center fw-bold fs-1 fst-italic"><span data-i18n-key="rank">Rank</span> : <span class="text-shadow" id="rank" style="font-size: 60px; color: orange"></span></p>
 					</div>
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 mt-4">
-						<p class="mb-2 fw-bold">Games history</p>
+						<p class="mb-2 fw-bold" data-i18n-key="gameHistory">Game history</p>
 						<div class="bg-dark rounded-5 p-2 box-shadow text-white text-center custom-scrollbar-css" id="games-history"></div>
 					</div>
 				</div>
@@ -546,9 +499,11 @@ export const updateProfile = () => {
 			userProfile = info;
 			displayUserProfile();
 		});
+		updateFriendlistSection(true);
 	} else {
 		clearUserProfile();
 		displayProfileForm(false);
+		updateFriendlistSection(false);
 	}
 };
 
@@ -596,7 +551,7 @@ document.addEventListener("click", e => {
 			translatePage();
 			break;
 
-		case element.matches(`#profile button[type="button"]`):
+		case element.matches("#edit-cancel-btn"):
 			e.preventDefault();
 			displayUserProfile();
 			break;
@@ -618,6 +573,7 @@ document.addEventListener("submit", e => {
 			e.preventDefault();
 			if (validateForm(element)) {
 				submitProfileForm(element);
+				setLanguage();
 			}
 			break;
 	}

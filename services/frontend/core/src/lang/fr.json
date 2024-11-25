@@ -31,6 +31,8 @@
 
   "uploadCustomImage": "Téléverser une image",
 
+  "selectDefaultImage": "Choisir une image par défaut",
+
   "language": "Langue",
 
   "createProfile": "Créer le profil",
@@ -54,8 +56,24 @@
   "gamesPerfect": "Parties parfaites",
 
   "rank": "Rang",
+
+  "gameHistory": "Historique des parties",
+
+  "noGamesPlayed": "Aucune partie jouée",
+
+  "CPU": "Ordi",
+
+  "score": "Score",
+
+  "to": "à",
+
+  "won": "Gagné",
+
+  "lost": "Perdu",
   
   "editProfile": "Modifier le profil",
+
+  "friendlist": "Liste d'amis",
 
   "passwordLength": "Le mot de passe doit être 6 et 20 caractères",
 
@@ -83,10 +101,16 @@
   
   "tournament": "Tournoi",
 
+  "invite": "Inviter",
+
+  "removeFriend": "Supprimer un ami",
+
   
   "player": "Joueur",
   
   "playerOne": "Joueur 1",
+
+  "playerTwo": "Joueur 2",
 
   "numberOfWins": "Points pour gagner",
 
@@ -104,6 +128,16 @@
 
   "ranking": "CLASSEMENT",
 
-  "playAgain": "REJOUER"
+  "playAgain": "REJOUER",
+
+  "userNotFound": "Veuillez entrer un nom d'utilisateur existant.",
+
+  "sameUser": "Entrez un nom d'utilisateur différent que le vôtre.",
+  
+  "selectFriends": "Veuillez sélectionner les utilisateurs à supprimer.",
+
+  "noUserSelected": "Aucun utilisateur sélectionné",
+
+  "unexpectedError": "Erreur inattendue"
   
   }

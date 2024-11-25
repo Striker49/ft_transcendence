@@ -1,9 +1,6 @@
-// The active locale
-// const defaultLocale = "en";
 const supportedLocales = ["en", "nl", "fr"];
 
 let locale = "en";
-let defaultLocale = "en";
 let translations = {};
 
 
@@ -17,26 +14,26 @@ function cycleSupportedLang(language) {
 			return (supportedLocales[i]);
 		}
 	}
+	return (0);
 }
 
 function findSupported(navLang) {
 	console.debug("FIND IF SUPPORTED LANGUAGE");
+	let found = 0;
 	//Will check if nav languages are supported from top to bottom
 	for (let j = 0; navLang[j]; j++)
-		cycleSupportedLang(navLang[j]);
+	{
+		found = cycleSupportedLang(navLang[j]);
+		if (found)
+			return (found);
+	}
 	console.debug("NO LANGUAGE SUPPORTED");
-	return (defaultLocale);
+	return (locale);
 }
 
-// When the page content is ready...
-document.addEventListener("DOMContentLoaded", (event) => {
-
+export function setLanguage() {
 	let newLocale;
 
-	// Redirect to another page if /game was reloaded
-	if (window.location.pathname === "/game") {
-		window.location.href = "/gameConfig";
-	}
 	//Change locale value for localStorage if valid or the navigator language
 	if (localStorage.getItem("lang") && cycleSupportedLang(localStorage.getItem("lang")) === localStorage.getItem("lang"))
 		newLocale = localStorage.getItem("lang");
@@ -53,6 +50,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	requestAnimationFrame( () => {
 		setLocale(newLocale);
 	});
+
+}
+
+// When the page content is ready...
+document.addEventListener("DOMContentLoaded", (event) => {
+	// Redirect to another page if /game was reloaded
+	if (window.location.pathname === "/game") {
+		window.location.href = "/gameConfig";
+	}
+	setLanguage();
 });
 
 document.addEventListener("change", (event) => {
@@ -77,13 +84,19 @@ async function setLocale(newLocale) {
 	console.info("trying to switch to:", newLocale);
 	if (newLocale === locale) return;  // Don't reload if locale is the same
 	try {
+
+		if (document.querySelector("[lang]").getAttribute("lang") != newLocale)
+			document.querySelector("[lang]").setAttribute("lang", newLocale);
+		
 		const newTranslations = await fetchTranslationsFor(newLocale);
 		
 		// Update the locale and translations
 		locale = newLocale;
 		localStorage.setItem("lang", locale);
-		console.log("newtranslations:", newTranslations);
+		console.debug("newtranslations:", newTranslations);
 		translations = newTranslations;
+		//Puts the last language translated's JSON in localStorage
+		localStorage.setItem("translations", JSON.stringify(translations));
 		// Ensure the page is fully loaded before translating
 		translatePage();
 		console.info("Content has been translated to:", locale);
@@ -92,7 +105,7 @@ async function setLocale(newLocale) {
 	}
 }
 
-async function fetchTranslationsFor(newLocale) {
+export async function fetchTranslationsFor(newLocale) {
 	try {
 		const response = await fetch(`/src/lang/${newLocale}.json`);
 		if (!response.ok) {
@@ -106,7 +119,7 @@ async function fetchTranslationsFor(newLocale) {
 }
 
 export function translatePage() {
-	console.log("TranslatePage() is called");
+	console.debug("TranslatePage() is called");
 	document.querySelectorAll("[data-i18n-key]").forEach((element) => {
 		translateElement(element);
 	});
@@ -115,8 +128,7 @@ export function translatePage() {
 // Replace the inner text of the given HTML element with the translation
 // corresponding to the element's data-i18n-key
 function translateElement(element) {
-	//Checks if we have loaded translations already if not we're 
-	//probably still on the first page
+	//Checks if we have loaded translations already
 	if (JSON.stringify(translations) === '{}')
 		return;
 	if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
@@ -133,7 +145,6 @@ function translateElement(element) {
 }
 
 export function getTranslatedWord(wordKey) {
-	console.log("getTranslatedWord", wordKey);
 	const translations = {
 		en: { winner: "WINNER"},
 		fr: { winner: "GAGNANT"},

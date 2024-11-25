@@ -31,6 +31,8 @@
 
   "uploadCustomImage": "Upload Custom Image",
 
+  "selectDefaultImage": "Select Default Image",
+
   "language": "Language",
 
   "createProfile": "Create profile",
@@ -57,7 +59,23 @@
 
   "rank": "Rank",
 
+  "gameHistory": "Game History",
+
+  "noGamesPlayed": "No games played yet",
+
+  "CPU": "CPU",
+
+  "score": "Score",
+
+  "to": "to",
+
+  "won": "Won",
+
+  "lost": "Lost",
+
   "editProfile": "Edit profile",
+
+  "friendlist": "Friendlist",
 
   "passwordLength": "Password must be 6 and 256 characters",
 
@@ -71,6 +89,9 @@
 
   "save": "Save",
 
+  "invite": "Invite",
+
+  "removeFriend": "Remove friend",
 
   "singleGame": "Single Game",
 
@@ -89,6 +110,8 @@
   
   "playerOne": "Player 1",
 
+  "playerTwo": "Player 2",
+
   "numberOfWins": "Number of wins",
 
   "theme": "Theme",
@@ -105,8 +128,16 @@
 
   "ranking": "RANKING",
 
-  "playAgain": "PLAY AGAIN"
+  "playAgain": "PLAY AGAIN",
 
+  "userNotFound": "Username not found. Please provide an existing username",
 
+  "sameUser": "Cannot add yourself as a friend.",
+
+  "selectFriends": "You must select friends first.",
+
+  "noUserSelected": "No user selected",
+
+  "unexpectedError": "Unexpected error"
 
   }

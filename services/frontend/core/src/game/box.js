@@ -16,12 +16,14 @@ export class Box extends THREE.Mesh {
             y: 0,
             z: 0
         },
-        zAcceleration
+        zAcceleration,
+        poweredUp
     }) {
         super(new THREE.BoxGeometry(width, height, depth),
         new THREE.MeshStandardMaterial({ color })
         )
-
+    
+    this.poweredUp = false;
     this.width = width;
     this.height = height;
     this.depth = depth;

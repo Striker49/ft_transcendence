@@ -20,7 +20,10 @@ class UserManager(BaseUserManager):
 		email = self.normalize_email(email)
 		user = self.model(email=email, username=username)
 
-		user.set_password(password)
+		if password:
+			user.set_password(password)
+		else:
+			user.set_password(self.make_random_password())
 		user.save(using=self._db)
 
 		return user
@@ -34,6 +37,10 @@ class UserManager(BaseUserManager):
 		user.save(using=self._db)
 
 		return user
+	
+	def make_random_password(self):
+		"""Generate a random password"""
+		return self.model.objects.make_random_password()
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 	"""Database model for the users that will be created"""
@@ -43,6 +50,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	username=models.CharField(max_length=255, unique=True) #users unique username
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
+	last_request=models.DateTimeField(null=True, blank=True)
+	id_42=models.PositiveIntegerField(null=True, blank=True)
 
 	objects = UserManager()
 
@@ -52,6 +61,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	def formatted_created(self):
 		local_created = timezone.localtime(self.created)
 		return local_created.strftime("%Y-%m-%d %H:%M:%S")
+
+	def formatted_last_request(self):
+		local_created = timezone.localtime(self.last_request)
+		return local_created.strftime("%Y-%m-%d %H:%M:%S")
+
+	def update_last_request(self):
+		self.last_request= timezone.now()
+		self.save(update_fields=['last_request'])
 
 	class Meta:
 		ordering = ['id']

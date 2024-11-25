@@ -32,6 +32,8 @@
 
   "uploadCustomImage": "Upload Aangepaste Afbeelding",
 
+  "selectDefaultImage": "Selecteer Standaardafbeelding",
+
   "language": "Taal",
 
   "createProfile": "Profiel aanmaken",
@@ -53,8 +55,24 @@
   "gamesPerfect": "Perfecte spellen",
 
   "rank": "Rang",
+  
+  "gameHistory": "Wedstrijdgeschiedenis",
+
+  "noGamesPlayed": "Nog geen spellen gespeeld",
+
+  "CPU": "CPU",
+
+  "score": "Score",
+
+  "to": "naar",
+
+  "won": "Gewonnen",
+
+  "lost": "Verloren",
 
   "editProfile": "Wijzig profiel",
+
+  "friendlist": "Vriendenlijst",
 
   "passwordLength": "Wachtwoord moet tussen 6 en 20 tekens zijn",
 
@@ -78,10 +96,16 @@
   
   "tournament": "Toernooi",
 
+  "invite": "Invite",
+
+  "removeFriend": "Remove friend",
+
 
   "player": "Speler",
   
   "playerOne": "Speler 1",
+
+  "playerTwo": "Speler 2",
 
   "numberOfWins": "Aantal overwinningen",
 
@@ -99,6 +123,16 @@
 
   "ranking": "RANGLIJST",
 
-  "playAgain": "NOGMAALS SPELEN"
+  "playAgain": "NOGMAALS SPELEN",
+
+  "userNotFound": "Username not found. Please provide an existing username",
+
+  "sameUser": "Cannot add yourself as a friend.",
+
+  "selectFriends": "You must select friends first.",
+
+  "noUserSelected": "No user selected",
+
+  "unexpectedError": "Erreur inattendue"
 
   }

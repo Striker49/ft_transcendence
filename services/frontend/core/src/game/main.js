@@ -6,7 +6,8 @@ import { Ball } from './ball.js';
 import { keys } from './keys.js';
 import { createText, createWinnerText } from './text.js';
 import { navigateTo } from '../router/router.js';
-import { getTranslatedWord } from '../localization.js';
+import { getTranslatedWord, translatePage } from '../localization.js';
+import { boxCollision } from './collision.js';
 
 const light = new THREE.DirectionalLight(0xffffff, 0.3);  // For shadows (color, intensity)
 light.position.z = -1;
@@ -22,18 +23,24 @@ renderer.shadowMap.enabled = true;
 //Seting variable value
 //<----need to fetch player name-------->
 let isStarted = false;
+let frames = 0;
 let speed = 0.15;
 let text, currentText, winnerText;
 let scoreP1, scoreP2;
 let nameP1, nameP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
+let paddleDepth= 2.5;
 let ballAcceleration = 0.01;
 let numberOfWins;
 let theme;
-let powerUps = false;
+let powerUpMode;
+let powerUps = [];
+let powerUpLocation;
 let ai = false;
+let newZPosition = 0;
 let state = 0;
+let winnerName;
 
 let paddleL;
 let paddleR;
@@ -43,14 +50,25 @@ let topWall;
 let bottomWall;
 
 const textureLoader = new THREE.TextureLoader();
+<<<<<<< HEAD
 const customTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
 const customWallTexture = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+=======
+
+let customTextureGround
+let customTexturePaddleL;
+let customTexturePaddleR;
+let customTextureBall;
+let customTextureNumber;
+
+>>>>>>> origin/dev
 
 const box = new THREE.Mesh
 
 function updateTheme(theme) {
     switch(theme) {
         case 'Custom':
+<<<<<<< HEAD
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
 
@@ -89,16 +107,34 @@ function updateTheme(theme) {
             ground.material.map = customTexture ? customTexture : null;
             ground.material.color.set(0xffffff); // Reset color to avoid tinting
             ground.material.needsUpdate = true;
+=======
+            customTextureGround = textureLoader.load('src/assets/1000_F_872786651_TAj61rs1j1vSBJFtSni4hxuG6vvaNZti.jpg');
+            customTexturePaddleL = textureLoader.load('src/assets/Stylized_Stone_Floor_010_basecolor.png');
+            customTexturePaddleR = textureLoader.load('src/assets/Stylized_Stone_Floor_009_basecolor.png');
+            customTextureBall = textureLoader.load('/src/assets/Tiles_053_basecolor.png');
+            customTextureNumber = textureLoader.load('/src/assets/Wood_Planks_014_basecolor.png');
+            customTexturePaddleL.repeat.set(0.75,0.75);
+            customTexturePaddleR.repeat.set(0.75,0.75);
+
+            paddleL.material.map = customTexturePaddleL; // Green
+            paddleR.material.map = customTexturePaddleR; // Red
+            ground.material.map = customTextureGround; // 
+            ball.material.map = customTextureBall; // Reset color to avoid tinting
+            // currentText.material.map = customTextureNumber;
+
+>>>>>>> origin/dev
             break;
         case 'Christmas':
             paddleL.material.color.set(0x00ff00); // Green
             paddleR.material.color.set(0xff0000); // Red
             ground.material.color.set(0x0369a1);  // Blue
+            ball.material.color.set('yellow'); // Yellow
             break;
         case 'Halloween':
             paddleL.material.color.set(0xff6600); // Orange
             paddleR.material.color.set(0x8c00ff); // Purple
             ground.material.color.set(0x564c43);  // Brown
+            ball.material.color.set('yellow'); // Yellow
             break;
         case 'Winter':
             paddleL.material.color.set(0x9fffff); // Light Blue
@@ -107,9 +143,11 @@ function updateTheme(theme) {
             ball.material.color.set(0x00ffff);    // Cyan for the ball
             break;
         default:
-            paddleL.material.color.set(0x00ff00); // Green
-            paddleR.material.color.set(0xff0000); // Red
-            ground.material.color.set(0x0369a1);  // Blue
+            paddleL.material.color.set(0x3ec300); // Green
+            paddleR.material.color.set(0xb63b85); // Red
+            ground.material.color.set(0x1a879c);  // Blue
+            ball.material.color.set('yellow'); // Yellow
+
     }
     ground.material.needsUpdate = true;
 }
@@ -143,17 +181,19 @@ function initGame() {
     scoreP1 = 0;
     scoreP2 = 0;
     ai = localStorage.getItem("nbPlayer") == "1" ? true : false;
+    powerUpMode = localStorage.getItem("powerUps") == "true"? true : false;
 
     numberOfWins = Math.max(1, Math.min(11, parseInt(localStorage.getItem("numberOfWins") || 3, 10)));
     if (localStorage.getItem("numberOfWins") != numberOfWins)
         localStorage.setItem("numberOfWins", numberOfWins);
-    console.log('initGame now', numberOfWins);
-    console.log('initGame theme', localStorage.getItem("theme"));
+    console.debug('initGame now', numberOfWins);
+    console.debug('initGame theme', localStorage.getItem("theme"));
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
         height: 0.5,
-        depth: 2.5,
+        depth: paddleDepth,
+        color: null,
         velocity: {
             x: 0,
             y: -0.01,
@@ -173,7 +213,8 @@ function initGame() {
     paddleR = new Box({
         width: paddleWidth,
         height: 0.5,
-        depth: 2.5,
+        depth: paddleDepth,
+        color: null,
         velocity: {
             x: 0,
             y: -0.01,
@@ -184,7 +225,6 @@ function initGame() {
             y: -1.25,
             z: 0
         },
-        color: 'red'
     });
     paddleR.castShadow = true;
     // scene.add(paddleR);
@@ -204,7 +244,7 @@ function initGame() {
             y: -1.25,
             z: 0
         },
-        color: 'yellow'
+        color: null
     });
     ball.castShadow = true;
     // scene.add(ball);
@@ -214,7 +254,7 @@ function initGame() {
         width: groundWidth, 
         height: 0.5,
         depth: 9,
-        color: '#0369a1',
+        color: null,
         position: {
             x: 0,
             y: -3,
@@ -241,6 +281,9 @@ function updateScore(text) {
             return;
         text.castShadow = true;
         text.receiveShadow = true;
+        if (customTextureNumber)
+            text.material.map = customTextureNumber;
+        
         scene.add(text);
     
         // Store the reference to the new text
@@ -318,7 +361,164 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
-let frames = 0;
+function applyPowerUp(paddle) {
+    let type = Math.round(Math.random() * (2 - 1) + 1);
+    // console.log("random", type);
+    if (type == 1)
+    {
+        paddle.scale.z = 0.5;
+        paddle.depth *= 0.5;
+    }
+    else if (type == 2)
+    {
+        paddle.scale.z = 2;
+        paddle.depth *= 2;
+        paddle.update(ground);
+        if (paddle.front > ground.front)
+            paddle.position.z -= paddle.front - ground.front;
+        if (paddle.back < ground.back)
+            paddle.position.z += ground.back - paddle.back;     
+    }
+}
+
+function removePowerUp() {
+    if (paddleL.poweredUp == true)
+    {
+        paddleL.scale.z = 1;
+        paddleL.depth = paddleDepth;
+    }
+    if (paddleR.poweredUp == true)
+    {
+        paddleR.scale.z = 1;
+        paddleR.depth = paddleDepth;
+    }
+    paddleL.poweredUp = false;
+    paddleR.poweredUp = false;
+    // powerUps.forEach((obj, index) => powerUps[index].poweredUp = false);
+}
+
+function createPowerBox(paddle, side) {
+    powerUps[side] = new Box({
+        width: 0.35,
+        height: 0.35,
+        depth: 0.35,
+        color: '#de5aed',
+        position: {
+            x: paddle.position.x,
+            y: 0,
+            z: paddle.position.z > 0 ? -(ground.depth / 2* 0.75) : (ground.depth / 2 * 0.75)
+        }})
+    powerUps[side].height = 0.5;
+    powerUps[side].castShadow = true;
+    scene.add(powerUps[side]);
+    
+    
+}
+
+function spawnPowerUp() {
+    if (frames < 500)
+        return;
+    if (paddleL.poweredUp == false)
+    {
+        if (!powerUps[0])
+        {
+            console.debug("creating power up...");
+            createPowerBox(paddleL, 0);
+        }
+    }
+    if (paddleR.poweredUp == false)
+    {
+        if (!powerUps[1])
+        {
+            console.debug("creating power up...");
+            createPowerBox(paddleR, 1);
+        }
+    }
+}
+
+
+function calculateBallEndPoint() {
+    // console.log("calculating ball endpoint");
+    if (powerUps[1])
+        powerUpLocation = powerUps[1].position.z;
+    let endPointx = ball.position.x;
+    let endPointz = ball.position.z;
+    let velocityx = ball.velocity.x;
+    let velocityz = ball.velocity.z;
+    let ballRadius = ball.radius;
+    let paddleLength = (paddleL.width / 2);
+    while (endPointx < (paddleR.position.x - paddleLength))
+    {
+        // console.log("endPointz:", endPointz);
+        if ((endPointx - (velocityx)) <= (paddleL.position.x + paddleLength) && velocityx < 0)
+            velocityx *= -1.075;
+        if ((endPointz + (velocityz) >= ground.front && velocityz > 0) || (endPointz - velocityz <= ground.back && velocityz < 0))
+            velocityz *= -1;
+        if (velocityx > 0.25)
+            velocityx = 0.25;
+
+        endPointx += velocityx;
+        endPointz += velocityz;
+    }
+    return (endPointz);
+}
+
+//Tells if the center of the paddle is where the ball will land or where the powerUp is located
+function approximate(newZPosition, paddlePosition) {
+    if (powerUpLocation && powerUpLocation <= paddlePosition + (paddleDepth / 2) && powerUpLocation >= paddlePosition - (paddleDepth / 2))
+        return (1);
+    else if (newZPosition <= paddlePosition + 0.5 && newZPosition >= paddlePosition - 0.5)
+        return (1);
+    return (0);
+}
+
+function targetLocation() {
+    // if (powerUpLocation && ((powerUpLocation > 0 && newZPosition > 0) || (powerUpLocation < 0 && newZPosition < 0)))
+    //     return (powerUpLocation);
+    // else
+    //     return (newZPosition);
+    //If powerUpLocation is known, it will be the target. Otherwise go to ball
+    if (powerUpLocation)
+        return (powerUpLocation);
+    else
+        return (newZPosition);
+}
+
+function updatePowerUps() {
+    powerUps.forEach((obj, index) => {
+        if (!powerUps[index])
+            return;
+        obj.rotation.z += 0.01;
+        obj.rotation.y += 0.01;
+        obj.update(ground);
+        if (boxCollision({
+            box1: obj,
+            box2: index == 0 ? paddleL : paddleR
+        }))
+        {
+            // console.log("powerUps[index].poweredUp:", powerUps[index].poweredUp);
+            if (powerUps[index].poweredUp == false)
+                {
+                    if (index == 0)
+                    {
+                        paddleL.poweredUp = true;
+                        applyPowerUp(paddleL);
+                    }
+                    else
+                    {
+                        paddleR.poweredUp = true;
+                        applyPowerUp(paddleR);
+                        powerUpLocation = null;
+                    }
+                    powerUps[index].poweredUp = true;
+                    scene.remove(powerUps[index]);
+                    powerUps[index].kill();
+                    powerUps[index] = null;
+                }
+            }
+        })
+}
+
 function updateGame() {
     if (state === 0)
         return;
@@ -330,22 +530,41 @@ function updateGame() {
         ball.velocity.y = 0;
     }
     paddleL.velocity.z = 0;
+    paddleR.velocity.z = 0;
     //Move left paddle if up/down key is pressed and will still be inbounds
-    if (keys.w.pressed && (paddleL.back - speed >= ground.back))
+    if (keys.w.pressed && (paddleL.back - speed > ground.back))
         paddleL.velocity.z = -speed;
-    else if (keys.s.pressed && (paddleL.front + speed <= ground.front)) {
+    else if (keys.s.pressed && (paddleL.front + speed < ground.front)) {
         paddleL.velocity.z = speed;
     }
 
-    paddleR.velocity.z = 0;
-
+    if (powerUpMode == true)
+        spawnPowerUp();
     //Move right paddle if up/down key is pressed and will still be inbounds
     if (ai == true)
     {
-        if (ball.position.z < paddleR.position.z && (paddleR.back - speed >= ground.back))
-            paddleR.velocity.z = -speed;
-        else if (ball.position.z > paddleR.position.z && (paddleR.front + speed <= ground.front))
-            paddleR.velocity.z = speed;
+        // console.log("newZPosition:", newZPosition);
+        // console.log("paddlePosition:", paddleR.position.z);
+
+        //calculates ball position 20 frames after start then every 60 frames
+        if ((frames > 140 && (frames - 140) % 70 == 0 ) || frames === 140)
+            newZPosition = calculateBallEndPoint();
+
+        
+        if (frames >= 140 ) {
+            //Goes up if next ball calculated position is higher or goes down if it's lower
+            if (targetLocation() < paddleR.position.z && (paddleR.back - speed >= ground.back) && !approximate(newZPosition, paddleR.position.z))
+            {
+                paddleR.velocity.z = -speed;
+            }
+            else if (targetLocation() > paddleR.position.z && (paddleR.front + speed <= ground.front) && !approximate(newZPosition, paddleR.position.z))
+            {
+                paddleR.velocity.z = speed;
+            }
+            else
+                paddleR.velocity.z = 0;
+
+        }
     }
     else
     {
@@ -358,6 +577,7 @@ function updateGame() {
     //updates paddles
     paddleR.update(ground);
     paddleL.update(ground);
+    updatePowerUps();
 
     let winner = 0;
 
@@ -374,6 +594,8 @@ function updateGame() {
 
 //Resets ball to 0 position with randomized velocities to change direction
 export function resetBallPosition(ball, winner) {
+    paddleR.velocity.z = 0;
+    newZPosition = 0;
     if (winner === 1)
         scoreP2++;
     else
@@ -384,8 +606,9 @@ export function resetBallPosition(ball, winner) {
     ball.velocity.y = 0;
     ball.velocity.z = 0;
     ball.velocity.x = 0;
-    frames = 0;
     updateScore();
+    removePowerUp();
+    frames = 0;
     if (scoreP1 == numberOfWins || scoreP2 == numberOfWins)
         endGame(winner);
 }
@@ -416,6 +639,11 @@ export const updateGameScene = () => {
 
 function showWinner(winnerName) {
     let winnerWord = getTranslatedWord("winner");
+    let translations = JSON.parse(localStorage.getItem("translations"));
+    if (translations && (winnerName == "Player 1" || winnerName == "Joueur 1" || winnerName == "Speler 1"))
+        winnerName = translations["playerOne"];
+    else if (translations && (winnerName == "Player 2" || winnerName == "Joueur 2" || winnerName == "Speler 2"))
+        winnerName= translations["playerTwo"];
     createWinnerText(function (text2) {
         winnerText = text2;
         scene.add(winnerText);
@@ -445,11 +673,12 @@ function insertButton() {
     body.appendChild(div);
     div.appendChild(rankingButton);
     div.appendChild(playAgainButton);
+    translatePage();
     console.debug("body", body);
 }
 
 function endGame(winner) {
-    const winnerName = (winner == 2 ? nameP1 : nameP2);
+    winnerName = (winner == 2 ? nameP1 : nameP2);
     console.debug("winner", winner);
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
@@ -481,11 +710,28 @@ function removeGameObjects() {
     scene.remove(bottomWall);
     ground.kill();
     scene.remove(ground);
+    currentText.material.map = null;
+    currentText.material.needsUpdate = true;
+    customTextureNumber = null;
     currentText.material.dispose();
     currentText.geometry.dispose();
+    powerUps.forEach((obj, index) => {
+        if (powerUps[index])
+        {
+            powerUps[index].kill();
+            scene.remove(powerUps[index]);
+        }
+    })
     scene.remove(currentText);
     if (winnerText)
     {
+        // text.material.map = null;
+        // currentText.material.map = null;
+        // currentText.material.needsUpdate = true;
+        // text.material.needsUpdate = true;
+        // customTextureNumber.material.map = null;
+        // customTextureNumber.material.needsUpdate = true;
+        // customTextureNumber = null;
         winnerText.material.dispose();
         winnerText.geometry.dispose();
         scene.remove(winnerText);
@@ -510,11 +756,12 @@ async function sendGameStats() {
 			body: JSON.stringify({
 				player1_UID: localStorage.getItem("UID"), 
 				player2_UID: null,
-                username_player2: null,
+                username_player2: ai == true ? null : nameP2,
 				score_player1: scoreP1,
 				score_player2: scoreP2
 			})
 		});
+        // console.log(ai == true ? null : nameP2);
 		if(!response.ok) { 
 			throw new Error(`Response status: ${response.status}`);
 		}
@@ -532,4 +779,43 @@ document.addEventListener('click', (event) => {
         winnerText.geometry.dispose();
         scene.remove(winnerText);
     }
+    // else if (winnerText)
+    // {
+    //     winnerText.material.dispose();
+    //     winnerText.geometry.dispose();
+    //     scene.remove(winnerText);
+    //     showWinner(getTranslatedWord(winnerName));
+    // }
 })
+
+document.addEventListener('click', (event) => {
+    if (event.target.matches("#ranking"))
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
+    // else if (winnerText)
+    // {
+    //     winnerText.material.dispose();
+    //     winnerText.geometry.dispose();
+    //     scene.remove(winnerText);
+    //     showWinner(getTranslatedWord(winnerName));
+    // }
+})
+
+document.querySelectorAll(".flag").forEach(flag => {
+    flag.addEventListener("click", (event) => {
+        // const selectedLang = event.target.getAttribute("data-lang");
+        // setLocale(selectedLang);
+        setTimeout( () => {
+        if (winnerText && window.location.href.includes("/game?") && state == 0) {
+            console.log("href", window.location.href);
+            winnerText.material.dispose();
+            winnerText.geometry.dispose();
+            scene.remove(winnerText);
+            showWinner(getTranslatedWord(winnerName));
+        }
+    }, 100);
+    });
+});

@@ -12,20 +12,27 @@ LANGUAGES = [
 	('nl', 'Dutch'),
 ]
 
+ONLINE_STATUS = [
+	('on', 'online'),
+	('off', 'offline'),
+	('ig', 'in game'),
+	('aw', 'away'),
+]
+
 def upload_to(instance, filename):
     return 'images/{filename}'.format(filename=filename)
 
 class UserProfile(models.Model):
 	"""Database model for users un the system"""
 	created = models.DateTimeField(auto_now_add=True)
-	UID=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	UID=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
 	first_name=models.CharField(max_length=255, blank=True)
 	last_name=models.CharField(max_length=255, blank=True)
 	avatar_path=models.CharField(max_length=255, blank=True)
 	bio=models.TextField(editable=True, blank=True)
-	
 	lang= models.CharField(max_length=2, choices=LANGUAGES, default='en')
-
+	status=models.CharField(max_length=3, choices=ONLINE_STATUS, default='off')
+	
 	class Meta:
 		ordering = ['created']
 		verbose_name = "Profile"
@@ -61,7 +68,7 @@ class UserFriendship(models.Model):
 		verbose_name = "Friendship"
   
 	def save(self, *args, **kwargs):
-		if self.user1_ID.id >self.user2_ID.id:
+		if self.user1_ID.id > self.user2_ID.id:
 			self.user1_ID, self.user2_ID = self.user2_ID, self.user1_ID
 		super().save(*args, **kwargs)
 	
