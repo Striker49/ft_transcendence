@@ -3,6 +3,7 @@
 html {
 	height: 100%;
 	background: linear-gradient(#132b37, #14a473 60%, #dac64d) no-repeat;
+	background-attachment: fixed;
 }
 
 body {
@@ -30,11 +31,6 @@ main, #about, #profile {
 
 #profile {
 	left: 100%;
-}
-
-.back-circle {
-	background: linear-gradient(#94215a, #340c2f 90%) no-repeat;
-	border-radius: 0 0 50% 50%;
 }
 
 footer {
@@ -224,6 +220,7 @@ h1 {
     top: 100%;
     left: 0;
     z-index: 1;
+	margin-top: 5px;
 }
 
 .flag {
@@ -242,8 +239,38 @@ h1 {
 
 /* ========= Media Queries ========= */
 
-@media (max-width: 575.98px) {
+@media (max-width: 767.98px) {
+	nav {
+		background-color: #212529bf;
+	}
+
+	.flag-options {
+		position: static;
+	}
+
 	#instructions .col {
 		border: 0 !important;
+	}
+}
+
+@media (min-width: 768px) {
+	nav a {
+		color: black !important;
+		text-shadow: 0px 0px 6px lightgray;
+	}
+
+	#menu-main-item {
+		background: linear-gradient(#94215a, #340c2f 90%) no-repeat;
+		border-radius: 0 0 50% 50%;
+	}
+
+	#menu-main-item a {
+		text-shadow: none;
+	}
+
+	.navbar-right {
+		position: absolute;
+		right: 18px;
+		top: 65px;
 	}
 }
