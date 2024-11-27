@@ -14,7 +14,8 @@ let userProfile = {
 	bio: "",
 	lang: "",
 	username: "",
-	email: ""
+	email: "",
+	id_42: ""
 };
 
 const clearUserProfile = () => {
@@ -435,6 +436,9 @@ const displayProfileForm = isEditMode => {
 };
 
 const displayUserProfile = () => {
+
+	const link42Btn = userProfile.id_42 > 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>` : "";
+
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
 			<div class="row p-0 text-black">
@@ -446,7 +450,7 @@ const displayUserProfile = () => {
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
 						<p class="m-0 mt-4 text-center">
-							<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>
+							${link42Btn}
 							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
 						</p>
