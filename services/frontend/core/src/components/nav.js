@@ -1,17 +1,17 @@
 export default `
 	<!-- Navbar -->
-	<nav class="navbar navbar-expand-sm p-0">
+	<nav class="navbar navbar-expand-md p-0 mb-2" data-bs-theme="dark">
 		<div class="container-fluid">
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<button class="navbar-toggler my-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse justify-content-center fw-bolder fs-5" id="navbarNav">
+			<div class="collapse navbar-collapse justify-content-center text-center fw-bolder fs-5 pb-4" id="navbarNav">
 				<ul class="navbar-nav">
 					<li class="nav-item px-5 py-3">
 						<a class="nav-link" href="/about" data-link data-i18n-key="about">About</a>
 					</li>
-					<li class="nav-item px-5 py-3 back-circle">
-						<a class="nav-link active" aria-current="page" href="/" data-link>Transcendence</a>
+					<li class="nav-item px-5 py-3" id="menu-main-item">
+						<a class="nav-link" aria-current="page" href="/" data-link>Transcendence</a>
 					</li>
 					<li class="nav-item px-5 py-3">
 						<a class="nav-link" href="/profile" data-link data-i18n-key="profile">Profile</a>

@@ -239,10 +239,10 @@ const listGamesHistory = async () => {
 			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
 			gamesHistoryDiv.innerHTML += `
 				<div class="row">
-					<p class="col date">${game.created}</p>
-					<p class="col vs">vs. ${player2}</p>
-					<p class="col score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
-					<p class="col status">${status}</p>
+					<p class="col-12 col-sm-3 date">${game.created.slice(0, -3)}</p>
+					<p class="col-12 col-sm-3 vs">vs. ${player2}</p>
+					<p class="col-12 col-sm-3 score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
+					<p class="col-12 col-sm-3 status fw-bold">${status}</p>
 				</div>
 			`;
 		});
