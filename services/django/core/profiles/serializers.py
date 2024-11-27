@@ -6,12 +6,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='UID.username')
     email = serializers.ReadOnlyField(source='UID.email')
     UID = serializers.ReadOnlyField(source='UID.id')
+    id_42 = serializers.ReadOnlyField(source='UID.id_42')
     
     class Meta:
         model = models.UserProfile
         fields = (
             'UID',
             'id',
+            'id_42',
             'first_name', 
             'last_name',
             'avatar_path',
