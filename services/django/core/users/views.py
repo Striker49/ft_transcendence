@@ -126,17 +126,20 @@ class User42CallbackView(APIView):
 		user = self.request.user
 		if user.is_authenticated:
 			id_42 = user_data['id']
-			old_user = models.CustomUser.objects.get(id_42=id_42)
-			if old_user:
+			try:
+				old_user = models.CustomUser.objects.get(id_42=id_42)
 				old_user.id_42 = 0
 				old_user.save()
+			except models.CustomUser.DoesNotExist:
+				print(f"User {user.username} is not yet linked to 42.")
 			user.id_42 = user_data['id']
 			user.save()
 			return Response({
 			'message': 'User linked to 42',
 			'UID': user.id,
 			'id_42': user_data['id'],
-			'username': user_data['login'],
+			'username_42': user_data['login'],
+			'username': user.username
 			})
    
 		# Authenticate or create the user
@@ -179,7 +182,7 @@ class User42CallbackView(APIView):
 
 		# Try to find the user by email or username
 		try:
-			user = models.CustomUser.objects.get(id_42=id_42)  # You can also try with username if needed
+			user = models.CustomUser.objects.get(id_42=id_42)
 		except models.CustomUser.DoesNotExist:
 			# If user does not exist, return an error response
 			raise PermissionDenied('User not found. Please register first.')
