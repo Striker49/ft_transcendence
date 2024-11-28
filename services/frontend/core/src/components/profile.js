@@ -218,6 +218,7 @@ const fetchGamesHistory = async () => {
 		return json;
 	} catch (error) {
 		console.error(error.message);
+		return null;
 	}
 };
 
@@ -274,11 +275,12 @@ const fetchUserStats = async () => {
 		return json;
 	} catch (error) {
 		console.error(error.message);
+		return null;
 	}
 };
 
 const updateStat = (selector, stat) => {
-	selector.querySelector("span.float-end").innerHTML = `${stat} / 42`;
+	selector.querySelector("span.float-end").textContent = `${stat} / 42`;
 	selector.querySelector("div.progress").setAttribute("aria-valuenow", stat);
 	selector.querySelector("div.progress-bar").style.transition = "width 1s ease";
 	selector.querySelector("div.progress-bar").style.width = `${Math.min((stat / 42) * 100, 100)}%`;
@@ -295,7 +297,9 @@ const updateUserStats = async () => {
 		updateStat(document.querySelector("#gamesPlayed"), userStats[0].total_games);
 		// updateStat(document.querySelector("#gamesPerfect"), userStats[0].perfect);
 
-		document.querySelector("#rank").innerHTML = userStats[0].rank;
+		document.querySelector("#rank").textContent = userStats[0].rank || "-42";
+	} else {
+		document.querySelector("#rank").textContent = "-42";
 	}
 };
 
@@ -437,7 +441,7 @@ const displayProfileForm = isEditMode => {
 
 const displayUserProfile = () => {
 
-	const link42Btn = userProfile.id_42 > 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>` : "";
+	const link42Btn = userProfile.id_42 <= 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>` : "";
 
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
@@ -499,6 +503,7 @@ const displayUserProfile = () => {
 
 export const updateProfile = () => {
 	if (localStorage.getItem("authToken")) {
+		// Not sure what happens if the fetch fails
 		fetchProfileInfo().then(info => {
 			userProfile = info;
 			displayUserProfile();
