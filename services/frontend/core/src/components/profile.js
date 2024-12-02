@@ -3,6 +3,7 @@ import { translatePage, fetchTranslationsFor, setLanguage } from "../localizatio
 import { validateForm } from "../utils/validation.js";
 import { handleFetch } from "../api/api.js";
 import { updateFriendlistSection } from "./friendlist.js"
+import { sanitizeJSON } from "../utils/sanitize.js"
 
 let upload = false;
 let userProfile = {
@@ -163,7 +164,7 @@ const submitProfileForm = async form => {
 
 		const json_users = await handleFetch(urlUsers, "PATCH", JSON.stringify(formUsers), headers);
 		const json_profiles = await handleFetch(urlProfiles, "PATCH", JSON.stringify(formProfiles), headers);
-		Object.assign(userProfile, json_profiles);
+		Object.assign(userProfile, sanitizeJSON(json_profiles));
 
 		// ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
@@ -226,7 +227,7 @@ const listGamesHistory = async () => {
 
 	const gamesHistory = await fetchGamesHistory();
 
-	if (gamesHistory) {
+	if (gamesHistory[0]) {
 
 		const gamesHistoryDiv = document.querySelector("#games-history");
 		let localTranslations = JSON.parse(localStorage.getItem("translations"));
@@ -337,7 +338,8 @@ const addAvatarSection = isEditMode => {
 				<span class="d-block mt-4 fst-italic">--> &nbsp;&nbsp;<a href="" class="text-decoration-none text-black" id="custom-image" data-i18n-key="uploadCustomImage">Upload custom image</a></span>
 			</div>
 			<div id="avatar-section-2" class="d-none text-center">
-				<input type="file" class="form-control" name="avatar" id="avatar">
+				<label for="avatar" class="btn btn-dark rounded-pill px-4" data-i18n-key="uploadCustomImage">Upload Custom Image</label>
+				<input type="file" class="form-control d-none" name="avatar" id="avatar">
 				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image" data-i18n-key="selectDefaultImage">Select default image</a>&nbsp;&nbsp; <--</span>
 			</div>
 		</div>
@@ -345,7 +347,7 @@ const addAvatarSection = isEditMode => {
 };
 
 const setSelectedLanguage = option => {
-	if (option === userProfile.lang) {
+	if (option === localStorage.getItem("lang")) {
 		return "selected";
 	}
 	return "";
@@ -505,7 +507,7 @@ export const updateProfile = () => {
 	if (localStorage.getItem("authToken")) {
 		// Not sure what happens if the fetch fails
 		fetchProfileInfo().then(info => {
-			userProfile = info;
+			userProfile = sanitizeJSON(info);
 			displayUserProfile();
 		});
 		updateFriendlistSection(true);
