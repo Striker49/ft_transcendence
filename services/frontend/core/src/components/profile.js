@@ -78,6 +78,25 @@ const uploadAvatar = async avatar => {
     }
 };
 
+const respondToFormSubmit = (status, body) => {
+
+	const response = document.createElement("div");
+	const responseTitle = document.createElement("h3");
+	const responseBody = document.createElement("p");
+
+	response.id = "response";
+	response.classList.add("position-absolute", "top-50", "start-50", "translate-middle", "text-center");
+	response.appendChild(responseTitle);
+	response.appendChild(responseBody);
+	if (status) {
+		responseTitle.textContent = "Form submitted correctly";
+	} else {
+		responseTitle.textContent = "Problems while submitting form";
+		responseBody.textContent = body;
+	}
+	return response;
+};
+
 const submitRegistrationForm = async form => {
 
     const data = new FormData(form);
@@ -119,7 +138,15 @@ const submitRegistrationForm = async form => {
 		updateProfile();
 
     } catch (error) {
-        console.error(error.message);
+		console.error(error.message);
+		// for (const key of Object.keys(error.message)) {
+		// 	if (!errors) {
+		// 		errors = text[key][0] + "\n";
+		// 	} else {
+		// 		errors += text[key][0] + "\n";
+		// 	}
+		// }
+		document.getElementById("profile").appendChild(respondToFormSubmit(false, error.message));
     }
 };
 
