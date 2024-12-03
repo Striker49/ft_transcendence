@@ -8,7 +8,7 @@ export default class extends Abstract {
 
 	async getHtml() {
 		return `
-			<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5" id="game-section">
+			<div class="container bg-dark bg-opacity-75 rounded-5 p-5" id="game-section">
 				<div class="py-5 bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black">
 					<ul class="nav flex-column text-center">
 						<li class="nav-item pt-1 pb-2 selected">

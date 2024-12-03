@@ -1,6 +1,6 @@
 export default `
 	<!-- Navbar -->
-	<nav class="navbar navbar-expand-md p-0 mb-2" data-bs-theme="dark">
+	<nav class="navbar navbar-expand-md p-0 mb-5" data-bs-theme="dark">
 		<div class="container-fluid">
 			<button class="navbar-toggler my-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>

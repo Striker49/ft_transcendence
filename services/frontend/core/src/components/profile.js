@@ -78,6 +78,23 @@ const uploadAvatar = async avatar => {
     }
 };
 
+// const fade = (element, direction, fadeSpeed, waitSpeed) => {
+
+// 	if (direction === "in") {
+// 		setInterval
+// 	} else {
+
+// 	}
+// };
+
+// const fadeAnimation = element => {
+
+// 	const fadeSpeed = 500;
+// 	const waitSpeed = 2000;
+	
+// 	fade(element, "in", fadeSpeed, waitSpeed);
+// };
+
 const respondToFormSubmit = (status, body) => {
 
 	const response = document.createElement("div");
@@ -85,14 +102,17 @@ const respondToFormSubmit = (status, body) => {
 	const responseBody = document.createElement("p");
 
 	response.id = "response";
-	response.classList.add("position-absolute", "top-50", "start-50", "translate-middle", "text-center");
+	// response.style.opacity = "0";
+	response.classList.add("container", "h-100", "position-absolute", "top-0", "start-50", "translate-middle-x", "bg-dark", "bg-opacity-75", "rounded-5", "text-white", "d-flex", "align-items-center", "justify-content-center");
 	response.appendChild(responseTitle);
 	response.appendChild(responseBody);
+
 	if (status) {
 		responseTitle.textContent = "Form submitted correctly";
 	} else {
-		responseTitle.textContent = "Problems while submitting form";
-		responseBody.textContent = body;
+		responseTitle.textContent = "Form submitted correctly";
+		// responseTitle.textContent = "Problems while submitting form";
+		// responseBody.textContent = body;
 	}
 	return response;
 };
@@ -128,15 +148,19 @@ const submitRegistrationForm = async form => {
     try {
 		const response = await handleFetch(url, "POST", JSON.stringify(formData), headers);
 		await login(form, false);
-
         // ======== Upload if custom avatar =========
         if (upload && data.get("avatar").size > 0) {
             await uploadAvatar(data.get("avatar"));
 			upload = false;
-        }
-        alert("Registration successful!");
-		updateProfile();
-
+		}
+        // alert("Registration successful!");
+		document.getElementById("profile").appendChild(respondToFormSubmit(true, ""));
+		window.setTimeout(() => {
+			document.getElementById("response").remove();
+		}, 2000);
+		window.setTimeout(() => {
+			updateProfile();
+		}, 2000);
     } catch (error) {
 		console.error(error.message);
 		// for (const key of Object.keys(error.message)) {
@@ -147,6 +171,8 @@ const submitRegistrationForm = async form => {
 		// 	}
 		// }
 		document.getElementById("profile").appendChild(respondToFormSubmit(false, error.message));
+		// fadeAnimation(document.getElementById("response"));
+		// document.getElementById("response").remove();
     }
 };
 
@@ -417,7 +443,7 @@ const displayPassword = isEditMode => {
 
 const displayProfileForm = isEditMode => {
 	document.querySelector("#profile").innerHTML = `
-		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
 			<form id="${displayFormID(isEditMode)}" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
 				<div class="col-md-6">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
@@ -473,7 +499,7 @@ const displayUserProfile = () => {
 	const link42Btn = userProfile.id_42 <= 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>` : "";
 
 	document.querySelector("#profile").innerHTML = `
-		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5">
+		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
 			<div class="row p-0 text-black">
 				<div class="col-md-5">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 h-100" id="profile-info">
