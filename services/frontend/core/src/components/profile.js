@@ -4,6 +4,8 @@ import { validateForm } from "../utils/validation.js";
 import { handleFetch } from "../api/api.js";
 import { updateFriendlistSection } from "./friendlist.js"
 import { sanitizeJSON } from "../utils/sanitize.js"
+import { printError } from "../utils/validation.js";
+import { uppercaseEveryWord } from "../utils/string.js";
 
 let upload = false;
 let userProfile = {
@@ -78,43 +80,68 @@ const uploadAvatar = async avatar => {
     }
 };
 
-// const fade = (element, direction, fadeSpeed, waitSpeed) => {
-
-// 	if (direction === "in") {
-// 		setInterval
-// 	} else {
-
-// 	}
-// };
-
-// const fadeAnimation = element => {
-
-// 	const fadeSpeed = 500;
-// 	const waitSpeed = 2000;
-	
-// 	fade(element, "in", fadeSpeed, waitSpeed);
-// };
-
-const respondToFormSubmit = (status, body) => {
+const createResponse = () => {
 
 	const response = document.createElement("div");
-	const responseTitle = document.createElement("h3");
-	const responseBody = document.createElement("p");
+	const responseHeading = document.createElement("h3");
+	const responseText = document.createElement("span");
+	const responseIcon = document.createElement("i");
+	const classes = [
+		"container",
+		"h-100",
+		"position-absolute",
+		"top-0",
+		"start-50",
+		"translate-middle-x",
+		"bg-dark",
+		"bg-opacity-75",
+		"rounded-5",
+		"text-white",
+		"d-flex",
+		"align-items-center",
+		"justify-content-center"
+	];
 
 	response.id = "response";
-	// response.style.opacity = "0";
-	response.classList.add("container", "h-100", "position-absolute", "top-0", "start-50", "translate-middle-x", "bg-dark", "bg-opacity-75", "rounded-5", "text-white", "d-flex", "align-items-center", "justify-content-center");
-	response.appendChild(responseTitle);
-	response.appendChild(responseBody);
-
-	if (status) {
-		responseTitle.textContent = "Form submitted correctly";
-	} else {
-		responseTitle.textContent = "Form submitted correctly";
-		// responseTitle.textContent = "Problems while submitting form";
-		// responseBody.textContent = body;
-	}
+	response.classList.add(...classes);
+	responseText.textContent = "Form submitted correctly";
+	responseText.setAttribute("data-i18n-key", "formSubmittedCorrectly");
+	responseIcon.classList.add("bi", "bi-check-circle-fill", "ms-2", "text-success");
+	responseHeading.appendChild(responseText);
+	responseHeading.appendChild(responseIcon);
+	response.appendChild(responseHeading);
 	return response;
+};
+
+const createLangKey = str => {
+
+	let langKey = null;
+
+	if (!str) {
+		return "";
+	}
+	langKey = uppercaseEveryWord(str);
+	langKey = langKey.replace(/ /g, "");
+	langKey = langKey[0].toLowerCase() + langKey.slice(1);
+	if (langKey[langKey.length - 1] === ".") {
+		langKey = langKey.slice(0, -1);
+	}
+	return langKey;
+};
+
+const showFormErrors = error => {
+
+	const obj = JSON.parse(error);
+
+	for (const key of Object.keys(obj)) {
+		if (key === "email") {
+			printError(document.querySelector("#email + .form-error"), createLangKey(obj.email[0]), obj[key]);
+		} else if (key === "username") {
+			printError(document.querySelector("#username + .form-error"), createLangKey(obj.username[0]), obj[key]);
+		} else {
+			alert ("Unexpected Error");
+		}
+	}
 };
 
 const submitRegistrationForm = async form => {
@@ -153,26 +180,19 @@ const submitRegistrationForm = async form => {
             await uploadAvatar(data.get("avatar"));
 			upload = false;
 		}
-        // alert("Registration successful!");
-		document.getElementById("profile").appendChild(respondToFormSubmit(true, ""));
-		window.setTimeout(() => {
-			document.getElementById("response").remove();
-		}, 2000);
-		window.setTimeout(() => {
-			updateProfile();
-		}, 2000);
+		const responseMsg = createResponse();
+		document.getElementById("profile").appendChild(responseMsg);
+		translatePage();
+		setTimeout(() => {
+			responseMsg.style.opacity = "1";
+			responseMsg.addEventListener("transitionend", e => {
+				setTimeout(() => {
+					updateProfile();
+				}, 1500);
+			});
+		}, 10);
     } catch (error) {
-		console.error(error.message);
-		// for (const key of Object.keys(error.message)) {
-		// 	if (!errors) {
-		// 		errors = text[key][0] + "\n";
-		// 	} else {
-		// 		errors += text[key][0] + "\n";
-		// 	}
-		// }
-		document.getElementById("profile").appendChild(respondToFormSubmit(false, error.message));
-		// fadeAnimation(document.getElementById("response"));
-		// document.getElementById("response").remove();
+		showFormErrors(error.message);
     }
 };
 
@@ -228,7 +248,7 @@ const submitProfileForm = async form => {
 		displayUserProfile();
 
 	} catch (error) {
-		console.error(error.message);
+		showFormErrors(error.message);
 	}
 };
 

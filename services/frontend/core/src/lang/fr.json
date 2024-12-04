@@ -138,6 +138,12 @@
 
   "noUserSelected": "Aucun utilisateur sélectionné",
 
-  "unexpectedError": "Erreur inattendue"
+  "unexpectedError": "Erreur inattendue",
+
+  "formSubmittedCorrectly": "Formulaire bien envoyé",
+
+  "userWithThisEmailAlreadyExists": "Un utilisateur avec ce courriel existe déjà.",
+
+  "userWithThisUsernameAlreadyExists": "Un utilisateur avec ce nom d'utilisateur existe déjà."
   
   }
