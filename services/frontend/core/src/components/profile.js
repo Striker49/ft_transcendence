@@ -139,7 +139,7 @@ const showFormErrors = error => {
 		} else if (key === "username") {
 			printError(document.querySelector("#username + .form-error"), createLangKey(obj.username[0]), obj[key]);
 		} else {
-			alert ("Unexpected Error");
+			alert ("Unexpected error in profile section");
 		}
 	}
 };
@@ -411,8 +411,8 @@ const addAvatarSection = isEditMode => {
 				<span class="d-block mt-4 fst-italic">--> &nbsp;&nbsp;<a href="" class="text-decoration-none text-black" id="custom-image" data-i18n-key="uploadCustomImage">Upload custom image</a></span>
 			</div>
 			<div id="avatar-section-2" class="d-none text-center">
-				<label for="avatar" class="btn btn-dark rounded-pill px-4" data-i18n-key="uploadCustomImage">Upload Custom Image</label>
-				<input type="file" class="form-control d-none" name="avatar" id="avatar">
+				<label for="avatar" class="btn btn-dark rounded-pill px-4 d-none" data-i18n-key="uploadCustomImage">Upload Custom Image</label>
+				<input type="file" class="form-control" name="avatar" id="avatar">
 				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image" data-i18n-key="selectDefaultImage">Select default image</a>&nbsp;&nbsp; <--</span>
 			</div>
 		</div>

@@ -82,7 +82,7 @@ export const login = async (form, updateProf) => {
 		localStorage.setItem("username", json.username);
 		localStorage.setItem("lang", json.lang_pref);
 
-		hideLoginModal();
+		// hideLoginModal();
 		updateLogin();
 		if (updateProf) {
 			updateProfile();
@@ -178,12 +178,11 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		if (validateForm(e.target)) {
-			login(e.target, true);
-		}
-		// if (validateForm(e.target) && login(e.target, true)) {
-		// 	console.log("Yo");
-		// 	hideLoginModal();
+		// if (validateForm(e.target)) {
+		// 	login(e.target, true);
 		// }
+		if (validateForm(e.target) && login(e.target, true)) {
+			hideLoginModal();
+		}
 	}
 });
