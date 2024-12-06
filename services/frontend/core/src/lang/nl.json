@@ -123,7 +123,7 @@
 
   "ranking": "Ranglijst",
 
-  "playAgain": "NOGMAALS SPELEN",
+  "playAgain": "Nogmaals Spelen",
 
   "userNotFound": "Username not found. Please provide an existing username",
 
@@ -135,10 +135,14 @@
 
   "unexpectedError": "Unexpected error",
 
-  "formSubmittedCorrectly": "Form Submitted Correctly",
+  "registrationSuccessful": "Registratie succesvol",
 
   "userWithThisEmailAlreadyExists": "User with this email already exists.",
 
-  "userWithThisUsernameAlreadyExists": "User with this username already exists."
+  "userWithThisUsernameAlreadyExists": "User with this username already exists.",
+
+  "resetCamera": "Camera resetten",
+
+  "linkWith42": "Link with 42"
 
   }

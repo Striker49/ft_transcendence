@@ -11,9 +11,19 @@ const replaceChar = char => {
 	}
 };
 
-export const sanitizeString = str => str.replace(/[&<>"'\/]/g, replaceChar);
+export const sanitizeString = str => {
+
+	if (!str) {
+		return null;
+	}
+	return str.replace(/[&<>"'\/]/g, replaceChar);
+}
 
 export const sanitizeJSON = json => {
+
+	if (!json || typeof json !== "object") {
+		return "";
+	}
 	for (const key in json) {
 		if (typeof json[key] === 'string') {
 			json[key] = sanitizeString(json[key]);

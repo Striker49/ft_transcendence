@@ -2,7 +2,7 @@ import Abstract from "./Abstract.js";
 
 const headers = new Headers({
 	"Content-Type": "application/json",
-	"Authorization": localStorage.getItem("authToken")
+	"Authorization": `Token ${localStorage.getItem("authToken")}`
 })
 
 async function getRanking() {

@@ -7,13 +7,13 @@ export default `
 			</button>
 			<div class="collapse navbar-collapse justify-content-center text-center fw-bolder fs-5 pb-4" id="navbarNav">
 				<ul class="navbar-nav">
-					<li class="nav-item px-5 py-3">
+					<li class="nav-item py-3" style="width: 200px;">
 						<a class="nav-link" href="/about" data-link data-i18n-key="about">About</a>
 					</li>
 					<li class="nav-item px-5 py-3" id="menu-main-item">
 						<a class="nav-link" aria-current="page" href="/" data-link>Transcendence</a>
 					</li>
-					<li class="nav-item px-5 py-3">
+					<li class="nav-item py-3" style="width: 200px;">
 						<a class="nav-link" href="/profile" data-link data-i18n-key="profile">Profile</a>
 					</li>
 				</ul>

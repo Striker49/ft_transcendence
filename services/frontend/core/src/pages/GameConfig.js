@@ -122,41 +122,6 @@ export default class extends Abstract {
 				</div>
 			</div>
 		`;
-
-		// return `
-		// 	<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 540px;">
-		// 		<div class="row align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-		// 		<label class="d-flex justify-content-center fw-bold " id="p2Form" for="player1" class="form-label">
-		// 		<span data-i18n-key="playerOne">Player 1</label>
-		// 		<span id="player1" class="d-flex justify-content-center mt-2 bg-transparent border-0 text-success fw-bold fs-5" role="text" data-skip-i18n="false" data-i18n-key="playerOne">${username}</span>
-		// 		${p2NameField}
-		// 		<div class="slidecontainer">
-		// 			<label for="winRange" class="form-label d-flex justify-content-center text-success fw-bold fs-5 my-2" ><span data-i18n-key="numberOfWins">Number of wins</span>:<span id="demo" style="margin-left: 10px;">${localStorage.getItem('numberOfWins') || '3'}</span></label>
-		// 			<input type="range" class="form-range" min="1" max="11" value="${localStorage.getItem('numberOfWins') || '3'}" id="winRange">
-		// 			</div>
-		// 			<div>
-		// 				<class="flex-column" data-bs-theme="dark">
-		// 				<span data-i18n-key="theme" class="d-flex justify-content-center my-2 bg-transparent border-0 text-success fw-bold fs-5" role="text">Theme</span>
-		// 				<div class="d-flex justify-content-center">
-		// 					<select id="theme" class="form-select auto-width-select" aria-label="Winter">
-		// 						<option data-i18n-key="none" value="None" ${localStorage.getItem('theme') === 'None' ? 'selected' : ''}>None</option>
-		// 						<option data-i18n-key="custom" value="Custom" ${localStorage.getItem('theme') === 'Custom' ? 'selected' : ''}>Custom</option>
-		// 						<option data-i18n-key="christmas" value="Christmas" ${localStorage.getItem('theme') === 'Christmas' ? 'selected' : ''}>Christmas</option>
-		// 						<option data-i18n-key="halloween" value="Halloween" ${localStorage.getItem('theme') === 'Halloween' ? 'selected' : ''}>Halloween</option>
-		// 						<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
-		// 					</select>
-		// 				</div>
-		// 			<div class="d-flex justify-content-center mt-4" >
-		// 				<label class="me-2">Power-Ups</label>
-		// 				<input type="checkbox" id="powerUps" value="false">
-		// 			</div>
-		// 			<div class="mt-4 d-flex justify-content-center">
-		// 				<button type="submit" data-i18n-key="start" id="startBtn" class="btn btn-primary" >START</button>
-		// 			</div>
-		// 			</div>
-		// 			<script>
-		// 			</script>
-		// 			`;
 	}
 }
 
@@ -211,8 +176,11 @@ document.addEventListener("click", (event) => {
         event.preventDefault();
 		// document.addEventListener("submit", e => {
 
-		// 	// Retrieve username and username2 values from the input fields
-		// 	username2 = e.target.value || '';
+			// Retrieve username and username2 values from the input fields
+			const player2Input = document.getElementById("player2");
+			if (player2Input) {
+				username2 = player2Input.value || username2;
+			}
 			
 			// console.log("Form is being submitted with names:", username, username2);
 			// Build the URL with query parameters

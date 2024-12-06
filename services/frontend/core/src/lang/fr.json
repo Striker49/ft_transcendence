@@ -128,7 +128,7 @@
 
   "ranking": "Classement",
 
-  "playAgain": "REJOUER",
+  "playAgain": "Rejouer",
 
   "userNotFound": "Veuillez entrer un nom d'utilisateur existant.",
 
@@ -140,10 +140,14 @@
 
   "unexpectedError": "Erreur inattendue",
 
-  "formSubmittedCorrectly": "Formulaire bien envoyé",
+  "registrationSuccessful": "Inscription réussie",
 
   "userWithThisEmailAlreadyExists": "Un utilisateur avec ce courriel existe déjà.",
 
-  "userWithThisUsernameAlreadyExists": "Un utilisateur avec ce nom d'utilisateur existe déjà."
+  "userWithThisUsernameAlreadyExists": "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+
+  "resetCamera": "Rétablir la caméra",
+
+  "linkWith42": "Lier avec 42"
   
   }

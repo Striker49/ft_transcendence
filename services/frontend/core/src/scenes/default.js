@@ -30,7 +30,7 @@ const init = () => {
 
 	scene.add(torus);
 	scene.add(ambientLight);
-	scene.add(gridHelper);
+	// scene.add(gridHelper);
 
 	Array(200).fill().forEach(addStar);
 

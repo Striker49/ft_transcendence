@@ -28,7 +28,7 @@ export default class extends Abstract {
 					</div>
 					<div class="row justify-content-center mx-0 my-4">
 						<div class="col-10 p-2 pt-4 text-center border-4 border-top border-info">
-							<h3 class="mb-4 fw-bold" data-i18n-key="playerTwo">Reset camera</h3>
+							<h3 class="mb-4 fw-bold" data-i18n-key="resetCamera">Reset camera</h3>
 							<div class="space-icon box-shadow" id="keySpace"></div>
 						</div>
 					</div>

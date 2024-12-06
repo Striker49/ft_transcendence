@@ -3,7 +3,7 @@ import { translatePage, fetchTranslationsFor, setLanguage } from "../localizatio
 import { validateForm } from "../utils/validation.js";
 import { handleFetch } from "../api/api.js";
 import { updateFriendlistSection } from "./friendlist.js"
-import { sanitizeJSON } from "../utils/sanitize.js"
+import { sanitizeJSON, sanitizeString } from "../utils/sanitize.js"
 import { printError } from "../utils/validation.js";
 import { uppercaseEveryWord } from "../utils/string.js";
 
@@ -77,6 +77,7 @@ const uploadAvatar = async avatar => {
 
     } catch (error) {
         console.error(error.message);
+		return "";
     }
 };
 
@@ -101,10 +102,15 @@ const createResponse = () => {
 		"align-items-center",
 		"justify-content-center"
 	];
+	const currentLang = localStorage.getItem("lang");
 
+	switch (currentLang) {
+		case "fr": responseText.textContent = "Inscription réussie"; break;
+		case "nl": responseText.textContent = "Registratie succesvol"; break;
+		default: responseText.textContent = "Registration successful"; break;
+	}
 	response.id = "response";
 	response.classList.add(...classes);
-	responseText.textContent = "Form submitted correctly";
 	responseText.setAttribute("data-i18n-key", "formSubmittedCorrectly");
 	responseIcon.classList.add("bi", "bi-check-circle-fill", "ms-2", "text-success");
 	responseHeading.appendChild(responseText);
@@ -182,15 +188,8 @@ const submitRegistrationForm = async form => {
 		}
 		const responseMsg = createResponse();
 		document.getElementById("profile").appendChild(responseMsg);
-		translatePage();
-		setTimeout(() => {
-			responseMsg.style.opacity = "1";
-			responseMsg.addEventListener("transitionend", e => {
-				setTimeout(() => {
-					updateProfile();
-				}, 1500);
-			});
-		}, 10);
+		setTimeout(() => { responseMsg.style.opacity = "1"; }, 100);
+		setTimeout(() => { updateProfile(); }, 2000);
     } catch (error) {
 		showFormErrors(error.message);
     }
@@ -271,6 +270,7 @@ const fetchProfileInfo = async () => {
 		return json;
 	} catch (error) {
 		console.error(error.message);
+		return "";
 	}
 };
 
@@ -309,18 +309,18 @@ const listGamesHistory = async () => {
 
 		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
-			let player2 = game.username_player2 || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
+			let player2 = sanitizeString(game.username_player2) || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
 			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
 				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
 			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
-			gamesHistoryDiv.innerHTML += `
+			gamesHistoryDiv.insertAdjacentHTML("afterbegin", `
 				<div class="row">
 					<p class="col-12 col-sm-3 date">${game.created.slice(0, -3)}</p>
 					<p class="col-12 col-sm-3 vs">vs. ${player2}</p>
 					<p class="col-12 col-sm-3 score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
 					<p class="col-12 col-sm-3 status fw-bold">${status}</p>
 				</div>
-			`;
+			`);
 		});
 	} else {
 		document.querySelector("#games-history").innerHTML = `
@@ -411,8 +411,9 @@ const addAvatarSection = isEditMode => {
 				<span class="d-block mt-4 fst-italic">--> &nbsp;&nbsp;<a href="" class="text-decoration-none text-black" id="custom-image" data-i18n-key="uploadCustomImage">Upload custom image</a></span>
 			</div>
 			<div id="avatar-section-2" class="d-none text-center">
-				<label for="avatar" class="btn btn-dark rounded-pill px-4 d-none" data-i18n-key="uploadCustomImage">Upload Custom Image</label>
-				<input type="file" class="form-control" name="avatar" id="avatar">
+				<p id="avatar-file"></p>
+				<label for="avatar" class="btn btn-dark rounded-pill px-4" data-i18n-key="uploadCustomImage">Upload Custom Image</label>
+				<input type="file" class="form-control d-none" name="avatar" id="avatar">
 				<span class="d-block mt-4 fst-italic"><a href="" class="text-decoration-none text-black" id="default-image" data-i18n-key="selectDefaultImage">Select default image</a>&nbsp;&nbsp; <--</span>
 			</div>
 		</div>
@@ -429,8 +430,8 @@ const setSelectedLanguage = option => {
 const displayButtons = isEditMode => {
 	if (isEditMode) {
 		return `
-			<button type="button" id="edit-cancel-btn" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="cancel">Cancel</button>
-			<button type="submit" class="btn btn-dark rounded-pill mx-2 px-4" data-i18n-key="save">Save</button>
+			<button type="button" id="edit-cancel-btn" class="btn btn-dark rounded-pill m-2 px-4" data-i18n-key="cancel">Cancel</button>
+			<button type="submit" class="btn btn-dark rounded-pill m-2 px-4" data-i18n-key="save">Save</button>
 		`;
 	} else {
 		return `
@@ -516,7 +517,7 @@ const displayProfileForm = isEditMode => {
 
 const displayUserProfile = () => {
 
-	const link42Btn = userProfile.id_42 <= 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Link with 42</a>` : "";
+	const link42Btn = userProfile.id_42 <= 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-dark border-0 rounded-pill bg-orange text-dark fw-bold px-4 m-2" data-i18n-key="linkWith42">Link with 42</a>` : "";
 
 	document.querySelector("#profile").innerHTML = `
 		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
@@ -529,9 +530,9 @@ const displayUserProfile = () => {
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
 						<p class="m-0 mt-4 text-center">
+							<button type="button" class="btn btn-dark rounded-pill px-4 m-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							${link42Btn}
-							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
-							<button type="button" class="btn btn-dark rounded-pill px-4 my-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
+							<button type="button" class="btn btn-dark rounded-pill px-4 m-2" id="edit-profile-btn" data-i18n-key="editProfile">Edit profile</button>
 						</p>
 					</div>
 				</div>
@@ -576,13 +577,15 @@ const displayUserProfile = () => {
 	translatePage();
 };
 
+const fetchAndDisplayProfile = async () => {
+	const info = await fetchProfileInfo();
+	userProfile = sanitizeJSON(info);
+	displayUserProfile();
+};
+
 export const updateProfile = () => {
 	if (localStorage.getItem("authToken")) {
-		// Not sure what happens if the fetch fails
-		fetchProfileInfo().then(info => {
-			userProfile = sanitizeJSON(info);
-			displayUserProfile();
-		});
+		fetchAndDisplayProfile();
 		updateFriendlistSection(true);
 	} else {
 		clearUserProfile();
@@ -601,6 +604,17 @@ const html = () => {
 export default html();
 
 // ============ Events ==============
+
+document.addEventListener("change", e => {
+
+	const element = e.target;
+
+	switch (true) {
+		case element.matches("#avatar-section-2 #avatar"):
+			document.querySelector("#avatar-file").textContent = element.files[0].name;
+			break;
+	}
+});
 
 document.addEventListener("click", e => {
 
