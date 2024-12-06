@@ -2,7 +2,7 @@ import Abstract from "./Abstract.js";
 
 const headers = new Headers({
 	"Content-Type": "application/json",
-	"Authorization": localStorage.getItem("authToken")
+	"Authorization": `Token ${localStorage.getItem("authToken")}`
 })
 
 async function getRanking() {
@@ -33,7 +33,7 @@ export default class extends Abstract {
 	const ranking = await getRanking();
 	// console.log(ranking);
 	return `
-		<div class="container bg-dark bg-opacity-75 rounded-5 mt-5 p-5" id="instructions">
+		<div class="container bg-dark bg-opacity-75 rounded-5 p-5" id="instructions">
 			<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold text-center">
 				<div class="row mb-4 justify-content-center">
 					<h4 class="bg-info w-auto px-4 py-2 rounded-bottom-4 fw-bold" data-i18n-key="ranking">Ranking</h4>

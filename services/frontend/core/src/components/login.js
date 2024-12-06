@@ -5,7 +5,13 @@ import { translatePage, setLanguage } from "../localization.js";
 const getCustomErrorMessage = statusCode => {
 	switch (Number(statusCode)) {
 		case 400:
-			return "Unable to log in with provided credentials.";
+			if (localStorage.getItem("lang") === "fr") {
+				return "Impossible de se connecter avec les informations fournies.";
+			} else if (localStorage.getItem("lang") === "nl") {
+				return "Kan niet inloggen met de opgegeven inloggegevens.";
+			} else {
+				return "Unable to log in with provided credentials.";
+			}
 		case 404:
 			return "User does not exist.";
 	}
@@ -76,6 +82,7 @@ export const login = async (form, updateProf) => {
 		localStorage.setItem("username", json.username);
 		localStorage.setItem("lang", json.lang_pref);
 
+		// hideLoginModal();
 		updateLogin();
 		if (updateProf) {
 			updateProfile();
@@ -92,8 +99,9 @@ export const login = async (form, updateProf) => {
 			alert(getCustomErrorMessage(statusCode));
 		} else {
 			// Server-side errors
-			alert("Something wrong with server");
+			alert("Unknown Error");
 		}
+		return false;
 	}
 };
 
@@ -170,6 +178,9 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
+		// if (validateForm(e.target)) {
+		// 	login(e.target, true);
+		// }
 		if (validateForm(e.target) && login(e.target, true)) {
 			hideLoginModal();
 		}

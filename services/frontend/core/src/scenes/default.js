@@ -30,14 +30,13 @@ const init = () => {
 
 	scene.add(torus);
 	scene.add(ambientLight);
-	scene.add(gridHelper);
+	// scene.add(gridHelper);
 
 	Array(200).fill().forEach(addStar);
 
 	window.addEventListener("resize", onWindowResize);
 	window.addEventListener("keydown", e => {
 		if (e.code == "Space") {
-			e.preventDefault();
 			camera.position.set(0, 9, 0);
 		}
 	});

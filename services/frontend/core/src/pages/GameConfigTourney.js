@@ -74,7 +74,7 @@ export default class extends Abstract {
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.transcendenceToken);
 		return `
-			<div id="game-screen" class="container bg-secondary text-light rounded-5 mt-5 p-5" style="width: 960px; height: 1010px;">
+			<div id="game-screen" class="container bg-secondary text-light rounded-5 p-5" style="width: 960px; height: 1010px;">
 				<div class="row align-items-center bg-dark rounded-5 p-5 h-150 mx-auto">
 				<form action="" method="post" enctype="multipart/form-data" class="fw-bold" id="tourney-config-form">
 				<div class="column p-5 py-2 pt-4">

@@ -138,6 +138,16 @@
 
   "noUserSelected": "No user selected",
 
-  "unexpectedError": "Unexpected error"
+  "unexpectedError": "Unexpected error",
+
+  "registrationSuccessful": "Registration successful",
+
+  "userWithThisEmailAlreadyExists": "User with this email already exists.",
+
+  "userWithThisUsernameAlreadyExists": "User with this username already exists.",
+
+  "resetCamera": "Reset camera",
+
+  "linkWith42": "Link with 42"
 
   }
