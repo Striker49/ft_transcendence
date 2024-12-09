@@ -134,9 +134,9 @@
 
   "winter": "Hiver",
 
-  "ranking": "CLASSEMENT",
+  "ranking": "Classement",
 
-  "playAgain": "REJOUER",
+  "playAgain": "Rejouer",
 
   "userNotFound": "Veuillez entrer un nom d'utilisateur existant.",
 
@@ -146,6 +146,16 @@
 
   "noUserSelected": "Aucun utilisateur sélectionné",
 
-  "unexpectedError": "Erreur inattendue"
+  "unexpectedError": "Erreur inattendue",
+
+  "registrationSuccessful": "Inscription réussie",
+
+  "userWithThisEmailAlreadyExists": "Un utilisateur avec ce courriel existe déjà.",
+
+  "userWithThisUsernameAlreadyExists": "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+
+  "resetCamera": "Rétablir la caméra",
+
+  "linkWith42": "Lier avec 42"
   
   }

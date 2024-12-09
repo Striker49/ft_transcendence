@@ -131,9 +131,9 @@
 
   "winter": "Winter",
 
-  "ranking": "RANGLIJST",
+  "ranking": "Ranglijst",
 
-  "playAgain": "NOGMAALS SPELEN",
+  "playAgain": "Nogmaals Spelen",
 
   "userNotFound": "Gebruikersnaam niet gevonden. Geef een bestaande gebruikersnaam alstublieft",
 
@@ -143,6 +143,16 @@
 
   "noUserSelected": "Geen gebruiker geselecteerd",
 
-  "unexpectedError": "Onverwachte fout"
+  "unexpectedError": "Unexpected error",
+
+  "registrationSuccessful": "Registratie succesvol",
+
+  "userWithThisEmailAlreadyExists": "User with this email already exists.",
+
+  "userWithThisUsernameAlreadyExists": "User with this username already exists.",
+
+  "resetCamera": "Camera resetten",
+
+  "linkWith42": "Link with 42"
 
   }
