@@ -107,7 +107,7 @@ h1 {
 }
 
 #games-history {
-	max-height: 150px;
+	max-height: 180px;
 }
 
 #games-history .row {
@@ -282,6 +282,10 @@ h1 {
 
 	#menu-main-item a {
 		text-shadow: none;
+	}
+	
+	.menu-secondary {
+		width: 200px;
 	}
 
 	.navbar-right {

@@ -148,6 +148,8 @@
 
   "resetCamera": "Reset camera",
 
-  "linkWith42": "Link with 42"
+  "linkWith42": "Link with 42",
+
+  "authenticate42": "42 authentication in progress ..."
 
   }
