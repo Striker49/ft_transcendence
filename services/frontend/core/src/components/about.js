@@ -22,43 +22,43 @@ export default `
 				<div class="row mb-4 justify-content-center">
 					<h4 class="bg-info w-auto px-4 py-2 rounded-bottom-4 fw-bold" data-i18n-key="about">About</h4>
 				</div>
-				<div class="row m-0 bg-info">
-					<p class="p-4 m-0">
-						<img src="/src/assets/pong.png" alt="Pong - Original game" width="256" height="173" class="float-start me-4 mb-2">
-						<span data-i18n-key="aboutContent">
+				<div class="row m-0 px-5">
+					<div class="p-4 bg-info rounded-5">
+						<img src="/src/assets/pong.png" alt="Pong - Original game" width="256" height="173" class="float-start mx-3 my-3">
+						<p class="my-3 mx-3 text-justify" data-i18n-key="aboutContent">
 							This project is something you've never done before.
 							Remember the beginning of your programming journey.
 							Look at yourself now. It's your time to shine!
-						</span>
-					</p>
+						</p>
+					</div>
 				</div>
 				<div class="row justify-content-center my-5">
-					<button class="btn btn-dark border-0 rounded-pill bg-orange text-dark fw-bold px-4 m-2 w-auto">The team</button>
+					<button class="btn btn-dark border-0 rounded-pill bg-orange text-dark fw-bold px-4 m-2 w-auto fst-italic fs-5">The Team</button>
 				</div>
-				<div class="row bg-info my-5 mx-0 p-2" style="height: 128px;">
-					<div class="col-4"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -20px" class="box-shadow"></div>
-					<div class="col-8 p-2">
+				<div class="row bg-info my-5 mx-0" style="height: 128px;">
+					<div class="col-4 px-3 text-end"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -10px" class="box-shadow"></div>
+					<div class="col-8 p-3">
 						<h5>Ziggy</h5>
 						<p>Link to Github</p>
 					</div>
 				</div>
-				<div class="row bg-info my-5 mx-0 p-2" style="height: 128px;">
-					<div class="col-4"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -20px" class="box-shadow"></div>
-					<div class="col-8 p-2">
+				<div class="row bg-info my-5 mx-0" style="height: 128px;">
+					<div class="col-4 px-3 text-end"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -10px" class="box-shadow"></div>
+					<div class="col-8 p-3">
+						<h5>Seb</h5>
+						<p>Link to Github</p>
+					</div>
+				</div>
+				<div class="row bg-info my-5 mx-0" style="height: 128px;">
+					<div class="col-4 px-3 text-end"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -10px" class="box-shadow"></div>
+					<div class="col-8 p-3">
 						<h5>Ziggy</h5>
 						<p>Link to Github</p>
 					</div>
 				</div>
-				<div class="row bg-info my-5 mx-0 p-2" style="height: 128px;">
-					<div class="col-4"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -20px" class="box-shadow"></div>
-					<div class="col-8 p-2">
-						<h5>Ziggy</h5>
-						<p>Link to Github</p>
-					</div>
-				</div>
-				<div class="row bg-info my-5 mx-0 p-2" style="height: 128px;">
-					<div class="col-4"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -20px" class="box-shadow"></div>
-					<div class="col-8 p-2">
+				<div class="row bg-info my-5 mx-0" style="height: 128px;">
+					<div class="col-4 px-3 text-end"><img src="/src/assets/avatar/avatar1.jpg" alt="Profile picture" width="150" height="150" style="margin-top: -10px" class="box-shadow"></div>
+					<div class="col-8 p-3">
 						<h5>Ziggy</h5>
 						<p>Link to Github</p>
 					</div>
