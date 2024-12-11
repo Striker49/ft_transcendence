@@ -84,7 +84,7 @@ export default class extends Abstract {
 		// console.debug("local storage: ", localStorage);
 		// console.debug("token: ", localStorage.authToken);
 		return `
-			<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
+			<div class="container bg-dark bg-opacity-75 rounded-5 p-5 mb-5">
 				<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold">
 					<div class="row m-0">
 						<a href="/select" class="bg-info rounded-4 px-3 py-2 corner-back text-decoration-none text-black" style="width: 50px;" data-link>\<\<</a>
