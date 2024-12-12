@@ -51,7 +51,7 @@ h1 {
 }
 
 .auto-width-select {
-	width: auto;
+	/* width: auto; */
 	min-width: 10px;
 }
 
@@ -96,6 +96,11 @@ h1 {
 	background-color: #009dbc;
 }
 
+#game-config p {
+	height: 50px;
+	margin-bottom: 25px;
+}
+
 /* ========= Profile ========= */
 
 #profile img {
@@ -107,7 +112,7 @@ h1 {
 }
 
 #games-history {
-	max-height: 150px;
+	max-height: 180px;
 }
 
 #games-history .row {
@@ -196,6 +201,10 @@ h1 {
 
 /* Orange */
 
+.text-orange {
+	color: orange;
+}
+
 .border-orange {
 	border: 3px solid orange;	
 }
@@ -251,6 +260,12 @@ h1 {
 
 /* ========= Media Queries ========= */
 
+@media (max-width: 575.98px) {
+	#ranking-section .rank-block div {
+		height: auto !important;
+	}
+}
+
 @media (max-width: 767.98px) {
 	nav {
 		background-color: #212529bf;
@@ -269,6 +284,26 @@ h1 {
 	}
 }
 
+@media (min-width: 576px) {
+	#ranking-section {
+		height: 175px;
+		padding-bottom: 0 !important;
+	}
+
+	#ranking-section .rank-block {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 75%;
+	}
+	
+	#ranking-section .rank-block div {
+		border-bottom-right-radius: 0 !important;
+		border-bottom-left-radius: 0 !important;
+	}
+}
+
 @media (min-width: 768px) {
 	nav a {
 		color: black !important;
@@ -282,6 +317,10 @@ h1 {
 
 	#menu-main-item a {
 		text-shadow: none;
+	}
+	
+	.menu-secondary {
+		width: 200px;
 	}
 
 	.navbar-right {

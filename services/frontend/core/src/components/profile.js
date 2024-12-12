@@ -22,8 +22,8 @@ let userProfile = {
 };
 
 const clearUserProfile = () => {
-	for (let [key, value] of Object.entries(userProfile)) {
-		value = "";
+	for (const key of Object.keys(userProfile)) {
+		userProfile[key] = "";
 	}
 };
 
@@ -467,7 +467,7 @@ const displayProfileForm = isEditMode => {
 		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
 			<form id="${displayFormID(isEditMode)}" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
 				<div class="col-md-6">
-					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 h-100">
 						<div class="pb-2">
 							<label for="email" class="form-label" data-i18n-key="email">Email</label>
 							<input type="email" class="form-control" name="email" id="email" value="${userProfile.email}" required>
@@ -498,7 +498,7 @@ const displayProfileForm = isEditMode => {
 					</div>
 				</div>
 				<div class="col-md-6 mt-4 mt-md-0">
-					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5">
+					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 h-100">
 						${addAvatarSection(isEditMode)}
 						<div class="py-4 border-bottom border-2 border-dark">
 							<label for="bio" class="form-label">Bio</label>

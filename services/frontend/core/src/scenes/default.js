@@ -38,6 +38,7 @@ const init = () => {
 	window.addEventListener("keydown", e => {
 		if (e.code == "Space") {
 			camera.position.set(0, 9, 0);
+			controls.target.set(0, 0, 0);
 		}
 	});
 
