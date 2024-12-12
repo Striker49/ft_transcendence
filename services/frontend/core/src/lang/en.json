@@ -8,6 +8,7 @@
 
   "aboutContent": "This project is something you've never done before. Remember the beginning of your programming journey. Look at yourself now. It's your time to shine!",
 
+  "theTeam": "The Team",
 
   "login": "Login",
 
@@ -116,7 +117,7 @@
 
   "theme": "Theme",
 
-  "start": "START",
+  "start": "Start",
 
   "none": "None",
 
@@ -126,9 +127,11 @@
 
   "winter": "Winter",
 
+  "custom": "Custom",
+
   "ranking": "Ranking",
 
-  "playAgain": "PLAY AGAIN",
+  "playAgain": "Play again",
 
   "userNotFound": "Username not found. Please provide an existing username",
 
@@ -149,6 +152,8 @@
   "resetCamera": "Reset camera",
 
   "linkWith42": "Link with 42",
+
+  "login42": "Login with 42",
 
   "authenticate42": "42 authentication in progress ..."
 

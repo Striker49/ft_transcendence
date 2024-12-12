@@ -22,8 +22,8 @@ let userProfile = {
 };
 
 const clearUserProfile = () => {
-	for (let [key, value] of Object.entries(userProfile)) {
-		value = "";
+	for (const key of Object.keys(userProfile)) {
+		userProfile[key] = "";
 	}
 };
 
@@ -464,7 +464,7 @@ const displayPassword = isEditMode => {
 
 const displayProfileForm = isEditMode => {
 	document.querySelector("#profile").innerHTML = `
-		<div class="container bg-dark bg-opacity-75 rounded-5 p-5 mb-5">
+		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
 			<form id="${displayFormID(isEditMode)}" action="" method="post" enctype="multipart/form-data" class="row p-0 text-black fw-bold" novalidate>
 				<div class="col-md-6">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 h-100">
@@ -520,7 +520,7 @@ const displayUserProfile = () => {
 	const link42Btn = userProfile.id_42 <= 0 ? `<a href="https://localhost/api/users/42/login/" class="btn btn-dark border-0 rounded-pill bg-orange text-dark fw-bold px-4 m-2" data-i18n-key="linkWith42">Link with 42</a>` : "";
 
 	document.querySelector("#profile").innerHTML = `
-		<div class="container bg-dark bg-opacity-75 rounded-5 p-5 mb-5">
+		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
 			<div class="row p-0 text-black">
 				<div class="col-md-5">
 					<div class="p-4 bg-info bg-opacity-50 border border-5 border-info rounded-5 h-100" id="profile-info">

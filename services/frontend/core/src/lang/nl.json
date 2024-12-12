@@ -8,6 +8,8 @@
 
   "aboutContent": "Dit project is nog steeds een kwestie van keuze als het om de toekomst gaat. Groeten over dit moment. Het is jouw tijd om te schitteren!",
 
+  "theTeam": "Het team",
+
   "emailorusername": "E-mailadres of gebruikersnaam",
 
   "login": "Inloggen",
@@ -111,7 +113,7 @@
 
   "theme": "Thema",
 
-  "start": "START",
+  "start": "Start",
 
   "none": "Geen",
 
@@ -121,9 +123,11 @@
 
   "winter": "Winter",
 
+  "custom": "Aangepast",
+
   "ranking": "Ranglijst",
 
-  "playAgain": "Nogmaals Spelen",
+  "playAgain": "Nogmaals spelen",
 
   "userNotFound": "Username not found. Please provide an existing username",
 
@@ -144,6 +148,8 @@
   "resetCamera": "Camera resetten",
 
   "linkWith42": "Link with 42",
+
+  "login42": "Inloggen met 42",
 
   "authenticate42": "42 authenticatie bezig ..."
 

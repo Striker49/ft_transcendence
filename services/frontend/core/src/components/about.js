@@ -71,7 +71,7 @@
 export default `
     <!-- About section -->
     <section id="about">
-        <div class="container bg-dark bg-opacity-75 rounded-5 p-5 mb-5">
+        <div class="container bg-dark bg-opacity-75 rounded-5 p-5">
             <div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black">
                 <div class="row mb-4 justify-content-center">
                     <h4 class="bg-info w-auto px-4 py-2 rounded-bottom-4 fw-bold" data-i18n-key="about">About</h4>
@@ -89,7 +89,7 @@ export default `
 					</div>
                 </div>
                 <div class="row justify-content-center my-5">
-                    <button class="btn btn-dark border-0 rounded-pill bg-orange text-dark fw-bold px-4 m-2 w-auto fst-italic fw-bolder fs-5 box-shadow">The Team</button>
+                    <button class="btn btn-dark border-0 rounded-pill bg-orange text-dark fw-bold px-4 m-2 w-auto fst-italic fw-bolder fs-5 box-shadow" data-i18n-key="theTeam">The Team</button>
                 </div>
                 <div class="row m-0 mb-4 px-4">
                     <div class="col-12 col-sm-6 col-lg-3 p-3">

@@ -8,7 +8,7 @@ export default class extends Abstract {
 
 	async getHtml() {
 		return `
-			<div id="game-screen" class="container bg-secondary rounded-5 p-5 mb-5" style="width: 960px; height: 540px;">
+			<div id="game-screen" class="container bg-secondary rounded-5 p-5" style="width: 960px; height: 540px;">
 				<div class="row justify-content-center align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
 					<div class="col-8">
 						<img src="/src/assets/tournament.png" alt="Tournament diagram" class="w-100">
