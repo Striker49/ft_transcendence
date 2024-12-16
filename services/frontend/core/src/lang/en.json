@@ -155,6 +155,10 @@
 
   "login42": "Login with 42",
 
-  "authenticate42": "42 authentication in progress ..."
+  "authenticate42": "42 authentication in progress ...",
+
+  "unableToLogin": "Unable to log in with provided credentials.",
+
+  "userDoesNotExist": "User does not exist."
 
   }

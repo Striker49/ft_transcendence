@@ -1,6 +1,7 @@
 import { updateProfile } from "./profile.js";
 import { validateForm } from "../utils/validation.js";
 import { translatePage, setLanguage } from "../localization.js";
+import { printError } from "../utils/validation.js";
 
 const getCustomErrorMessage = statusCode => {
 	switch (Number(statusCode)) {
@@ -13,7 +14,40 @@ const getCustomErrorMessage = statusCode => {
 				return "Unable to log in with provided credentials.";
 			}
 		case 404:
-			return "User does not exist.";
+			if (localStorage.getItem("lang") === "fr") {
+				return "Utilisateur non existant.";
+			} else if (localStorage.getItem("lang") === "nl") {
+				return "Gebruiker bestaat niet.";
+			} else {
+				return "User does not exist.";
+			}
+		default:
+			if (localStorage.getItem("lang") === "fr") {
+				return "Erreur inconnue";
+			} else if (localStorage.getItem("lang") === "nl") {
+				return "Onverwachte fout";
+			} else {
+				return "Unexpected error";
+			}
+	}
+};
+
+const printCustomErrorMessage = statusCode => {
+
+	const modalElement = document.getElementById("loginModal");
+	const errorMsg = getCustomErrorMessage(statusCode);
+
+	if (modalElement && modalElement.classList.contains("show")) {
+		if (statusCode === "400") {
+			printError(document.querySelector("#login-user + .form-error"), "unableToLogin", errorMsg);
+			printError(document.querySelector("#login-pass + .form-error"), "unableToLogin", errorMsg);
+		} else if (statusCode === "404") {
+			printError(document.querySelector("#login-user + .form-error"), "userDoesNotExist", errorMsg);
+		} else {
+			alert (errorMsg);
+		}
+	} else {
+		alert(errorMsg);
 	}
 };
 
@@ -45,9 +79,13 @@ const changeStatusOffline = async (token, uid) => {
 };
 
 const hideLoginModal = () => {
-	const modalElement = document.querySelector("#loginModal");
-	const modalInstance = bootstrap.Modal.getInstance(modalElement);
-	modalInstance.hide();
+
+	const modalElement = document.getElementById("loginModal");
+
+	if (modalElement && modalElement.classList.contains("show")) {
+		const modalInstance = bootstrap.Modal.getInstance(modalElement);
+		modalInstance.hide();
+	}
 };
 
 export const login = async (form, updateProf) => {
@@ -82,7 +120,7 @@ export const login = async (form, updateProf) => {
 		localStorage.setItem("username", json.username);
 		localStorage.setItem("lang", json.lang_pref);
 
-		// hideLoginModal();
+		hideLoginModal();
 		updateLogin();
 		if (updateProf) {
 			updateProfile();
@@ -96,10 +134,11 @@ export const login = async (form, updateProf) => {
 		if (error.message.includes("Response status:")) {
 			// Client-side errors
 			const statusCode = error.message.split("Response status: ")[1];
-			alert(getCustomErrorMessage(statusCode));
+			printCustomErrorMessage(statusCode);
+			// alert(getCustomErrorMessage(statusCode));
 		} else {
 			// Server-side errors
-			alert("Unknown Error");
+			alert("Unexpected error");
 		}
 		return false;
 	}
@@ -178,11 +217,11 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
-		// if (validateForm(e.target)) {
-		// 	login(e.target, true);
-		// }
-		if (validateForm(e.target) && login(e.target, true)) {
-			hideLoginModal();
+		if (validateForm(e.target)) {
+			login(e.target, true);
 		}
+		// if (validateForm(e.target) && login(e.target, true)) {
+		// 	hideLoginModal();
+		// }
 	}
 });

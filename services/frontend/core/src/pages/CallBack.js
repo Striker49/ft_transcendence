@@ -13,7 +13,7 @@ export default class extends Abstract {
 		return `
 			<div class="container bg-dark bg-opacity-75 rounded-5 p-5" id="game-section">
 				<div class="py-5 bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black">
-					<p class="text-center fs-5 fst-italic m-0" data-i18n-key="authenticate42">42 authentication in progress ...</p> 
+					<p class="text-center fs-5 fst-italic" data-i18n-key="authenticate42">42 authentication in progress ...</p> 
 				</div>
 			</div>
 		`;
@@ -23,7 +23,7 @@ export default class extends Abstract {
 const authenticate42 = async () => {
 
 	const queryString = window.location.search;
-	const query = new URLSearchParams(queryString);	
+	const query = new URLSearchParams(queryString);
 
 	const token = localStorage.getItem("authToken");
 

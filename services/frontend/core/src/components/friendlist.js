@@ -619,7 +619,7 @@ const addFriendlistSection = () => {
 
 	header.appendChild(headerTitle);
 	header.appendChild(headerCloseBtn);
-	
+
 	friendlist.appendChild(header);
 	friendlist.appendChild(body);
 
