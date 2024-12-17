@@ -436,7 +436,85 @@ function endGame(winner) {
     showWinner(winnerName);
     sendGameStats(scoreP1, scoreP2, ai, nameP2);
     insertButton();
-    translatePage();
+    //GoToEndScreen
+    // navigateTo("/endGame");
+	// router();
+    // window.location.href = "/endGame";
+}
+
+function removeGameObjects() {
+    ball.kill();
+    scene.remove(ball);
+    paddleL.kill();
+    scene.remove(paddleL);
+    paddleR.kill();
+    scene.remove(paddleR);
+    ground.kill();
+    scene.remove(ground);
+    currentText.material.map = null;
+    currentText.material.needsUpdate = true;
+    customTextureNumber = null;
+    currentText.material.dispose();
+    currentText.geometry.dispose();
+    powerUps.forEach((obj, index) => {
+        if (powerUps[index])
+        {
+            powerUps[index].kill();
+            scene.remove(powerUps[index]);
+        }
+    })
+    scene.remove(currentText);
+    if (winnerText)
+    {
+        // text.material.map = null;
+        // currentText.material.map = null;
+        // currentText.material.needsUpdate = true;
+        // text.material.needsUpdate = true;
+        // customTextureNumber.material.map = null;
+        // customTextureNumber.material.needsUpdate = true;
+        // customTextureNumber = null;
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }
+}
+
+
+// const headers = new Headers({
+// 	"Content-Type": "application/json",
+// 	"Authorization": "Token " + localStorage.getItem("authToken")
+// })
+
+async function sendGameStats() {
+    if (!localStorage.getItem("authToken"))
+		return;
+    const headers = new Headers({
+        "Content-Type": "application/json",
+        "Authorization": "Token " + localStorage.getItem("authToken")
+    });
+	const url = "https://localhost/api/game/played/";
+    // console.debug(localStorage.getItem("authToken"));
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: headers,
+			body: JSON.stringify({
+				player1_UID: localStorage.getItem("UID"), 
+				player2_UID: null,
+                username_player2: ai == true ? null : nameP2,
+				score_player1: scoreP1,
+				score_player2: scoreP2
+			})
+		});
+        // console.log(ai == true ? null : nameP2);
+		if(!response.ok) { 
+			throw new Error(`Response status: ${response.status}`);
+		}
+		const stats = await response.json();
+		console.log("RANKING", stats);
+	} catch (error) {
+		console.error(error.message);
+	}
 }
 
 document.addEventListener('click', (event) => {

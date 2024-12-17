@@ -8,6 +8,8 @@
 
   "aboutContent": "Dit project is iets dat je nog nooit gedaan hebt. Herinner je het begin van jouw programmeer parcours. Het is jouw tijd om te schitteren!",
 
+  "theTeam": "Het team",
+
   "emailorusername": "E-mailadres of gebruikersnaam",
 
   "login": "Inloggen",
@@ -119,7 +121,7 @@
 
   "theme": "Thema",
 
-  "start": "START",
+  "start": "Start",
 
   "none": "Geen",
 
@@ -131,9 +133,11 @@
 
   "winter": "Winter",
 
-  "ranking": "RANGLIJST",
+  "custom": "Aangepast",
 
-  "playAgain": "NOGMAALS SPELEN",
+  "ranking": "Ranglijst",
+
+  "playAgain": "Nogmaals spelen",
 
   "userNotFound": "Gebruikersnaam niet gevonden. Geef een bestaande gebruikersnaam alstublieft",
 
@@ -143,6 +147,20 @@
 
   "noUserSelected": "Geen gebruiker geselecteerd",
 
-  "unexpectedError": "Onverwachte fout"
+  "unexpectedError": "Unexpected error",
+
+  "registrationSuccessful": "Registratie succesvol",
+
+  "userWithThisEmailAlreadyExists": "User with this email already exists.",
+
+  "userWithThisUsernameAlreadyExists": "User with this username already exists.",
+
+  "resetCamera": "Camera resetten",
+
+  "linkWith42": "Link with 42",
+
+  "login42": "Inloggen met 42",
+
+  "authenticate42": "42 authenticatie bezig ..."
 
   }

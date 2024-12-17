@@ -5,7 +5,13 @@ import { translatePage, setLanguage } from "../localization.js";
 const getCustomErrorMessage = statusCode => {
 	switch (Number(statusCode)) {
 		case 400:
-			return "Unable to log in with provided credentials.";
+			if (localStorage.getItem("lang") === "fr") {
+				return "Impossible de se connecter avec les informations fournies.";
+			} else if (localStorage.getItem("lang") === "nl") {
+				return "Kan niet inloggen met de opgegeven inloggegevens.";
+			} else {
+				return "Unable to log in with provided credentials.";
+			}
 		case 404:
 			return "User does not exist.";
 	}
@@ -76,6 +82,7 @@ export const login = async (form, updateProf) => {
 		localStorage.setItem("username", json.username);
 		localStorage.setItem("lang", json.lang_pref);
 
+		// hideLoginModal();
 		updateLogin();
 		if (updateProf) {
 			updateProfile();
@@ -92,8 +99,9 @@ export const login = async (form, updateProf) => {
 			alert(getCustomErrorMessage(statusCode));
 		} else {
 			// Server-side errors
-			alert("Something wrong with server");
+			alert("Unknown Error");
 		}
+		return false;
 	}
 };
 
@@ -135,7 +143,7 @@ const loginContent = () => {
 					</div>
 					<div class="modal-footer">
 						<a href="/profile" data-i18n-key="newUser" class="btn btn-secondary float-start" data-bs-dismiss="modal" data-link>New User ?</a>
-						<a href="https://localhost/api/users/42/login/" class="btn btn-primary">Login with 42</a>
+						<a href="https://localhost/api/users/42/login/" data-i18n-key="login42" class="btn btn-primary">Login with 42</a>
 						<button type="submit" data-i18n-key="login" class="btn btn-primary" form="login-form">Login</button>
 					</div>
 				</div>
@@ -170,6 +178,9 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
 	if (e.target.matches("#login-form")) {
 		e.preventDefault();
+		// if (validateForm(e.target)) {
+		// 	login(e.target, true);
+		// }
 		if (validateForm(e.target) && login(e.target, true)) {
 			hideLoginModal();
 		}
