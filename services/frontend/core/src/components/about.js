@@ -102,7 +102,7 @@ export default `
 							</div>
 							<p class="pt-2 m-0">
 								<a href="https://github.com/ziggyvdven" target="_blank"><img src="/src/assets/icons/github.png" alt="Github icon" width="50" height="50" class="p-2"></a>
-								<a href="#"><img src="/src/assets/icons/linkedin.png" alt="Linkedin icon" width="50" height="50" class="p-2"></a>
+								<a href="https://www.linkedin.com/in/ziggy-van-de-ven/"><img src="/src/assets/icons/linkedin.png" alt="Linkedin icon" width="50" height="50" class="p-2"></a>
 							</p>
 						</div>
                     </div>
@@ -116,7 +116,7 @@ export default `
 							</div>
 							<p class="pt-2 m-0">
 								<a href="https://github.com/Striker49" target="_blank"><img src="/src/assets/icons/github.png" alt="Github icon" width="50" height="50" class="p-2"></a>
-								<a href="#"><img src="/src/assets/icons/linkedin.png" alt="Linkedin icon" width="50" height="50" class="p-2"></a>
+								<a href="https://www.linkedin.com/in/sebastien-roy-prog/"><img src="/src/assets/icons/linkedin.png" alt="Linkedin icon" width="50" height="50" class="p-2"></a>
 							</p>
 						</div>
                     </div>

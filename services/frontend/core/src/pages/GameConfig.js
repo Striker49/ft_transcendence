@@ -119,10 +119,6 @@ export default class extends Abstract {
 							</p>
 							<p><input type="checkbox" id="powerUps" value="false"></p>
 						</div>
-					<div class="d-flex justify-content-center mt-4" >
-						<label class="me-2">Power-Ups</label>
-						<input type="checkbox" id="powerUps" value="false">
-					</div>
 					<div class="row mx-0 my-4 justify-content-center">
 						<a href="#" data-i18n-key="start" id="startBtn" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto">Start</a>
 					</div>
@@ -182,7 +178,7 @@ document.addEventListener("click", (event) => {
 	}
     if (event.target.matches("#startBtn")) {
         // Prevent default link behavior if it's an <a> tag
-        // event.preventDefault();
+        event.preventDefault();
 		// document.addEventListener("submit", e => {
 
 			// Retrieve username and username2 values from the input fields
