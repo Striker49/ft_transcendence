@@ -8,6 +8,7 @@
 
   "aboutContent": "Ce projet est quelque chose que vous n’avez jamais fait auparavant. Rappelez-vous du début de votre voyage en programmation. Regardez-vous maintenant. C’est le temps de briller !",
   
+  "theTeam": "L'équipe",
   
   "login": "Se connecter",
 
@@ -116,7 +117,7 @@
 
   "theme": "Thème",
 
-  "start": "COMMENCER",
+  "start": "Commencer",
 
   "none": "Aucun",
 
@@ -126,9 +127,11 @@
 
   "winter": "Hiver",
 
+  "custom": "Personnalisé",
+
   "ranking": "Classement",
 
-  "playAgain": "REJOUER",
+  "playAgain": "Rejouer",
 
   "userNotFound": "Veuillez entrer un nom d'utilisateur existant.",
 
@@ -138,6 +141,20 @@
 
   "noUserSelected": "Aucun utilisateur sélectionné",
 
-  "unexpectedError": "Erreur inattendue"
+  "unexpectedError": "Erreur inattendue",
+
+  "registrationSuccessful": "Inscription réussie",
+
+  "userWithThisEmailAlreadyExists": "Un utilisateur avec ce courriel existe déjà.",
+
+  "userWithThisUsernameAlreadyExists": "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+
+  "resetCamera": "Rétablir la caméra",
+
+  "linkWith42": "Lier avec 42",
+
+  "login42": "Connexion 42",
+
+  "authenticate42": "Authentification 42 en cours ..."
   
   }

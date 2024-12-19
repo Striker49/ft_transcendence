@@ -686,16 +686,20 @@ function removeGameObjects() {
 }
 
 
-const headers = new Headers({
-	"Content-Type": "application/json",
-	"Authorization": "Token " + localStorage.getItem("authToken")
-})
+// const headers = new Headers({
+// 	"Content-Type": "application/json",
+// 	"Authorization": "Token " + localStorage.getItem("authToken")
+// })
 
 async function sendGameStats() {
     if (!localStorage.getItem("authToken"))
 		return;
+    const headers = new Headers({
+        "Content-Type": "application/json",
+        "Authorization": "Token " + localStorage.getItem("authToken")
+    });
 	const url = "https://localhost/api/game/played/";
-    console.debug(localStorage.getItem("authToken"));
+    // console.debug(localStorage.getItem("authToken"));
 	try {
 		const response = await fetch(url, {
 			method: "POST",
