@@ -8,7 +8,6 @@ import Abstract from "./Abstract.js";
 async function getRanking() {
 	const headers = new Headers({
 		"Content-Type": "application/json",
-		"Authorization": `Token ${localStorage.getItem("authToken")}`
 	});
 	const url = "https://localhost/api/game/ranking/";
 	try {

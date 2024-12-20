@@ -5,7 +5,7 @@ from rest_framework.exceptions import MethodNotAllowed, NotFound
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
@@ -47,6 +47,7 @@ class GameViewSet(viewsets.ModelViewSet):
 class GamesRanking(ListAPIView):
 	serializer_class = serializers.RankingSerializer
 	queryset = models.GameStats.objects.all()
+	permission_classes = [permissions.UpdateGameStats] 
 
 	def get_queryset(self):
 		"""Get the profiles based on search query or return the logged-in user's profile."""
