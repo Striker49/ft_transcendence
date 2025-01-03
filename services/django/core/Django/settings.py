@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -24,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", default=0)
+DEBUG = os.environ.get("DEBUG") == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -40,7 +39,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'oauth2_provider',
-    'debug_toolbar',
     'profiles.apps.ProfilesConfig',
     'django_extensions',
     'users.apps.UsersConfig',
@@ -51,7 +49,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,6 +76,10 @@ TEMPLATES = [
         },
     },
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 WSGI_APPLICATION = 'Django.wsgi.application'
 
@@ -152,7 +153,7 @@ INTERNAL_IPS = [
     "localhost",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False  # Use this for development only
+CORS_ALLOW_ALL_ORIGINS = False 
 
 CORS_ALLOWED_ORIGINS = [
     "https://localhost:8080", 
@@ -183,7 +184,7 @@ REST_FRAMEWORK = {
 
 OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID")
 OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET")
-OAUTH_REDIRECT_URI = 'https://localhost/callback'
+OAUTH_REDIRECT_URI = os.environ.get("OAUTH_REDIRECT_URI")
 
 OAUTH_AUTHORIZE_URL = 'https://api.intra.42.fr/oauth/authorize'
 OAUTH_USER_INFO_URL = 'https://api.intra.42.fr/v2/me'

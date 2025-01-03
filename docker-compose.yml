@@ -22,9 +22,9 @@ services:
   django:
     build:
       context: ./services/django
-      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+      dockerfile: build/Dockerfile.dev
     env_file:
-      - ./services/django/.env
+      - ./services/django/.env.dev
     volumes:
       - ./services/django:/code
     expose:
