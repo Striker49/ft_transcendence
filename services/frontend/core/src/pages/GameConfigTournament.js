@@ -1,6 +1,7 @@
 import Abstract from "./Abstract.js";
-import { navigateTo } from "../router/router.js";
 import { fetchTranslationsFor } from "../localization.js";
+import { navigateTo } from "../router/router.js";
+import { sanitizeString } from "../utils/sanitize.js";
 
 let username;
 let nbPlayer;
@@ -153,7 +154,7 @@ export default class extends Abstract {
 						</div>
 					</div>
 					<div class="row mx-0 my-4 justify-content-center">
-						<a href="#" data-i18n-key="start" id="startBtn" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto">Go to tournament</a>
+						<a href="#" id="startTournament" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto">Go to tournament</a>
 					</div>
 				</div>
 			</div>
@@ -197,18 +198,19 @@ document.addEventListener("click", (event) => {
 			localStorage.setItem("powerUps", true)
 		}
 	}
-    if (event.target.matches("#startBtn")) {
+    if (event.target.matches("#startTournament")) {
         // Prevent default link behavior if it's an <a> tag
         event.preventDefault();
 		// Get aliases for tournament
-		const aliasArray = document.querySelector("#game-config");
-		console.log(aliasArray);
-		// for (let index = 0; index < aliasArray.length; index++) {
-		// 	console.log("aliasArray ", index, " ", aliasArray[index]);
-		// }
+		const inputs = document.querySelectorAll("#game-config input[type=text]");
+		const round = [];
+		for (const input of inputs.values()) {
+			round.push(sanitizeString(input.value));
+		}
+		localStorage.setItem("tournament", JSON.stringify(round));
 		// Build the URL with query parameters
 		const url = `/tournament?username=${encodeURIComponent(username)}&nbPlayer=${encodeURIComponent(nbPlayer)}`;
 		// Navigate to the URL
-		// navigateTo(url);
+		navigateTo(url);
     }
 });
