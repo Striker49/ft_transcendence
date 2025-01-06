@@ -203,7 +203,7 @@ document.addEventListener("click", (event) => {
         event.preventDefault();
 		// Get aliases for tournament
 		const inputs = document.querySelectorAll("#game-config input[type=text]");
-		const round = [];
+		const round = [username];
 		for (const input of inputs.values()) {
 			round.push(sanitizeString(input.value));
 		}
