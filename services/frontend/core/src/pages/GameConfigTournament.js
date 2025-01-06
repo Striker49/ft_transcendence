@@ -208,8 +208,10 @@ document.addEventListener("click", (event) => {
 			round.push(sanitizeString(input.value));
 		}
 		localStorage.setItem("tournament", JSON.stringify(round));
+		localStorage.setItem("tournamentMatch", 0);
+		localStorage.setItem("nbPlayer", nbPlayer);
 		// Build the URL with query parameters
-		const url = `/tournament?username=${encodeURIComponent(username)}&nbPlayer=${encodeURIComponent(nbPlayer)}`;
+		const url = "/tournament";
 		// Navigate to the URL
 		navigateTo(url);
     }

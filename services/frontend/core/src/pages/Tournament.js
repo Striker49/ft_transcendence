@@ -1,22 +1,27 @@
 import Abstract from "./Abstract.js";
+import { navigateTo } from "../router/router.js";
 import { shuffle } from "../utils/random.js";
+import { addImage } from "../utils/image.js";
 
-let blockID = 0;
-const match = Number(localStorage.getItem("tournamentMatch")) * 2;
+const goToConfig = () => {
+	localStorage.removeItem("tournament");
+	localStorage.removeItem("tournamentMatch");
+	navigateTo("/tournamentConfig");
+};
 
-const matchmaking = async () => {
+const matchmaking = () => {
 
-	const names = JSON.parse(localStorage.getItem("tournament"));	
+	const names = JSON.parse(localStorage.getItem("tournament"));
 	const array = shuffle(names);
 
 	localStorage.setItem("tournament", JSON.stringify(array));
 	localStorage.setItem("tournamentMatch", 0);
 };
 
-const createColumnBlocks = (idx, nbPlayer, names, isEnd) => {
+const createColumnBlocks = (names, nbBlocks, blockID) => {
 
-	const nbBlocks = isEnd ? 1 : nbPlayer / idx;
 	const fragment = document.createDocumentFragment();
+	const match = Number(localStorage.getItem("tournamentMatch")) * 2;
 
 	for (let i = 0; i < nbBlocks; ++i, ++blockID) {
 
@@ -24,8 +29,9 @@ const createColumnBlocks = (idx, nbPlayer, names, isEnd) => {
 		block.className = "tournament-block";
 		if (blockID === match || blockID - 1 === match) {
 			block.classList.add("bg-primary");
+			block.id = blockID === match ? "p1" : "p2";
 		}
-		if (names[blockID]) {
+		if (names && names[blockID]) {
 			block.textContent = names[blockID];
 		}
 		fragment.appendChild(block);
@@ -33,26 +39,78 @@ const createColumnBlocks = (idx, nbPlayer, names, isEnd) => {
 	return fragment;
 };
 
-const createTournament = async () => {
+const createTournament = (nbPlayer, names, end) => {
 
-	const queryString = window.location.search;
-	const query = new URLSearchParams(queryString);
-	const nbPlayer = query.get("nbPlayer");
-	const nbColumns = nbPlayer === "8" ? 4 : 3;
-
+	const nbColumns = nbPlayer === 8 ? 4 : 3;
 	const diagram = document.createElement("div");
 	diagram.classList.add("row", "m-0", "mt-4", "p-4", "bg-info");
 
-	const names = JSON.parse(localStorage.getItem("tournament"));
+	for (let idx = 1, blockID = 0; idx <= nbColumns; ++idx) {
 
-	for (let idx = 1; idx <= nbColumns; ++idx) {
-
+		const nbBlocks = idx === nbColumns ? 1 : Math.floor(nbPlayer / idx);
 		const column = document.createElement("div");
 		column.classList.add("col", "tournament-column");
-		column.appendChild(createColumnBlocks(idx, Number(nbPlayer), names, idx === nbColumns));
+		column.appendChild(createColumnBlocks(names, nbBlocks, blockID));
 		diagram.appendChild(column);
+		blockID += nbBlocks;
 	}
 	return diagram.outerHTML;
+};
+
+const displayTournamentBtn = end => {
+
+	const btn = document.createElement('a');
+	const btnClasses = [
+		"btn",
+		"btn-dark",
+		"rounded-pill",
+		"px-4",
+		"bg-orange",
+		"border-0",
+		"text-dark",
+		"fw-bold",
+		"box-shadow",
+		"w-auto",
+		"z-1"
+	];
+
+	btn.classList.add(...btnClasses);
+	btn.setAttribute('href', '#');
+
+	if (end) {
+		btn.id = "playAgainBtn";
+		btn.setAttribute('data-i18n-key', 'playAgain');
+		btn.textContent = "Play Again";
+	} else {
+		btn.id = "startMatchBtn";
+		btn.setAttribute('data-i18n-key', 'start');
+		btn.textContent = "Start";
+	}
+
+	return btn.outerHTML;
+};
+
+const getEndState = (nbPlayer, names) => {
+
+	if ((nbPlayer === 4 && names.length === 7)
+	||	(nbPlayer === 8 && names.length === 15)) {
+		console.log("Tournament Over");
+		return true;
+	}
+	return false;
+};
+
+const getNumberOfPlayers = () => {
+
+	// const queryString = window.location.search;
+	// const query = new URLSearchParams(queryString);
+	// const nbPlayer = query.get("nbPlayer");
+
+	if (!localStorage.getItem("nbPlayer")) {
+		console.log("Missing number of Players");
+		goToConfig();
+	}
+	return Number(localStorage.getItem("nbPlayer"));
 };
 
 export default class extends Abstract {
@@ -63,20 +121,29 @@ export default class extends Abstract {
 
 	async getHtml() {
 
-		if (!localStorage.getItem("tournamentMatch")) {
-			await matchmaking();
+		const nbPlayer = getNumberOfPlayers();
+		const start = localStorage.getItem("tournamentMatch");
+
+		if (!localStorage.getItem("tournament")) {
+			goToConfig();
+		} else if (!start || start === "0") {
+			matchmaking();
 		}
-		const tournament = await createTournament();
+
+		const names = JSON.parse(localStorage.getItem("tournament"));
+		const end = getEndState(nbPlayer, names);
+		const tournament = createTournament(nbPlayer, names, end);
+		const tournamentBtn = displayTournamentBtn(end);
 
 		return `
 			<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
-        		<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black">
+				<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black">
 					<div class="row mb-4 justify-content-center">
 						<h4 class="bg-info w-auto px-4 py-2 rounded-bottom-4 fw-bold">Tournament</h4>
 					</div>
 					${tournament}
 					<div class="row mx-0 my-4 justify-content-center position-relative">
-						<a href="#" data-i18n-key="start" id="startBtn" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto z-1">Start</a>
+						${tournamentBtn}
 					</div>
 				</div>
 			</div>
@@ -84,20 +151,28 @@ export default class extends Abstract {
 	}
 }
 
-// ==================== HTML tournament
+// ============ Events ==============
 
-/* <div class="row m-0 mt-4 p-4 bg-info">
-<div class="col tournament-column">
-	<div class="tournament-block">Player 1</div>
-	<div class="tournament-block">${names[i++]}</div>
-	<div class="tournament-block">${names[i++]}</div>
-	<div class="tournament-block">${names[i++]}</div>
-</div>
-<div class="col tournament-column">
-	<div class="tournament-block"></div>
-	<div class="tournament-block"></div>
-</div>
-<div class="col tournament-column">
-	<div class="tournament-block"></div>
-</div>
-</div> */
+document.addEventListener("click", e => {
+
+	const element = e.target;
+
+	switch (true) {
+
+		case element.matches("#startMatchBtn"):
+			e.preventDefault();
+			// Retrieve player 1 and player 2 names
+			const p1 = document.getElementById("p1").textContent;
+			const p2 = document.getElementById("p2").textContent;
+			// Build the URL with query parameters
+			const url = `/game?username=${encodeURIComponent(p1)}&username2=${encodeURIComponent(p2)}`;
+			// Navigate to the URL
+			navigateTo(url);
+			break;
+		
+		case element.matches("#playAgainBtn"):
+			e.preventDefault();
+			goToConfig();
+			break;
+	}
+});

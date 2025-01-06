@@ -601,29 +601,57 @@ function showWinner(winnerName) {
     }, winnerWord, winnerName);
 }
 
-function insertButton() {
+function insertButton(winnerName) {
+
     const div = document.createElement('div');
     div.setAttribute('class', "mt-5 d-flex justify-content-center");
-    const rankingButton = document.createElement('a');
-    rankingButton.setAttribute('href', '/endGame');
-    rankingButton.setAttribute('data-i18n-key', 'ranking');
-    rankingButton.setAttribute('class', 'btn btn-primary');
-    rankingButton.setAttribute('id', 'ranking');
-    rankingButton.setAttribute('data-link', 'true');
-    rankingButton.style.margin = '0 10px';
-    rankingButton.innerHTML = "Ranking";
-    const playAgainButton = document.createElement('a');
-    playAgainButton.setAttribute('href', '/gameConfig');
-    playAgainButton.setAttribute('data-i18n-key', 'playAgain');
-    playAgainButton.setAttribute('class', 'btn btn-primary');
-    playAgainButton.setAttribute('id', 'playAgain');
-    playAgainButton.setAttribute('data-link', 'true');
-    playAgainButton.innerHTML = "Play Again";
-    playAgainButton.style.margin = '0 10px';
+
+    if (localStorage.getItem("tournament")) {
+        const nextMatchButton = document.createElement('a');
+        nextMatchButton.setAttribute('href', '/tournament');
+        nextMatchButton.setAttribute('data-i18n-key', 'nextMatch');
+        nextMatchButton.setAttribute('class', 'btn btn-primary');
+        nextMatchButton.setAttribute('id', 'nextMatch');
+        nextMatchButton.setAttribute('data-link', 'true');
+        nextMatchButton.style.margin = '0 10px';
+        nextMatchButton.innerHTML = "Next Match";
+        const stopButton = document.createElement('a');
+        stopButton.setAttribute('href', '/');
+        stopButton.setAttribute('data-i18n-key', 'stopTournament');
+        stopButton.setAttribute('class', 'btn btn-primary');
+        stopButton.setAttribute('id', 'stopTournament');
+        stopButton.setAttribute('data-link', 'true');
+        stopButton.innerHTML = "Stop Tournament";
+        stopButton.style.margin = '0 10px';
+        div.appendChild(nextMatchButton);
+        div.appendChild(stopButton);
+        const array = JSON.parse(localStorage.getItem("tournament"));
+        array.push(winnerName);
+        localStorage.setItem("tournament", JSON.stringify(array));
+        localStorage.setItem("tournamentMatch", Number(localStorage.getItem("tournamentMatch")) + 1);
+    } else {
+        const rankingButton = document.createElement('a');
+        rankingButton.setAttribute('href', '/endGame');
+        rankingButton.setAttribute('data-i18n-key', 'ranking');
+        rankingButton.setAttribute('class', 'btn btn-primary');
+        rankingButton.setAttribute('id', 'ranking');
+        rankingButton.setAttribute('data-link', 'true');
+        rankingButton.style.margin = '0 10px';
+        rankingButton.innerHTML = "Ranking";
+        const playAgainButton = document.createElement('a');
+        playAgainButton.setAttribute('href', '/gameConfig');
+        playAgainButton.setAttribute('data-i18n-key', 'playAgain');
+        playAgainButton.setAttribute('class', 'btn btn-primary');
+        playAgainButton.setAttribute('id', 'playAgain');
+        playAgainButton.setAttribute('data-link', 'true');
+        playAgainButton.innerHTML = "Play Again";
+        playAgainButton.style.margin = '0 10px';
+        div.appendChild(rankingButton);
+        div.appendChild(playAgainButton);
+    }
+
     const body = document.querySelector("main");
     body.appendChild(div);
-    div.appendChild(rankingButton);
-    div.appendChild(playAgainButton);
     translatePage();
     console.debug("body", body);
 }
@@ -641,7 +669,7 @@ function endGame(winner) {
     updateScore();
     showWinner(winnerName);
     sendGameStats();
-    insertButton();
+    insertButton(winnerName);
     //GoToEndScreen
     // navigateTo("/endGame");
 	// router();
@@ -685,12 +713,6 @@ function removeGameObjects() {
     }
 }
 
-
-// const headers = new Headers({
-// 	"Content-Type": "application/json",
-// 	"Authorization": "Token " + localStorage.getItem("authToken")
-// })
-
 async function sendGameStats() {
     if (!localStorage.getItem("authToken"))
 		return;
@@ -705,7 +727,7 @@ async function sendGameStats() {
 			method: "POST",
 			headers: headers,
 			body: JSON.stringify({
-				player1_UID: localStorage.getItem("UID"), 
+				player1_UID: localStorage.getItem("UID"),
 				player2_UID: null,
                 username_player2: ai == true ? null : nameP2,
 				score_player1: scoreP1,
@@ -722,38 +744,6 @@ async function sendGameStats() {
 		console.error(error.message);
 	}
 }
-
-document.addEventListener('click', (event) => {
-    if (event.target.matches("#ranking"))
-    {
-        winnerText.material.dispose();
-        winnerText.geometry.dispose();
-        scene.remove(winnerText);
-    }
-    // else if (winnerText)
-    // {
-    //     winnerText.material.dispose();
-    //     winnerText.geometry.dispose();
-    //     scene.remove(winnerText);
-    //     showWinner(getTranslatedWord(winnerName));
-    // }
-})
-
-document.addEventListener('click', (event) => {
-    if (event.target.matches("#ranking"))
-    {
-        winnerText.material.dispose();
-        winnerText.geometry.dispose();
-        scene.remove(winnerText);
-    }
-    // else if (winnerText)
-    // {
-    //     winnerText.material.dispose();
-    //     winnerText.geometry.dispose();
-    //     scene.remove(winnerText);
-    //     showWinner(getTranslatedWord(winnerName));
-    // }
-})
 
 document.querySelectorAll(".flag").forEach(flag => {
     flag.addEventListener("click", (event) => {

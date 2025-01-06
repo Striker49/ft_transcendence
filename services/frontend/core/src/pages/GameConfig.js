@@ -4,19 +4,8 @@ import { fetchTranslationsFor } from "../localization.js";
 
 let p2NameLabel;
 let p2NameField;
-let p2Name;
 let username;
 let username2;
-
-// const headers = new Headers({
-// 	"Content-Type": "application/json",
-// 	"Authorization": "Token " + localStorage.getItem("authToken")
-// })
-
-// const options = {
-// 	method: "GET",
-// 	headers: headers
-// };
 
 async function getUserProfile() {
 	if (!localStorage.getItem("authToken"))
@@ -157,15 +146,6 @@ document.addEventListener("change", (event) => {
 	}
 })
 
-const readName = async () => {
-	username = (document.querySelector("#username")?.value || '');
-	username2 = (document.querySelector("#p2Name")?.value || '');
-
-	// return (username2);
-
-	console.log("Form is being submitted with names:", username, username2);
-}
-
 document.addEventListener("click", (event) => {
     if (event.target.matches("#powerUps")) {
 		console.log("powerups!!!");
@@ -183,6 +163,9 @@ document.addEventListener("click", (event) => {
     if (event.target.matches("#startBtn")) {
         // Prevent default link behavior if it's an <a> tag
         event.preventDefault();
+		// Clear Tournament params
+		localStorage.removeItem("tournament");
+		localStorage.removeItem("tournamentMatch");
 		// document.addEventListener("submit", e => {
 
 			// Retrieve username and username2 values from the input fields
