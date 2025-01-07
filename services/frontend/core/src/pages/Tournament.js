@@ -124,7 +124,9 @@ const getNumberOfPlayers = () => {
 	// const query = new URLSearchParams(queryString);
 	// const nbPlayer = query.get("nbPlayer");
 
-	if (!localStorage.getItem("nbPlayer")) {
+	const nbPlayer = localStorage.getItem("nbPlayer");
+
+	if (!nbPlayer || !(nbPlayer === "4" || nbPlayer === "8")) {
 		console.log("Missing number of Players");
 		goToConfig();
 	}
@@ -144,7 +146,7 @@ export default class extends Abstract {
 
 		if (!localStorage.getItem("tournament")) {
 			goToConfig();
-		} else if (!start || start === "0") {
+		} else if (!start || start === "0" || JSON.parse(localStorage.getItem("tournament")).length === nbPlayer) {
 			matchmaking();
 		}
 

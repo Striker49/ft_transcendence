@@ -50,14 +50,14 @@ async function getNbPlayer(queryName) {
 		console.log("Two players detected");
 		nbPlayer = false;
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
+		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\" maxlength=\"12\"></p>";
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.log("No player detected");
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
+		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\" maxlength=\"12\"></p>";
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}

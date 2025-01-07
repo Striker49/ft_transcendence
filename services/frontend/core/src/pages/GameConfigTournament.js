@@ -44,24 +44,6 @@ async function getNbPlayer(queryName) {
     return nbPlayer;
 }
 
-// async function getLabels(nbPlayer) {
-
-// 	const fragment = document.createDocumentFragment();
-
-// 	for (let i = 1; i <= nbPlayer; ++i) {
-
-// 		const nb = document.createTextNode(i);
-// 		const label = document.createElement("p");
-// 		const span = document.createElement("span");
-// 		span.setAttribute("data-i18n-key", "player");
-// 		span.textContent = "Player";
-// 		label.appendChild(span);
-// 		label.appendChild(nb);
-// 		fragment.appendChild(label);
-// 	}
-// 	return fragment.textContent;
-// }
-
 async function getLabels(nbPlayer) {
 
 	if (nbPlayer === "8") {
@@ -89,19 +71,19 @@ async function getInputs(nbPlayer) {
 	
 	if (nbPlayer === "8") {
 		return `
-			<p><input type="text" class="form-control" name="player2" id="player2"></p>
-			<p><input type="text" class="form-control" name="player3" id="player3"></p>
-			<p><input type="text" class="form-control" name="player4" id="player4"></p>
-			<p><input type="text" class="form-control" name="player5" id="player5"></p>
-			<p><input type="text" class="form-control" name="player6" id="player6"></p>
-			<p><input type="text" class="form-control" name="player7" id="player7"></p>
-			<p><input type="text" class="form-control" name="player8" id="player8"></p>
+			<p><input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player4" id="player4" placeholder="Player 4" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player5" id="player5" placeholder="Player 5" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player6" id="player6" placeholder="Player 6" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player7" id="player7" placeholder="Player 7" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player8" id="player8" placeholder="Player 8" maxlength="12"></p>
 		`;
 	} else {
 		return `
-			<p><input type="text" class="form-control" name="player2" id="player2"></p>
-			<p><input type="text" class="form-control" name="player3" id="player3"></p>
-			<p><input type="text" class="form-control" name="player4" id="player4"></p>
+			<p><input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
+			<p><input type="text" class="form-control" name="player4" id="player4" placeholder="Player 4" maxlength="12"></p>
 		`;
 	}
 }
@@ -205,7 +187,11 @@ document.addEventListener("click", (event) => {
 		const inputs = document.querySelectorAll("#game-config input[type=text]");
 		const round = [username];
 		for (const input of inputs.values()) {
-			round.push(sanitizeString(input.value));
+			if (!input.value) {
+				round.push(input.placeholder);
+			} else {
+				round.push(sanitizeString(input.value));
+			}
 		}
 		localStorage.setItem("tournament", JSON.stringify(round));
 		localStorage.setItem("tournamentMatch", 0);
