@@ -120,7 +120,7 @@ export default class extends Abstract {
 								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</p>
-						<p><input type="checkbox" id="powerUps" value="false"></p>
+						<p><input type="checkbox" id="powerUps" value="true" checked></p>
 					</div>
 				</div>
 				<div class="row mx-0 my-4 justify-content-center">

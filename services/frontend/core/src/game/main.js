@@ -117,7 +117,8 @@ function startGame() {
     
     updateScore(); // Make sure this function updates the score correctly
     updateTheme(localStorage.getItem("theme"));
-
+    // powerUps[0] = null;
+    // powerUps[1] = null;
     state = 1;
 }
 
@@ -134,6 +135,8 @@ function initGame() {
     nameP2 = getUsername("username2");
     scoreP1 = 0;
     scoreP2 = 0;
+    powerUps[0] = null;
+    powerUps[1] = null;
     ai = localStorage.getItem("nbPlayer") == "1" ? true : false;
     powerUpMode = localStorage.getItem("powerUps") == "true"? true : false;
 
