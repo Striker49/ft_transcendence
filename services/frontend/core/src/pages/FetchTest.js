@@ -56,12 +56,12 @@ const submitForm = async form => {
 		"Authorization": "Token 14dad9f3042f23c6952fff339973f73f2cef38cc"
 	});
 
-	const url = 'https://localhost/api/game/stats/';
+	const url = 'https://localhost/api/game/ranking/';
 
 	const options = {
-		method: "PATCH",
-		body: JSON.stringify(formData),
-		headers: headers
+		method: "GET",
+		// body: JSON.stringify(formData),
+		// headers: headers
 	};
 
 	try {

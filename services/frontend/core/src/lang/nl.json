@@ -147,7 +147,7 @@
 
   "noUserSelected": "Geen gebruiker geselecteerd",
 
-  "unexpectedError": "Unexpected error",
+  "unexpectedError": "Onverwachte fout",
 
   "registrationSuccessful": "Registratie succesvol",
 
@@ -161,6 +161,10 @@
 
   "login42": "Inloggen met 42",
 
-  "authenticate42": "42 authenticatie bezig ..."
+  "authenticate42": "42 authenticatie bezig ...",
+
+  "unableToLogin": "Kan niet inloggen met de opgegeven inloggegevens.",
+
+  "userDoesNotExist": "Gebruiker bestaat niet."
 
   }

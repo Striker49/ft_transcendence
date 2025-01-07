@@ -163,6 +163,10 @@
 
   "login42": "Connexion 42",
 
-  "authenticate42": "Authentification 42 en cours ..."
+  "authenticate42": "Authentification 42 en cours ...",
+
+  "unableToLogin": "Impossible de se connecter avec les informations fournies.",
+
+  "userDoesNotExist": "Utilisateur non existant."
   
   }
