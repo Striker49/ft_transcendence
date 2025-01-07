@@ -3,7 +3,7 @@ import { scene, camera, renderer, controls } from "../threejs/base.js";
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
-import { createScoreText, createWinnerText, createText } from './text.js';
+import { createScoreText, createText } from './text.js';
 import { navigateTo } from '../router/router.js';
 import { getTranslatedWord, translatePage } from '../localization.js';
 import { boxCollision } from './collision.js';
@@ -29,7 +29,7 @@ renderer.shadowMap.enabled = true;
 let isStarted = false;
 let frames = 0;
 let speed = 0.15;
-let text, currentText, winnerText;
+let text, currentText, winnerText, winnerNameText;
 let textnameP1, textnameP2;
 let scoreP1, scoreP2;
 let nameP1, nameP2;
@@ -119,8 +119,6 @@ function startGame() {
     
     updateScore(); // Make sure this function updates the score correctly
     updateTheme(localStorage.getItem("theme"));
-    // powerUps[0] = null;
-    // powerUps[1] = null;
     state = 1;
 }
 
@@ -223,13 +221,13 @@ function initGame() {
     createText (function (text3) {
         textnameP1 = text3;
         scene.add(textnameP1);
-    }, nameP1, -6, -5, 0x3ec300);
-
+    }, nameP1, 0.75, -6, -5, paddleL.material.color);
+    // textnameP1.material.color.set(0xff6600);
     //Create 3D P2 name
     createText (function (text4) {
         textnameP2 = text4;
         scene.add(textnameP2);
-    }, nameP2, 6, -5, 0xb63b85);
+    }, nameP2, 0.75, 6, -5, paddleR.material.color);
     startGame();
 }
 
@@ -423,49 +421,48 @@ export const updateGameScene = () => {
         if (isStarted) {
             console.log('Game Ended');
             isStarted = false;
-            customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, textnameP1, textnameP2);
+            customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, winnerNameText, textnameP1, textnameP2);
         }
     }
 }
 
-function showWinner(winnerName) {
+function showWinner(winnerName, winnerColor) {
     let winnerWord = getTranslatedWord("winner");
     let translations = JSON.parse(localStorage.getItem("translations"));
     if (translations && (winnerName == "Player 1" || winnerName == "Joueur 1" || winnerName == "Speler 1"))
         winnerName = translations["playerOne"];
     else if (translations && (winnerName == "Player 2" || winnerName == "Joueur 2" || winnerName == "Speler 2"))
         winnerName= translations["playerTwo"];
-    createWinnerText(function (text2) {
+    createText(function (text2) {
         winnerText = text2;
+        winnerText.castShadow = true;
         scene.add(winnerText);
-    }, winnerWord, winnerName);
+    }, winnerWord, 1.25, 0, -2, 0xffd700);
+    createText(function (text2) {
+        winnerNameText = text2;
+        // winnerNameText.position.z = 1;
+        winnerNameText.castShadow = true;
+        scene.add(winnerNameText);
+    }, winnerName, 1.25, 0, 0, winnerColor);
 }
 
 
 function endGame(winner) {
     winnerName = (winner == 2 ? nameP1 : nameP2);
+    let winnerColor = (winner == 2 ? paddleL.material.color : paddleR.material.color);
     console.debug("winner", winner);
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
     console.debug("winnerName", winnerName);
     console.debug("textnameP1", winnerText);
-    customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, textnameP1, textnameP2);
+    customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, winnerNameText, textnameP1, textnameP2);
     console.log(textnameP1);
     state = 0;
     updateScore();
-    showWinner(winnerName);
+    showWinner(winnerName, winnerColor);
     sendGameStats(scoreP1, scoreP2, ai, nameP2);
     insertButton(winnerName);
-    //GoToEndScreen
-    // navigateTo("/endGame");
-	// router();
-    // window.location.href = "/endGame";
 }
-
-// const headers = new Headers({
-// 	"Content-Type": "application/json",
-// 	"Authorization": "Token " + localStorage.getItem("authToken")
-// })
 
 document.addEventListener('click', (event) => {
     if (event.target.matches("#ranking"))

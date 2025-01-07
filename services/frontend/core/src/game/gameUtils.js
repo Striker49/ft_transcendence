@@ -107,16 +107,22 @@ function removePowerUps(scene, powerUps) {
     })
 }
 
-function removeWinner(scene, winnerText) {
+function removeWinner(scene, winnerText, winnerNameText) {
     if (winnerText)
-        {
-            winnerText.material.dispose();
-            winnerText.geometry.dispose();
-            scene.remove(winnerText);
-        }
+    {
+        winnerText.material.dispose();
+        winnerText.geometry.dispose();
+        scene.remove(winnerText);
+    }    
+    if (winnerNameText)
+    {
+        winnerNameText.material.dispose();
+        winnerNameText.geometry.dispose();
+        scene.remove(winnerNameText);
+    }
 }
 
-export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, textnameP1, textnameP2) {
+export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, winnerNameText, textnameP1, textnameP2) {
 	ball.kill();
     scene.remove(ball);
     paddleL.kill();
@@ -134,7 +140,7 @@ export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customT
     textnameP2.material.dispose();
     textnameP2.geometry.dispose();
     scene.remove(textnameP1, textnameP2);
-    removeWinner(scene, winnerText);
+    removeWinner(scene, winnerText, winnerNameText);
 	return (null);
 }
 
