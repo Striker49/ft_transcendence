@@ -116,7 +116,7 @@ function removeWinner(scene, winnerText) {
         }
 }
 
-export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText) {
+export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, textnameP1, textnameP2) {
 	ball.kill();
     scene.remove(ball);
     paddleL.kill();
@@ -129,6 +129,11 @@ export function removeGameObjects(scene, ball, paddleL, paddleR, ground, customT
     if (customTextureNumber)
         removeNumberTexture(currentText, customTextureNumber);
     scene.remove(scene, currentText);
+    textnameP1.material.dispose();
+    textnameP1.geometry.dispose();
+    textnameP2.material.dispose();
+    textnameP2.geometry.dispose();
+    scene.remove(textnameP1, textnameP2);
     removeWinner(scene, winnerText);
 	return (null);
 }

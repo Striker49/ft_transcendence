@@ -3,7 +3,7 @@ import { scene, camera, renderer, controls } from "../threejs/base.js";
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { keys } from './keys.js';
-import { createText, createWinnerText } from './text.js';
+import { createScoreText, createWinnerText, createText } from './text.js';
 import { navigateTo } from '../router/router.js';
 import { getTranslatedWord, translatePage } from '../localization.js';
 import { boxCollision } from './collision.js';
@@ -30,8 +30,10 @@ let isStarted = false;
 let frames = 0;
 let speed = 0.15;
 let text, currentText, winnerText;
+let textnameP1, textnameP2;
 let scoreP1, scoreP2;
 let nameP1, nameP2;
+let textP1, textP2;
 let groundWidth = 13;
 let paddleWidth = 0.5;
 let paddleDepth= 2.5;
@@ -216,12 +218,24 @@ function initGame() {
     });
     ground.receiveShadow = true;
     frames = 0;
+
+    //Create 3D P1 name
+    createText (function (text3) {
+        textnameP1 = text3;
+        scene.add(textnameP1);
+    }, nameP1, -6, -5, 0x3ec300);
+
+    //Create 3D P2 name
+    createText (function (text4) {
+        textnameP2 = text4;
+        scene.add(textnameP2);
+    }, nameP2, 6, -5, 0xb63b85);
     startGame();
 }
 
 //Updates score text (alternates between old and new one)
 function updateScore(text) {
-    createText(function (text) {
+    createScoreText(function (text) {
         // Remove the old text if it exists
         if (currentText) {
             scene.remove(currentText);      // Remove the old text from the scene
@@ -409,7 +423,7 @@ export const updateGameScene = () => {
         if (isStarted) {
             console.log('Game Ended');
             isStarted = false;
-            customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText);
+            customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, textnameP1, textnameP2);
         }
     }
 }
@@ -434,7 +448,9 @@ function endGame(winner) {
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
     console.debug("winnerName", winnerName);
-    customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText);
+    console.debug("textnameP1", winnerText);
+    customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, textnameP1, textnameP2);
+    console.log(textnameP1);
     state = 0;
     updateScore();
     showWinner(winnerName);
