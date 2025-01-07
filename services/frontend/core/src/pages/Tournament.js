@@ -3,6 +3,8 @@ import { navigateTo } from "../router/router.js";
 import { shuffle } from "../utils/random.js";
 import { addImage } from "../utils/image.js";
 
+const trophyURL = "/src/assets/icons/trophy.png";
+
 const goToConfig = () => {
 	localStorage.removeItem("tournament");
 	localStorage.removeItem("tournamentMatch");
@@ -18,7 +20,7 @@ const matchmaking = () => {
 	localStorage.setItem("tournamentMatch", 0);
 };
 
-const createColumnBlocks = (names, nbBlocks, blockID) => {
+const createColumnBlocks = (names, nbBlocks, blockID, end) => {
 
 	const fragment = document.createDocumentFragment();
 	const match = Number(localStorage.getItem("tournamentMatch")) * 2;
@@ -28,12 +30,25 @@ const createColumnBlocks = (names, nbBlocks, blockID) => {
 		const block = document.createElement("div");
 		block.className = "tournament-block";
 		if (blockID === match || blockID - 1 === match) {
-			block.classList.add("bg-primary");
+			if (end) {
+				// block.classList.add("text-shadow", "text-orange", "fw-bold", "fs-1");
+				// block.classList.remove("tournament-block");
+				block.classList.add("bg-warning");
+			} else {
+				block.classList.add("bg-primary");
+			}
 			block.id = blockID === match ? "p1" : "p2";
 		}
 		if (names && names[blockID]) {
 			block.textContent = names[blockID];
 		}
+		// if (end && nbBlocks === 1) {
+		// 	const winnerText = document.createElement("p");
+		// 	winnerText.classList.add("fw-bold", "fs-2");
+		// 	winnerText.setAttribute("data-i18n-key", "winner");
+		// 	winnerText.textContent = "Winner";
+		// 	fragment.appendChild(winnerText);
+		// }
 		fragment.appendChild(block);
 	}
 	return fragment;
@@ -50,7 +65,10 @@ const createTournament = (nbPlayer, names, end) => {
 		const nbBlocks = idx === nbColumns ? 1 : Math.floor(nbPlayer / idx);
 		const column = document.createElement("div");
 		column.classList.add("col", "tournament-column");
-		column.appendChild(createColumnBlocks(names, nbBlocks, blockID));
+		// if (end && idx === nbColumns) {
+		// 	column.style.justifyContent = "center";
+		// }
+		column.appendChild(createColumnBlocks(names, nbBlocks, blockID, end));
 		diagram.appendChild(column);
 		blockID += nbBlocks;
 	}
