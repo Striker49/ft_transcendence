@@ -3,12 +3,12 @@ import CallBack from "../pages/CallBack.js";
 import EndGame from "../pages/EndGame.js";
 import Game from "../pages/Game.js";
 import GameConfig from "../pages/GameConfig.js";
+import GameConfigTournament from "../pages/GameConfigTournament.js";
 import Index from "../pages/Index.js";
 import Instructions from "../pages/Instructions.js";
 import Profile from "../pages/Profile.js";
 import Select from "../pages/Select.js";
-// import Tournament from "../pages/Tournament.js";
-import Tournament from "../pages/GameConfigTourney.js";
+import Tournament from "../pages/Tournament.js";
 import FetchTest from "../pages/FetchTest.js";
 import { translateX } from "../utils/utils.js";
 import { translatePage } from "../localization.js";
@@ -30,6 +30,7 @@ const router = async () => {
 		{ path: "/profile", page: Profile },
 		{ path: "/select", page: Select },
 		{ path: "/tournament", page: Tournament },
+		{ path: "/tournamentConfig", page: GameConfigTournament },
 		{ path: "/fetch-test", page: FetchTest }
 	];
 

@@ -4,19 +4,8 @@ import { fetchTranslationsFor } from "../localization.js";
 
 let p2NameLabel;
 let p2NameField;
-let p2Name;
 let username;
 let username2;
-
-// const headers = new Headers({
-// 	"Content-Type": "application/json",
-// 	"Authorization": "Token " + localStorage.getItem("authToken")
-// })
-
-// const options = {
-// 	method: "GET",
-// 	headers: headers
-// };
 
 async function getUserProfile() {
 	if (!localStorage.getItem("authToken"))
@@ -50,29 +39,29 @@ async function getNbPlayer(queryName) {
     let nbPlayer = false;
     const params = new URLSearchParams(window.location.search);
     if (params.get(queryName) == "1")
-    {
-        console.log("One player detected");
-        nbPlayer = true;
-        p2NameLabel = "";
-        p2NameField = "";
-        localStorage.setItem("nbPlayer", "1");
-    }
-    else if (params.get(queryName) == "2")
-    {
-        console.log("Two players detected");
-        nbPlayer = false;
-        p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-        p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
-        localStorage.setItem("nbPlayer", "2");
-    }
-    else
-    {
-        console.log("No player detected");
-        p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-        p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\"></p>";
-        // (!params.get(queryName) && localStorage.getItem("nbPlayer"))
-        return (localStorage.getItem("nbPlayer") == "1" ? true : false)
-    }
+	{
+		console.log("One player detected");
+		nbPlayer = true;
+		p2NameLabel = "";
+		p2NameField = "";
+		localStorage.setItem("nbPlayer", "1");
+	}
+	else if (params.get(queryName) == "2")
+	{
+		console.log("Two players detected");
+		nbPlayer = false;
+		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
+		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\" maxlength=\"12\"></p>";
+		localStorage.setItem("nbPlayer", "2");
+	}
+	else 
+	{
+		console.log("No player detected");
+		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
+		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\" maxlength=\"12\"></p>";
+		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
+		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
+	}
     return (nbPlayer);
 }
 
@@ -155,15 +144,6 @@ document.addEventListener("change", (event) => {
 	}
 })
 
-const readName = async () => {
-	username = (document.querySelector("#username")?.value || '');
-	username2 = (document.querySelector("#p2Name")?.value || '');
-
-	// return (username2);
-
-	console.log("Form is being submitted with names:", username, username2);
-}
-
 document.addEventListener("click", (event) => {
     if (event.target.matches("#powerUps")) {
 		console.log("powerups!!!");
@@ -183,6 +163,9 @@ document.addEventListener("click", (event) => {
     if (event.target.matches("#startBtn")) {
         // Prevent default link behavior if it's an <a> tag
         event.preventDefault();
+		// Clear Tournament params
+		localStorage.removeItem("tournament");
+		localStorage.removeItem("tournamentMatch");
 		// document.addEventListener("submit", e => {
 
 			// Retrieve username and username2 values from the input fields
