@@ -88,13 +88,23 @@
 
   "save": "Sauvegarder",
 
+
+  "friends": "Amis",
+
+  "removeFriend": "Supprimer un ami",
+
   "addFriend": "Ajouter un ami",
+
 
   "singleGame": "Jeu Solo",
 
   "onePlayer": "1 Joueur",
 
   "twoPlayers": "2 Joueurs",
+
+  "fourPlayers": "4 Joueurs",
+
+  "eightPlayers": "8 Joueurs",
 
   "instructions": "Instructions",
 
@@ -120,6 +130,8 @@
   "start": "Commencer",
 
   "none": "Aucun",
+
+  "custom": "Personnalisé",
 
   "christmas": "Noël",
 

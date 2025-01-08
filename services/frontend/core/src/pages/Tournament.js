@@ -1,4 +1,137 @@
 import Abstract from "./Abstract.js";
+import { navigateTo } from "../router/router.js";
+import { shuffle } from "../utils/random.js";
+import { addImage } from "../utils/image.js";
+
+const trophyURL = "/src/assets/icons/trophy.png";
+
+const goToConfig = () => {
+	localStorage.removeItem("tournament");
+	localStorage.removeItem("tournamentMatch");
+	navigateTo("/tournamentConfig");
+};
+
+const matchmaking = () => {
+
+	const names = JSON.parse(localStorage.getItem("tournament"));
+	const array = shuffle(names);
+
+	localStorage.setItem("tournament", JSON.stringify(array));
+	localStorage.setItem("tournamentMatch", 0);
+};
+
+const createColumnBlocks = (names, nbBlocks, blockID, end) => {
+
+	const fragment = document.createDocumentFragment();
+	const match = Number(localStorage.getItem("tournamentMatch")) * 2;
+
+	for (let i = 0; i < nbBlocks; ++i, ++blockID) {
+
+		const block = document.createElement("div");
+		block.className = "tournament-block";
+		if (blockID === match || blockID - 1 === match) {
+			if (end) {
+				// block.classList.add("text-shadow", "text-orange", "fw-bold", "fs-1");
+				// block.classList.remove("tournament-block");
+				block.classList.add("bg-warning");
+			} else {
+				block.classList.add("bg-primary");
+			}
+			block.id = blockID === match ? "p1" : "p2";
+		}
+		if (names && names[blockID]) {
+			block.textContent = names[blockID];
+		}
+		// if (end && nbBlocks === 1) {
+		// 	const winnerText = document.createElement("p");
+		// 	winnerText.classList.add("fw-bold", "fs-2");
+		// 	winnerText.setAttribute("data-i18n-key", "winner");
+		// 	winnerText.textContent = "Winner";
+		// 	fragment.appendChild(winnerText);
+		// }
+		fragment.appendChild(block);
+	}
+	return fragment;
+};
+
+const createTournament = (nbPlayer, names, end) => {
+
+	const nbColumns = nbPlayer === 8 ? 4 : 3;
+	const diagram = document.createElement("div");
+	diagram.classList.add("row", "m-0", "mt-4", "p-4", "bg-info");
+
+	for (let idx = 1, blockID = 0; idx <= nbColumns; ++idx) {
+
+		const nbBlocks = idx === nbColumns ? 1 : Math.floor(nbPlayer / idx);
+		const column = document.createElement("div");
+		column.classList.add("col", "tournament-column");
+		// if (end && idx === nbColumns) {
+		// 	column.style.justifyContent = "center";
+		// }
+		column.appendChild(createColumnBlocks(names, nbBlocks, blockID, end));
+		diagram.appendChild(column);
+		blockID += nbBlocks;
+	}
+	return diagram.outerHTML;
+};
+
+const displayTournamentBtn = end => {
+
+	const btn = document.createElement('a');
+	const btnClasses = [
+		"btn",
+		"btn-dark",
+		"rounded-pill",
+		"px-4",
+		"bg-orange",
+		"border-0",
+		"text-dark",
+		"fw-bold",
+		"box-shadow",
+		"w-auto",
+		"z-1"
+	];
+
+	btn.classList.add(...btnClasses);
+	btn.setAttribute('href', '#');
+
+	if (end) {
+		btn.id = "playAgainBtn";
+		btn.setAttribute('data-i18n-key', 'playAgain');
+		btn.textContent = "Play Again";
+	} else {
+		btn.id = "startMatchBtn";
+		btn.setAttribute('data-i18n-key', 'start');
+		btn.textContent = "Start";
+	}
+
+	return btn.outerHTML;
+};
+
+const getEndState = (nbPlayer, names) => {
+
+	if ((nbPlayer === 4 && names.length === 7)
+	||	(nbPlayer === 8 && names.length === 15)) {
+		console.log("Tournament Over");
+		return true;
+	}
+	return false;
+};
+
+const getNumberOfPlayers = () => {
+
+	// const queryString = window.location.search;
+	// const query = new URLSearchParams(queryString);
+	// const nbPlayer = query.get("nbPlayer");
+
+	const nbPlayer = localStorage.getItem("nbPlayer");
+
+	if (!nbPlayer || !(nbPlayer === "4" || nbPlayer === "8")) {
+		console.log("Missing number of Players");
+		goToConfig();
+	}
+	return Number(localStorage.getItem("nbPlayer"));
+};
 
 export default class extends Abstract {
 	constructor() {
@@ -7,17 +140,59 @@ export default class extends Abstract {
 	}
 
 	async getHtml() {
+
+		const nbPlayer = getNumberOfPlayers();
+		const start = localStorage.getItem("tournamentMatch");
+
+		if (!localStorage.getItem("tournament")) {
+			goToConfig();
+		} else if (!start || start === "0" || JSON.parse(localStorage.getItem("tournament")).length === nbPlayer) {
+			matchmaking();
+		}
+
+		const names = JSON.parse(localStorage.getItem("tournament"));
+		const end = getEndState(nbPlayer, names);
+		const tournament = createTournament(nbPlayer, names, end);
+		const tournamentBtn = displayTournamentBtn(end);
+
 		return `
-			<div id="game-screen" class="container bg-secondary rounded-5 p-5" style="width: 960px; height: 540px;">
-				<div class="row justify-content-center align-items-center bg-dark rounded-5 p-5 h-100 mx-auto">
-					<div class="col-8">
-						<img src="/src/assets/tournament.png" alt="Tournament diagram" class="w-100">
+			<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
+				<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black">
+					<div class="row mb-4 justify-content-center">
+						<h4 class="bg-info w-auto px-4 py-2 rounded-bottom-4 fw-bold">Tournament</h4>
 					</div>
-					<div class="col-4">
-						<a href="/game" role="button" data-i18n-key="start" class="btn btn-success d-block" data-link>Start Game</a>
-					</div>	
+					${tournament}
+					<div class="row mx-0 my-4 justify-content-center position-relative">
+						${tournamentBtn}
+					</div>
 				</div>
 			</div>
 		`;
 	}
 }
+
+// ============ Events ==============
+
+document.addEventListener("click", e => {
+
+	const element = e.target;
+
+	switch (true) {
+
+		case element.matches("#startMatchBtn"):
+			e.preventDefault();
+			// Retrieve player 1 and player 2 names
+			const p1 = document.getElementById("p1").textContent;
+			const p2 = document.getElementById("p2").textContent;
+			// Build the URL with query parameters
+			const url = `/game?username=${encodeURIComponent(p1)}&username2=${encodeURIComponent(p2)}`;
+			// Navigate to the URL
+			navigateTo(url);
+			break;
+		
+		case element.matches("#playAgainBtn"):
+			e.preventDefault();
+			goToConfig();
+			break;
+	}
+});

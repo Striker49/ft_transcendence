@@ -6,7 +6,7 @@
 
   "profile": "Profiel",
 
-  "aboutContent": "Dit project is nog steeds een kwestie van keuze als het om de toekomst gaat. Groeten over dit moment. Het is jouw tijd om te schitteren!",
+  "aboutContent": "Dit project is iets dat je nog nooit gedaan hebt. Herinner je het begin van jouw programmeer parcours. Het is jouw tijd om te schitteren!",
 
   "theTeam": "Het team",
 
@@ -76,15 +76,25 @@
 
   "friendlist": "Vriendenlijst",
 
-  "passwordLength": "Wachtwoord moet tussen 6 en 20 tekens zijn",
+  "passwordLength": "Wachtwoord moet tussen de 6 en 20 tekens zijn",
 
-  "passwordNotOriginal": "Wachtwoord kan niet 'wachtwoor zijn",
+  "passwordNotOriginal": "Wachtwoord kan niet 'wachtwoord' zijn",
 
   "usernameRequired": "Gebruikersnaam is verplicht",
 
-  "validEmail": "Voer een gelgig e-mailadres in",
+  "validEmail": "Voer een geldig e-mailadres in",
+
+  "cancel": "Annuleren",
+
+  "save": "Opslaan",
+
+
+  "friends": "Vrienden",
+
+  "removeFriend": "Vriend verwijderen",
 
   "addFriend": "Vriend toevoegen",
+
 
   "singleGame": "Solo Spel",
 
@@ -92,15 +102,17 @@
 
   "twoPlayers": "2 Spelers",
 
+  "fourPlayers": "4 Spelers",
+
+  "eightPlayers": "8 Spelers",
+
   "instructions": "Instructies",
 
   "back": "Terug",
   
   "tournament": "Toernooi",
 
-  "invite": "Invite",
-
-  "removeFriend": "Remove friend",
+  "invite": "Uitnodigen",
 
 
   "player": "Speler",
@@ -117,6 +129,8 @@
 
   "none": "Geen",
 
+  "custom": "Aangepaste",
+
   "christmas": "Kerstmis",
 
   "halloween": "Halloween",
@@ -129,13 +143,13 @@
 
   "playAgain": "Nogmaals spelen",
 
-  "userNotFound": "Username not found. Please provide an existing username",
+  "userNotFound": "Gebruikersnaam niet gevonden. Geef een bestaande gebruikersnaam alstublieft",
 
-  "sameUser": "Cannot add yourself as a friend.",
+  "sameUser": "Het is niet mogelijk om jezelf als vriend toe te voegen.",
 
-  "selectFriends": "You must select friends first.",
+  "selectFriends": "Selecteer eesrt een vriend.",
 
-  "noUserSelected": "No user selected",
+  "noUserSelected": "Geen gebruiker geselecteerd",
 
   "unexpectedError": "Onverwachte fout",
 

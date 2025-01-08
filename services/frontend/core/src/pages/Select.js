@@ -19,10 +19,10 @@ export default class extends Abstract {
 							</div>
 						</li>
 						<li class="nav-item pt-1 pb-2">
-							<a href="#" data-i18n-key="tournament" class="nav-link text-black fw-bold fs-5">Tournament</a>
+							<a href="/tournament" data-i18n-key="tournament" class="nav-link text-black fw-bold fs-5">Tournament</a>
 							<div class="d-none">
-								<a data-i18n-key="onePlayer" class="text-decoration-none text-black fw-bold fst-italic d-inline p-2" href="/tournament" data-link>1 Player</a>
-								<a data-i18n-key="twoPlayers" class="text-decoration-none text-black fw-bold fst-italic d-inline p-2" href="/tournament" data-link>2 Players</a>
+								<a data-i18n-key="fourPlayers" class="text-decoration-none text-black fw-bold fst-italic d-inline p-2" href="/tournamentConfig?nbPlayer=4" data-link>4 Players</a>
+								<a data-i18n-key="eightPlayers" class="text-decoration-none text-black fw-bold fst-italic d-inline p-2" href="/tournamentConfig?nbPlayer=8" data-link>8 Players</a>
 							</div>
 						</li>
 						<li class="nav-item pt-1 pb-2">
