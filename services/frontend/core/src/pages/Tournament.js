@@ -11,19 +11,10 @@ const goToConfig = () => {
 	navigateTo("/tournamentConfig");
 };
 
-const matchmaking = () => {
-
-	const names = JSON.parse(localStorage.getItem("tournament"));
-	const array = shuffle(names);
-
-	localStorage.setItem("tournament", JSON.stringify(array));
-	localStorage.setItem("tournamentMatch", 0);
-};
-
-const createColumnBlocks = (names, nbBlocks, blockID, end) => {
+const createColumnBlocks = (names, match, nbBlocks, blockID, end) => {
 
 	const fragment = document.createDocumentFragment();
-	const match = Number(localStorage.getItem("tournamentMatch")) * 2;
+	// const match = Number(localStorage.getItem("tournamentMatch")) * 2;
 
 	for (let i = 0; i < nbBlocks; ++i, ++blockID) {
 
@@ -56,6 +47,7 @@ const createColumnBlocks = (names, nbBlocks, blockID, end) => {
 
 const createTournament = (nbPlayer, names, end) => {
 
+	const match = (names.length % nbPlayer) * 2;
 	const nbColumns = nbPlayer === 8 ? 4 : 3;
 	const diagram = document.createElement("div");
 	diagram.classList.add("row", "m-0", "mt-4", "p-4", "bg-info");
@@ -68,7 +60,7 @@ const createTournament = (nbPlayer, names, end) => {
 		// if (end && idx === nbColumns) {
 		// 	column.style.justifyContent = "center";
 		// }
-		column.appendChild(createColumnBlocks(names, nbBlocks, blockID, end));
+		column.appendChild(createColumnBlocks(names, match, nbBlocks, blockID, end));
 		diagram.appendChild(column);
 		blockID += nbBlocks;
 	}
@@ -127,11 +119,26 @@ const getNumberOfPlayers = () => {
 	const nbPlayer = localStorage.getItem("nbPlayer");
 
 	if (!nbPlayer || !(nbPlayer === "4" || nbPlayer === "8")) {
-		console.log("Missing number of Players");
 		goToConfig();
 	}
 	return Number(localStorage.getItem("nbPlayer"));
 };
+
+const matchmaking = () => {
+
+	const names = JSON.parse(localStorage.getItem("tournament"));
+	const array = shuffle(names);
+
+	localStorage.setItem("tournament", JSON.stringify(array));
+	// localStorage.setItem("tournamentMatch", 0);
+};
+
+// const setTournamentMatch = nbPlayer => {
+
+// 	const tournament = JSON.parse(localStorage.getItem("tournament"));
+
+// 	localStorage.setItem("tournamentMatch", tournament.length % nbPlayer);
+// };
 
 export default class extends Abstract {
 	constructor() {
@@ -142,13 +149,14 @@ export default class extends Abstract {
 	async getHtml() {
 
 		const nbPlayer = getNumberOfPlayers();
-		const start = localStorage.getItem("tournamentMatch");
 
 		if (!localStorage.getItem("tournament")) {
 			goToConfig();
-		} else if (!start || start === "0" || JSON.parse(localStorage.getItem("tournament")).length === nbPlayer) {
+		} else if (JSON.parse(localStorage.getItem("tournament")).length === nbPlayer) {
 			matchmaking();
 		}
+
+		// setTournamentMatch(nbPlayer);
 
 		const names = JSON.parse(localStorage.getItem("tournament"));
 		const end = getEndState(nbPlayer, names);

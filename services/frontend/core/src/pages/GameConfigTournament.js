@@ -194,7 +194,7 @@ document.addEventListener("click", (event) => {
 			}
 		}
 		localStorage.setItem("tournament", JSON.stringify(round));
-		localStorage.setItem("tournamentMatch", 0);
+		// localStorage.setItem("tournamentMatch", 0);
 		localStorage.setItem("nbPlayer", nbPlayer);
 		// Build the URL with query parameters
 		const url = "/tournament";

@@ -60,7 +60,7 @@ export function insertButton(winnerName) {
         const array = JSON.parse(localStorage.getItem("tournament"));
         array.push(winnerName);
         localStorage.setItem("tournament", JSON.stringify(array));
-        localStorage.setItem("tournamentMatch", Number(localStorage.getItem("tournamentMatch")) + 1);
+        // localStorage.setItem("tournamentMatch", Number(localStorage.getItem("tournamentMatch")) + 1);
     } else {
         const rankingButton = document.createElement('a');
         rankingButton.setAttribute('href', '/endGame');
