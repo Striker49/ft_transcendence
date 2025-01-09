@@ -3,11 +3,14 @@ import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { getTranslatedWord, translatePage } from '../localization.js';
 
-export async function sendGameStats(scoreP1, scoreP2, ai, nameP2) {
+export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
     if (!localStorage.getItem("authToken"))
 		return;
 	const url = "https://localhost/api/game/played/";
     console.debug(localStorage.getItem("authToken"));
+    let userLogged = localStorage.getItem("username");
+    if (userLogged != nameP1 && userLogged != nameP2)
+        return;
 	try {
 		const response = await fetch(url, {
 			method: "POST",
