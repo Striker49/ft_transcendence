@@ -1,9 +1,6 @@
 import Abstract from "./Abstract.js";
 import { navigateTo } from "../router/router.js";
 import { shuffle } from "../utils/random.js";
-import { addImage } from "../utils/image.js";
-
-const trophyURL = "/src/assets/icons/trophy.png";
 
 const goToConfig = () => {
 	localStorage.removeItem("tournament");
@@ -11,36 +8,72 @@ const goToConfig = () => {
 	navigateTo("/tournamentConfig");
 };
 
-const createColumnBlocks = (names, match, nbBlocks, blockID, end) => {
+const createCol = (isBracket, isSecondCol) => {
+
+	const col = document.createElement("div");
+	col.className = "col";
+
+	if (isBracket) {
+
+		const row = document.createElement("div");
+		row.classList.add("row", "w-100", "bracket-h");
+		col.classList.add("d-flex", "align-items-center");
+		if (isSecondCol) {
+			col.classList.add("justify-content-end");
+		}
+		col.appendChild(row);
+	}
+	return col;
+};
+
+const createRow = (idx, multiplier) => {
+
+	const row = document.createElement("div");
+	row.classList.add("row", "w-100", "justify-content-center", "align-items-center", "position-relative");
+
+	if (idx > 1) {
+		row.classList.add("bracket-v");
+		row.style.height = (70 * (multiplier / 2) + 4) + "px";
+	}
+	return row;
+};
+
+const createColumnBlocks = (idx, names, match, nbPlayer, nbBlocks, blockID, end) => {
 
 	const fragment = document.createDocumentFragment();
 	// const match = Number(localStorage.getItem("tournamentMatch")) * 2;
 
 	for (let i = 0; i < nbBlocks; ++i, ++blockID) {
 
+		const row = createRow(idx, nbPlayer / nbBlocks);
 		const block = document.createElement("div");
-		block.className = "tournament-block";
+		block.classList.add("tournament-block", "rounded-pill", "fw-bold", "fst-italic", "box-shadow");
 		if (blockID === match || blockID - 1 === match) {
 			if (end) {
-				// block.classList.add("text-shadow", "text-orange", "fw-bold", "fs-1");
-				// block.classList.remove("tournament-block");
-				block.classList.add("bg-warning");
+				block.classList.add("bg-orange");
 			} else {
-				block.classList.add("bg-primary");
+				block.classList.add("bg-white");
 			}
 			block.id = blockID === match ? "p1" : "p2";
 		}
 		if (names && names[blockID]) {
 			block.textContent = names[blockID];
 		}
-		// if (end && nbBlocks === 1) {
-		// 	const winnerText = document.createElement("p");
-		// 	winnerText.classList.add("fw-bold", "fs-2");
-		// 	winnerText.setAttribute("data-i18n-key", "winner");
-		// 	winnerText.textContent = "Winner";
-		// 	fragment.appendChild(winnerText);
-		// }
-		fragment.appendChild(block);
+		if (end && nbBlocks === 1) {
+			const winnerText = document.createElement("p");
+			winnerText.classList.add("fw-bold", "fs-2", "position-absolute", "top-0", "text-center");
+			if (nbPlayer === 8) {
+				winnerText.classList.add("mt-5");
+			}
+			winnerText.setAttribute("data-i18n-key", "winner");
+			winnerText.textContent = "Winner";
+			row.appendChild(winnerText);
+		}
+		row.appendChild(createCol(idx > 1, false));
+		row.appendChild(block);
+		row.appendChild(createCol(nbBlocks > 1, true));
+
+		fragment.appendChild(row);
 	}
 	return fragment;
 };
@@ -57,10 +90,7 @@ const createTournament = (nbPlayer, names, end) => {
 		const nbBlocks = idx === nbColumns ? 1 : Math.floor(nbPlayer / idx);
 		const column = document.createElement("div");
 		column.classList.add("col", "tournament-column");
-		// if (end && idx === nbColumns) {
-		// 	column.style.justifyContent = "center";
-		// }
-		column.appendChild(createColumnBlocks(names, match, nbBlocks, blockID, end));
+		column.appendChild(createColumnBlocks(idx, names, match, nbPlayer, nbBlocks, blockID, end));
 		diagram.appendChild(column);
 		blockID += nbBlocks;
 	}
