@@ -101,6 +101,7 @@ export default class extends Abstract {
 		const userData = await getUserProfile();
 		nbPlayer = await getNbPlayer("nbPlayer");
 		username = (userData ? userData.username : localTranslations["playerOne"]);
+		localStorage.setItem("powerUps", false);
 		const playerLabels = await getLabels(nbPlayer);
 		const playerInputs = await getInputs(nbPlayer);
 		return `
@@ -132,7 +133,7 @@ export default class extends Abstract {
 									<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 								</select>
 							</p>
-							<p><input type="checkbox" id="powerUps" value="false"></p>
+							<p><input type="checkbox" id="powerUps"></p>
 						</div>
 					</div>
 					<div class="row mx-0 my-4 justify-content-center">
@@ -167,19 +168,6 @@ document.addEventListener("change", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-    if (event.target.matches("#powerUps")) {
-		console.log("powerups!!!");
-		const checkBox = document.getElementById("powerUps");
-		// console.log("checkbox", checkBox);
-		if (checkBox.value == "true") {
-			checkBox.value = false;
-			localStorage.setItem("powerUps", false);
-		}
-		else {
-			checkBox.value = true;
-			localStorage.setItem("powerUps", true)
-		}
-	}
     if (event.target.matches("#startTournament")) {
         // Prevent default link behavior if it's an <a> tag
         event.preventDefault();
