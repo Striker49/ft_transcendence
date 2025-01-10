@@ -427,6 +427,14 @@ const setSelectedLanguage = option => {
 	return "";
 };
 
+const displayBio = () => {
+	
+	if (!userProfile.bio || userProfile.bio === "null") {
+		return "You are an amazing Pong player seeking retribution for the slaughtering of the Atari 2600. Please remain civil.";
+	}
+	return userProfile.bio;
+};
+
 const displayButtons = isEditMode => {
 	if (isEditMode) {
 		return `
@@ -528,7 +536,7 @@ const displayUserProfile = () => {
 						<p class="text-center py-4 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${userProfile.username}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${userProfile.first_name} ${userProfile.last_name}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
-						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
+						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${displayBio()}</p>
 						<p class="m-0 mt-4 text-center">
 							<button type="button" class="btn btn-dark rounded-pill px-4 m-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							${link42Btn}

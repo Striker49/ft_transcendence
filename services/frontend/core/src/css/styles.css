@@ -105,11 +105,13 @@ h1 {
 
 .tournament-block {
 	background-color: lightgray;
-	width: 150px;
+	width: 130px;
 	height: 50px;
 	margin: 10px 0;
 	text-align: center;
 	line-height: 50px;
+	font-weight: bold;
+	font-style: italic;
 }
 
 .tournament-block input {

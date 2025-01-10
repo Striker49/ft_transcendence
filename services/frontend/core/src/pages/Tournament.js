@@ -47,7 +47,7 @@ const createColumnBlocks = (idx, names, match, nbPlayer, nbBlocks, blockID, end)
 
 		const row = createRow(idx, nbPlayer / nbBlocks);
 		const block = document.createElement("div");
-		block.classList.add("tournament-block", "rounded-pill", "fw-bold", "fst-italic", "box-shadow");
+		block.classList.add("tournament-block", "rounded-pill", "box-shadow");
 		if (blockID === match || blockID - 1 === match) {
 			if (end) {
 				block.classList.add("bg-orange");
