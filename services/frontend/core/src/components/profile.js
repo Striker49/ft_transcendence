@@ -510,7 +510,7 @@ const displayProfileForm = isEditMode => {
 						${addAvatarSection(isEditMode)}
 						<div class="py-4 border-bottom border-2 border-dark">
 							<label for="bio" class="form-label">Bio</label>
-							<textarea class="form-control" name="bio" id="bio">${userProfile.bio}</textarea>
+							<textarea class="form-control" name="bio" id="bio">${displayBio()}</textarea>
 						</div>
 						<div class="pt-4 text-center">
 							${displayButtons(isEditMode)}
