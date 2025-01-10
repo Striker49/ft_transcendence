@@ -79,6 +79,7 @@ export default class extends Abstract {
 		const ai = await getNbPlayer("nbPlayer");
 		username = (userData ? userData.username : localTranslations["playerOne"])
 		username2 = localTranslations["playerTwo"] || "Player 2";
+		localStorage.setItem("powerUps", false);
 		return `
 		<div class="container bg-dark bg-opacity-75 rounded-5 p-5">
 			<div class="bg-info bg-opacity-50 border border-5 border-info rounded-5 text-black fw-bold">
@@ -109,7 +110,7 @@ export default class extends Abstract {
 								<option data-i18n-key="winter" value="Winter" ${localStorage.getItem('theme') === 'Winter' ? 'selected' : ''}>Winter</option>
 							</select>
 						</p>
-						<p><input type="checkbox" id="powerUps" value="true" checked></p>
+						<p><input type="checkbox" id="powerUps"></p>
 					</div>
 				</div>
 				<div class="row mx-0 my-4 justify-content-center">
@@ -151,13 +152,11 @@ document.addEventListener("click", (event) => {
 		// console.log("checkbox", checkBox);
 		if (checkBox.value == "true") {
 			checkBox.value = false;
-			checkBox.checked = false;
 			localStorage.setItem("powerUps", false);
 		}
 		else {
 			checkBox.value = true;
-			checkBox.checked = true;
-			localStorage.setItem("powerUps", true)
+			localStorage.setItem("powerUps", true);
 		}
 	}
     if (event.target.matches("#startBtn")) {

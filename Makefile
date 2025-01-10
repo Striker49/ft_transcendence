@@ -35,6 +35,11 @@ dev:
 	make build
 	make up
 
+prod:
+	make down
+	docker-compose -f docker-compose.prod.yml build --no-cache
+	docker-compose -f docker-compose.prod.yml up -d
+
 eval:
 	docker stop $$(docker ps -qa); \
 	docker rm $$(docker ps -qa); \
