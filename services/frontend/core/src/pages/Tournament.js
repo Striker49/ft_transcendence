@@ -41,7 +41,6 @@ const createRow = (idx, multiplier) => {
 const createColumnBlocks = (idx, names, match, nbPlayer, nbBlocks, blockID, end) => {
 
 	const fragment = document.createDocumentFragment();
-	// const match = Number(localStorage.getItem("tournamentMatch")) * 2;
 
 	for (let i = 0; i < nbBlocks; ++i, ++blockID) {
 
@@ -130,21 +129,19 @@ const displayTournamentBtn = end => {
 	return btn.outerHTML;
 };
 
-const getEndState = (nbPlayer, names) => {
+export const getEndState = () => {
+
+	const nbPlayer = Number(localStorage.getItem("nbPlayer"));
+	const names = JSON.parse(localStorage.getItem("tournament"));
 
 	if ((nbPlayer === 4 && names.length === 7)
 	||	(nbPlayer === 8 && names.length === 15)) {
-		console.log("Tournament Over");
 		return true;
 	}
 	return false;
 };
 
 const getNumberOfPlayers = () => {
-
-	// const queryString = window.location.search;
-	// const query = new URLSearchParams(queryString);
-	// const nbPlayer = query.get("nbPlayer");
 
 	const nbPlayer = localStorage.getItem("nbPlayer");
 
@@ -160,15 +157,7 @@ const matchmaking = () => {
 	const array = shuffle(names);
 
 	localStorage.setItem("tournament", JSON.stringify(array));
-	// localStorage.setItem("tournamentMatch", 0);
 };
-
-// const setTournamentMatch = nbPlayer => {
-
-// 	const tournament = JSON.parse(localStorage.getItem("tournament"));
-
-// 	localStorage.setItem("tournamentMatch", tournament.length % nbPlayer);
-// };
 
 export default class extends Abstract {
 	constructor() {
@@ -186,10 +175,8 @@ export default class extends Abstract {
 			matchmaking();
 		}
 
-		// setTournamentMatch(nbPlayer);
-
+		const end = getEndState();
 		const names = JSON.parse(localStorage.getItem("tournament"));
-		const end = getEndState(nbPlayer, names);
 		const tournament = createTournament(nbPlayer, names, end);
 		const tournamentBtn = displayTournamentBtn(end);
 
