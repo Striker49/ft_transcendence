@@ -63,6 +63,8 @@ const createColumnBlocks = (idx, names, match, nbPlayer, nbBlocks, blockID, end)
 			winnerText.classList.add("fw-bold", "fs-2", "position-absolute", "top-0", "text-center");
 			if (nbPlayer === 8) {
 				winnerText.classList.add("mt-5");
+			} else if (nbPlayer === 4) {
+				winnerText.classList.add("margin-top-negative");
 			}
 			winnerText.setAttribute("data-i18n-key", "winner");
 			winnerText.textContent = "Winner";
@@ -83,6 +85,7 @@ const createTournament = (nbPlayer, names, end) => {
 	const nbColumns = nbPlayer === 8 ? 4 : 3;
 	const diagram = document.createElement("div");
 	diagram.classList.add("row", "m-0", "mt-4", "p-4", "bg-info");
+	diagram.id = "tournament-diagram";
 
 	for (let idx = 1, blockID = 0; idx <= nbColumns; ++idx) {
 

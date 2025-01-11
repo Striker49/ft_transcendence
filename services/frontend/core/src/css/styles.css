@@ -285,9 +285,34 @@ h1 {
     margin: 0 10px;
 }
 
+/* Negative margins */
+
+.margin-top-negative {
+	margin-top: -5px;
+}
+
 /* ========= Media Queries ========= */
 
 @media (max-width: 575.98px) {
+
+	.tournament-column {
+		padding: 25px 0;
+		border-bottom: 4px solid #212529;
+	}
+
+	.tournament-column:first-child {
+		padding-top: 0;
+	}
+
+	.tournament-column:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	#tournament-diagram {
+		display: block;
+	}
+
 	#ranking-section .rank-block div {
 		height: auto !important;
 	}

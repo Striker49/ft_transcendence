@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { Box } from './box.js';
 import { Ball } from './ball.js';
 import { getTranslatedWord, translatePage } from '../localization.js';
+import { getEndState } from '../pages/Tournament.js';
 
 export async function sendGameStats(scoreP1, scoreP2, ai, nameP2) {
     if (!localStorage.getItem("authToken"))
@@ -39,27 +40,41 @@ export function insertButton(winnerName) {
     div.setAttribute('class', "mt-5 d-flex justify-content-center");
 
     if (localStorage.getItem("tournament")) {
-        const nextMatchButton = document.createElement('a');
-        nextMatchButton.setAttribute('href', '/tournament');
-        nextMatchButton.setAttribute('data-i18n-key', 'nextMatch');
-        nextMatchButton.setAttribute('class', 'btn btn-primary');
-        nextMatchButton.setAttribute('id', 'nextMatch');
-        nextMatchButton.setAttribute('data-link', 'true');
-        nextMatchButton.style.margin = '0 10px';
-        nextMatchButton.innerHTML = "Next Match";
-        const stopButton = document.createElement('a');
-        stopButton.setAttribute('href', '/');
-        stopButton.setAttribute('data-i18n-key', 'stopTournament');
-        stopButton.setAttribute('class', 'btn btn-primary');
-        stopButton.setAttribute('id', 'stopTournament');
-        stopButton.setAttribute('data-link', 'true');
-        stopButton.innerHTML = "Stop Tournament";
-        stopButton.style.margin = '0 10px';
-        div.appendChild(nextMatchButton);
-        div.appendChild(stopButton);
+
         const array = JSON.parse(localStorage.getItem("tournament"));
         array.push(winnerName);
         localStorage.setItem("tournament", JSON.stringify(array));
+
+        if (getEndState()) {
+            const showResultButton = document.createElement('a');
+            showResultButton.setAttribute('href', '/tournament');
+            showResultButton.setAttribute('data-i18n-key', 'showResult');
+            showResultButton.setAttribute('class', 'btn btn-primary');
+            showResultButton.setAttribute('id', 'showResult');
+            showResultButton.setAttribute('data-link', 'true');
+            showResultButton.style.margin = '0 10px';
+            showResultButton.innerHTML = "Show Result";
+            div.appendChild(showResultButton);
+        } else {
+            const nextMatchButton = document.createElement('a');
+            nextMatchButton.setAttribute('href', '/tournament');
+            nextMatchButton.setAttribute('data-i18n-key', 'nextMatch');
+            nextMatchButton.setAttribute('class', 'btn btn-primary');
+            nextMatchButton.setAttribute('id', 'nextMatch');
+            nextMatchButton.setAttribute('data-link', 'true');
+            nextMatchButton.style.margin = '0 10px';
+            nextMatchButton.innerHTML = "Next Match";
+            const stopButton = document.createElement('a');
+            stopButton.setAttribute('href', '/');
+            stopButton.setAttribute('data-i18n-key', 'stopTournament');
+            stopButton.setAttribute('class', 'btn btn-primary');
+            stopButton.setAttribute('id', 'stopTournament');
+            stopButton.setAttribute('data-link', 'true');
+            stopButton.innerHTML = "Stop Tournament";
+            stopButton.style.margin = '0 10px';
+            div.appendChild(nextMatchButton);
+            div.appendChild(stopButton);
+        }
     } else {
         const rankingButton = document.createElement('a');
         rankingButton.setAttribute('href', '/endGame');

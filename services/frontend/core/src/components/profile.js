@@ -289,7 +289,7 @@ const fetchGamesHistory = async () => {
 		const json = await handleFetch(url, "GET", "", headers);
 		console.log("======= Games History =======");
 		console.log(json);
-		return json;
+		return json.reverse().slice(0, 20);
 	} catch (error) {
 		console.error(error.message);
 		return null;
@@ -313,14 +313,14 @@ const listGamesHistory = async () => {
 			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
 				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
 			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
-			gamesHistoryDiv.insertAdjacentHTML("afterbegin", `
+			gamesHistoryDiv.innerHTML += `
 				<div class="row">
 					<p class="col-12 col-sm-3 date">${game.created.slice(0, -3)}</p>
 					<p class="col-12 col-sm-3 vs">vs. ${player2}</p>
 					<p class="col-12 col-sm-3 score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
 					<p class="col-12 col-sm-3 status fw-bold">${status}</p>
 				</div>
-			`);
+			`;
 		});
 	} else {
 		document.querySelector("#games-history").innerHTML = `

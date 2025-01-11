@@ -112,6 +112,14 @@
   
   "tournament": "Toernooi",
 
+  "nextMatch": "Volgende wedstrijd",
+
+  "stopTournament": "Stop toernooi",
+
+  "showResult": "Resultaat weergeven",
+
+  "winner": "Winnaar",
+
   "invite": "Uitnodigen",
 
 
@@ -136,8 +144,6 @@
   "halloween": "Halloween",
 
   "winter": "Winter",
-
-  "custom": "Aangepast",
 
   "ranking": "Ranglijst",
 
