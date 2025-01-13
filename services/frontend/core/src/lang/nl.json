@@ -80,7 +80,11 @@
 
   "passwordNotOriginal": "Wachtwoord kan niet 'wachtwoord' zijn",
 
+  "passwordNotValid": "Voer een geldig wachtwoord in",
+
   "usernameRequired": "Gebruikersnaam is verplicht",
+
+  "fieldRequired": "Dit veld is verplicht",
 
   "validEmail": "Voer een geldig e-mailadres in",
 

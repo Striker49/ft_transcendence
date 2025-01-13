@@ -80,7 +80,11 @@
 
   "passwordNotOriginal": "Password cannot be password",
 
+  "passwordNotValid": "Please enter valid password",
+
   "usernameRequired": "Username is required",
+
+  "fieldRequired": "This field is required",
 
   "validEmail": "Please enter a valid email address",
 
