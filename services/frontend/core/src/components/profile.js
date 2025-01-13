@@ -494,10 +494,12 @@ const displayProfileForm = isEditMode => {
 						<div class="py-2 border-top border-2 border-dark">
 							<label for="first_name" class="form-label" data-i18n-key="firstName">First name</label>
 							<input type="text" class="form-control" name="first_name" id="first_name" value="${userProfile.first_name}">
+							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 						</div>
 						<div class="py-2">
 							<label for="last_name" class="form-label" data-i18n-key="lastName">Last name</label>
 							<input type="text" class="form-control" name="last_name" id="last_name" value="${userProfile.last_name}">
+							<p class="form-error my-0 mt-2 fst-italic lh-1" style="font-size: 12px;"></p>
 						</div>
 						<div class="pb-2">
 							<label for="lang" class="form-label" data-i18n-key="language">Preferred language</label>

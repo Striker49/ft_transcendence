@@ -45,6 +45,21 @@ const init = () => {
 	animate();
 }
 
+const roundPos = value => {
+
+	const min = -5;
+	const max = 5;
+
+	if (value > min && value < max) {
+		if (value < 0) {
+			value = min;
+		} else {
+			value = max;
+		}
+	}
+	return value;
+};
+
 // Populate scene with stars
 const addStar = () => {
 	const geometry = new THREE.SphereGeometry(0.25, 4, 4);
@@ -53,7 +68,7 @@ const addStar = () => {
 
 	const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread( 100 ));
 
-	star.position.set(x, y, z);
+	star.position.set(roundPos(x), roundPos(y), roundPos(z));
 	scene.add(star);
 };
 

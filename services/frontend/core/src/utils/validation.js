@@ -27,11 +27,23 @@ export const printError = (span, langKey, msg) => {
 	}
 };
 
+const validateField = (field, isValid) => {
+
+	const span = field.nextElementSibling;
+
+	if (field.value === "" || field.value == null || isWhiteSpace(field.value)) {
+		printError(span, "fieldRequired", "This field is required");
+		return false;
+	}
+	clearSpan(span);
+	return isValid;
+};
+
 const validateUsername = (username, isValid) => {
 
 	const span = username.nextElementSibling;
 
-	if (username.value === "" || username.value == null) {
+	if (username.value === "" || username.value == null || isWhiteSpace(username.value)) {
 		printError(span, "usernameRequired", "Username is required");
 		return false;
 	}
@@ -50,6 +62,9 @@ const validatePassword = (password, isValid) => {
 		return false;
 	} else if (password.value === "password" || password.value === "motdepasse" || password.value === "wachtwoord") {
 		printError(span, "passwordNotOriginal", "Password cannot be password");
+		return false;
+	} else if (isWhiteSpace(password.value)) {
+		printError(span, "passwordNotValid", "Please enter valid password");
 		return false;
 	}
 	clearSpan(span);
@@ -81,7 +96,21 @@ export const validateForm = form => {
 			isValid = validatePassword(inputs[i], isValid);
 		} else if (inputs[i].name === "username") {
 			isValid = validateUsername(inputs[i], isValid);
+		} else if (inputs[i].name === "first_name" || inputs[i].name === "last_name") {
+			isValid = validateField(inputs[i], isValid);
 		}
 	}
 	return isValid;
+};
+
+// White-space
+export const isWhiteSpace = str => {
+	
+	const regex = /[^\s]/g; // Searches for anything other than a whitespace
+
+	if (str.search(regex) === -1) {
+		// No match was found and so, there's only whitespace characters.
+		return true;
+	}
+	return false;
 };
