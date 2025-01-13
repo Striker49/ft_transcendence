@@ -27,7 +27,7 @@ export const printError = (span, langKey, msg) => {
 	}
 };
 
-const validateField = (field, isValid) => {
+export const validateField = (field, isValid) => {
 
 	const span = field.nextElementSibling;
 
