@@ -353,11 +353,13 @@ function updateGame() {
             //Goes up if next ball calculated position is higher or goes down if it's lower
             if (targetLocation(powerUpLocation, newZPosition) < paddleR.position.z && (paddleR.back - speed >= ground.back) && !approximate(newZPosition, paddleR.position.z, powerUpLocation, paddleDepth))
             {
-                paddleR.velocity.z = -speed;
+                if (ball.velocity.x > 0 && ball.position.x > (paddleL.position.x * 0.50))
+                    paddleR.velocity.z = -speed;
             }
             else if (targetLocation(powerUpLocation, newZPosition) > paddleR.position.z && (paddleR.front + speed <= ground.front) && !approximate(newZPosition, paddleR.position.z, powerUpLocation, paddleDepth))
             {
-                paddleR.velocity.z = speed;
+                if (ball.velocity.x > 0 && ball.position.x > (paddleL.position.x * 0.50))
+                    paddleR.velocity.z = speed;
             }
             else
                 paddleR.velocity.z = 0;
