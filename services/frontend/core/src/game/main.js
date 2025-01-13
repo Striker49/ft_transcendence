@@ -481,6 +481,9 @@ document.querySelectorAll(".flag").forEach(flag => {
             winnerText.material.dispose();
             winnerText.geometry.dispose();
             scene.remove(winnerText);
+            winnerNameText.material.dispose();
+            winnerNameText.geometry.dispose();
+            scene.remove(winnerNameText);
             showWinner(getTranslatedWord(winnerName));
         }
     }, 100);
