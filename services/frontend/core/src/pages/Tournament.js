@@ -1,9 +1,6 @@
 import Abstract from "./Abstract.js";
 import { navigateTo } from "../router/router.js";
 import { shuffle } from "../utils/random.js";
-import { addImage } from "../utils/image.js";
-
-const trophyURL = "/src/assets/icons/trophy.png";
 
 const goToConfig = () => {
 	localStorage.removeItem("tournament");
@@ -11,64 +8,91 @@ const goToConfig = () => {
 	navigateTo("/tournamentConfig");
 };
 
-const matchmaking = () => {
+const createCol = (isBracket, isSecondCol) => {
 
-	const names = JSON.parse(localStorage.getItem("tournament"));
-	const array = shuffle(names);
+	const col = document.createElement("div");
+	col.className = "col";
 
-	localStorage.setItem("tournament", JSON.stringify(array));
-	localStorage.setItem("tournamentMatch", 0);
+	if (isBracket) {
+
+		const row = document.createElement("div");
+		row.classList.add("row", "w-100", "bracket-h");
+		col.classList.add("d-flex", "align-items-center");
+		if (isSecondCol) {
+			col.classList.add("justify-content-end");
+		}
+		col.appendChild(row);
+	}
+	return col;
 };
 
-const createColumnBlocks = (names, nbBlocks, blockID, end) => {
+const createRow = (idx, multiplier) => {
+
+	const row = document.createElement("div");
+	row.classList.add("row", "w-100", "justify-content-center", "align-items-center", "position-relative");
+
+	if (idx > 1) {
+		row.classList.add("bracket-v");
+		row.style.height = (70 * (multiplier / 2) + 4) + "px";
+	}
+	return row;
+};
+
+const createColumnBlocks = (idx, names, match, nbPlayer, nbBlocks, blockID, end) => {
 
 	const fragment = document.createDocumentFragment();
-	const match = Number(localStorage.getItem("tournamentMatch")) * 2;
 
 	for (let i = 0; i < nbBlocks; ++i, ++blockID) {
 
+		const row = createRow(idx, nbPlayer / nbBlocks);
 		const block = document.createElement("div");
-		block.className = "tournament-block";
+		block.classList.add("tournament-block", "rounded-pill", "box-shadow");
 		if (blockID === match || blockID - 1 === match) {
 			if (end) {
-				// block.classList.add("text-shadow", "text-orange", "fw-bold", "fs-1");
-				// block.classList.remove("tournament-block");
-				block.classList.add("bg-warning");
+				block.classList.add("bg-orange");
 			} else {
-				block.classList.add("bg-primary");
+				block.classList.add("bg-white");
 			}
 			block.id = blockID === match ? "p1" : "p2";
 		}
 		if (names && names[blockID]) {
 			block.textContent = names[blockID];
 		}
-		// if (end && nbBlocks === 1) {
-		// 	const winnerText = document.createElement("p");
-		// 	winnerText.classList.add("fw-bold", "fs-2");
-		// 	winnerText.setAttribute("data-i18n-key", "winner");
-		// 	winnerText.textContent = "Winner";
-		// 	fragment.appendChild(winnerText);
-		// }
-		fragment.appendChild(block);
+		if (end && nbBlocks === 1) {
+			const winnerText = document.createElement("p");
+			winnerText.classList.add("fw-bold", "fs-2", "position-absolute", "top-0", "text-center");
+			if (nbPlayer === 8) {
+				winnerText.classList.add("mt-5");
+			} else if (nbPlayer === 4) {
+				winnerText.classList.add("margin-top-negative");
+			}
+			winnerText.setAttribute("data-i18n-key", "winner");
+			winnerText.textContent = "Winner";
+			row.appendChild(winnerText);
+		}
+		row.appendChild(createCol(idx > 1, false));
+		row.appendChild(block);
+		row.appendChild(createCol(nbBlocks > 1, true));
+
+		fragment.appendChild(row);
 	}
 	return fragment;
 };
 
 const createTournament = (nbPlayer, names, end) => {
 
+	const match = (names.length % nbPlayer) * 2;
 	const nbColumns = nbPlayer === 8 ? 4 : 3;
 	const diagram = document.createElement("div");
 	diagram.classList.add("row", "m-0", "mt-4", "p-4", "bg-info");
+	diagram.id = "tournament-diagram";
 
 	for (let idx = 1, blockID = 0; idx <= nbColumns; ++idx) {
 
 		const nbBlocks = idx === nbColumns ? 1 : Math.floor(nbPlayer / idx);
 		const column = document.createElement("div");
 		column.classList.add("col", "tournament-column");
-		// if (end && idx === nbColumns) {
-		// 	column.style.justifyContent = "center";
-		// }
-		column.appendChild(createColumnBlocks(names, nbBlocks, blockID, end));
+		column.appendChild(createColumnBlocks(idx, names, match, nbPlayer, nbBlocks, blockID, end));
 		diagram.appendChild(column);
 		blockID += nbBlocks;
 	}
@@ -108,11 +132,13 @@ const displayTournamentBtn = end => {
 	return btn.outerHTML;
 };
 
-const getEndState = (nbPlayer, names) => {
+export const getEndState = () => {
+
+	const nbPlayer = Number(localStorage.getItem("nbPlayer"));
+	const names = JSON.parse(localStorage.getItem("tournament"));
 
 	if ((nbPlayer === 4 && names.length === 7)
 	||	(nbPlayer === 8 && names.length === 15)) {
-		console.log("Tournament Over");
 		return true;
 	}
 	return false;
@@ -120,17 +146,20 @@ const getEndState = (nbPlayer, names) => {
 
 const getNumberOfPlayers = () => {
 
-	// const queryString = window.location.search;
-	// const query = new URLSearchParams(queryString);
-	// const nbPlayer = query.get("nbPlayer");
-
 	const nbPlayer = localStorage.getItem("nbPlayer");
 
 	if (!nbPlayer || !(nbPlayer === "4" || nbPlayer === "8")) {
-		console.log("Missing number of Players");
 		goToConfig();
 	}
 	return Number(localStorage.getItem("nbPlayer"));
+};
+
+const matchmaking = () => {
+
+	const names = JSON.parse(localStorage.getItem("tournament"));
+	const array = shuffle(names);
+
+	localStorage.setItem("tournament", JSON.stringify(array));
 };
 
 export default class extends Abstract {
@@ -142,16 +171,15 @@ export default class extends Abstract {
 	async getHtml() {
 
 		const nbPlayer = getNumberOfPlayers();
-		const start = localStorage.getItem("tournamentMatch");
 
 		if (!localStorage.getItem("tournament")) {
 			goToConfig();
-		} else if (!start || start === "0" || JSON.parse(localStorage.getItem("tournament")).length === nbPlayer) {
+		} else if (JSON.parse(localStorage.getItem("tournament")).length === nbPlayer) {
 			matchmaking();
 		}
 
+		const end = getEndState();
 		const names = JSON.parse(localStorage.getItem("tournament"));
-		const end = getEndState(nbPlayer, names);
 		const tournament = createTournament(nbPlayer, names, end);
 		const tournamentBtn = displayTournamentBtn(end);
 

@@ -112,9 +112,15 @@
   
   "tournament": "Tournoi",
 
-  "invite": "Inviter",
+  "nextMatch": "Prochain match",
 
-  "removeFriend": "Supprimer un ami",
+  "stopTournament": "Arrêter le tournoi",
+
+  "showResult": "Voir le résultat",
+
+  "winner": "Gagnant",
+
+  "invite": "Inviter",
 
   
   "player": "Joueur",
@@ -138,8 +144,6 @@
   "halloween": "Halloween",
 
   "winter": "Hiver",
-
-  "custom": "Personnalisé",
 
   "ranking": "Classement",
 

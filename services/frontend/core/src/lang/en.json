@@ -94,8 +94,6 @@
 
   "friends": "Friends",
 
-  "removeFriend": "Remove friend",
-
   "addFriend": "Add friend",
 
 
@@ -115,6 +113,13 @@
   
   "tournament": "Tournament",
 
+  "nextMatch": "Next Match",
+
+  "stopTournament": "Stop Tournament",
+
+  "showResult": "Show Result",
+
+  "winner": "Winner",
 
   "player": "Player",
   
@@ -137,8 +142,6 @@
   "halloween": "Halloween",
 
   "winter": "Winter",
-
-  "custom": "Custom",
 
   "ranking": "Ranking",
 

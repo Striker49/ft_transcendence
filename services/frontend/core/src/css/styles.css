@@ -104,13 +104,14 @@ h1 {
 /* ========= Tournament ========= */
 
 .tournament-block {
-	border: 1px solid black;
 	background-color: lightgray;
-	width: 150px;
+	width: 130px;
 	height: 50px;
 	margin: 10px 0;
 	text-align: center;
 	line-height: 50px;
+	font-weight: bold;
+	font-style: italic;
 }
 
 .tournament-block input {
@@ -124,10 +125,7 @@ h1 {
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
-}
-
-.trophy-img {
-	margin: 24px;
+	padding: 0;
 }
 
 /* ========= Profile ========= */
@@ -287,9 +285,34 @@ h1 {
     margin: 0 10px;
 }
 
+/* Negative margins */
+
+.margin-top-negative {
+	margin-top: -5px;
+}
+
 /* ========= Media Queries ========= */
 
 @media (max-width: 575.98px) {
+
+	.tournament-column {
+		padding: 25px 0;
+		border-bottom: 4px solid #212529;
+	}
+
+	.tournament-column:first-child {
+		padding-top: 0;
+	}
+
+	.tournament-column:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	#tournament-diagram {
+		display: block;
+	}
+
 	#ranking-section .rank-block div {
 		height: auto !important;
 	}
@@ -357,4 +380,17 @@ h1 {
 		right: 18px;
 		top: 65px;
 	}
+}
+
+@media (min-width: 992px) {
+
+	.bracket-h {
+		background-color: #212529;
+		height: 4px;
+	}
+
+	.bracket-v {
+		border-left: 4px solid #212529;
+	}
+
 }

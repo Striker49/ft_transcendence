@@ -289,7 +289,7 @@ const fetchGamesHistory = async () => {
 		const json = await handleFetch(url, "GET", "", headers);
 		console.log("======= Games History =======");
 		console.log(json);
-		return json;
+		return json.reverse().slice(0, 20);
 	} catch (error) {
 		console.error(error.message);
 		return null;
@@ -313,14 +313,14 @@ const listGamesHistory = async () => {
 			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
 				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
 			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
-			gamesHistoryDiv.insertAdjacentHTML("afterbegin", `
+			gamesHistoryDiv.innerHTML += `
 				<div class="row">
 					<p class="col-12 col-sm-3 date">${game.created.slice(0, -3)}</p>
 					<p class="col-12 col-sm-3 vs">vs. ${player2}</p>
 					<p class="col-12 col-sm-3 score"><span data-i18n-key="score">Score</span>: ${game.score_player1} <span data-i18n-key="to">${localTranslations["to"]}</span> ${game.score_player2}</p>
 					<p class="col-12 col-sm-3 status fw-bold">${status}</p>
 				</div>
-			`);
+			`;
 		});
 	} else {
 		document.querySelector("#games-history").innerHTML = `
@@ -427,6 +427,14 @@ const setSelectedLanguage = option => {
 	return "";
 };
 
+const displayBio = () => {
+	
+	if (!userProfile.bio || userProfile.bio === "null") {
+		return "You are an amazing Pong player seeking retribution for the slaughtering of the Atari 2600. Please remain civil.";
+	}
+	return userProfile.bio;
+};
+
 const displayButtons = isEditMode => {
 	if (isEditMode) {
 		return `
@@ -502,7 +510,7 @@ const displayProfileForm = isEditMode => {
 						${addAvatarSection(isEditMode)}
 						<div class="py-4 border-bottom border-2 border-dark">
 							<label for="bio" class="form-label">Bio</label>
-							<textarea class="form-control" name="bio" id="bio">${userProfile.bio}</textarea>
+							<textarea class="form-control" name="bio" id="bio">${displayBio()}</textarea>
 						</div>
 						<div class="pt-4 text-center">
 							${displayButtons(isEditMode)}
@@ -528,7 +536,7 @@ const displayUserProfile = () => {
 						<p class="text-center py-4 m-0 fs-2 fw-bold fst-italic border-bottom border-2 border-dark">${userProfile.username}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="name">Name</span> : ${userProfile.first_name} ${userProfile.last_name}</p>
 						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold" data-i18n-key="email">Email</span> : ${userProfile.email}</p>
-						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${userProfile.bio}</p>
+						<p class="py-4 px-2 m-0 border-bottom border-2 border-dark"><span class="fw-bold">Bio</span> : ${displayBio()}</p>
 						<p class="m-0 mt-4 text-center">
 							<button type="button" class="btn btn-dark rounded-pill px-4 m-2" data-bs-toggle="offcanvas" data-i18n-key="friendlist" data-bs-target="#friendlist" aria-controls="friendlist">Friendlist</button>
 							${link42Btn}
