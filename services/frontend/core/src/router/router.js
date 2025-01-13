@@ -120,8 +120,8 @@ init();
 
 window.addEventListener("popstate", () => {
     const currentUrl = window.location.pathname;
-    if (currentUrl === "/game") {
-        history.replaceState(null, null, "/gameConfig"); // Redirect instead of /game
+    if (currentUrl === "/game" || currentUrl === "/gameConfig") {
+        history.replaceState(null, null, "/select"); // Redirect instead of /game
         router(); // Reload the page for /gameConfig
     } else {
         router(); // Regular route change handling

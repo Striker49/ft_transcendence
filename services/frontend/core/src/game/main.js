@@ -47,6 +47,7 @@ let ai = false;
 let newZPosition = 0;
 let state = 0;
 let winnerName;
+let winnerColor;
 
 let paddleL;
 let paddleR;
@@ -426,7 +427,7 @@ export const updateGameScene = () => {
     }
 }
 
-function showWinner(winnerName, winnerColor) {
+function showWinner(winnerName) {
     let winnerWord = getTranslatedWord("winner");
     let translations = JSON.parse(localStorage.getItem("translations"));
     if (translations && (winnerName == "Player 1" || winnerName == "Joueur 1" || winnerName == "Speler 1"))
@@ -449,7 +450,7 @@ function showWinner(winnerName, winnerColor) {
 
 function endGame(winner) {
     winnerName = (winner == 2 ? nameP1 : nameP2);
-    let winnerColor = (winner == 2 ? paddleL.material.color : paddleR.material.color);
+    winnerColor = (winner == 2 ? paddleL.material.color : paddleR.material.color);
     console.debug("winner", winner);
     console.debug("nameP1", nameP1);
     console.debug("nameP2", nameP2);
@@ -459,8 +460,8 @@ function endGame(winner) {
     console.log(textnameP1);
     state = 0;
     updateScore();
-    showWinner(winnerName, winnerColor);
-    sendGameStats(scoreP1, scoreP2, ai, nameP2);
+    showWinner(winnerName);
+    sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2);
     insertButton(winnerName);
 }
 
@@ -480,6 +481,9 @@ document.querySelectorAll(".flag").forEach(flag => {
             winnerText.material.dispose();
             winnerText.geometry.dispose();
             scene.remove(winnerText);
+            winnerNameText.material.dispose();
+            winnerNameText.geometry.dispose();
+            scene.remove(winnerNameText);
             showWinner(getTranslatedWord(winnerName));
         }
     }, 100);

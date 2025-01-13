@@ -4,11 +4,18 @@ import { Ball } from './ball.js';
 import { getTranslatedWord, translatePage } from '../localization.js';
 import { getEndState } from '../pages/Tournament.js';
 
-export async function sendGameStats(scoreP1, scoreP2, ai, nameP2) {
+export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
     if (!localStorage.getItem("authToken"))
 		return;
 	const url = "https://localhost/api/game/played/";
     console.debug(localStorage.getItem("authToken"));
+    let userLogged = localStorage.getItem("username");
+    let otherPlayer = nameP2 == userLogged ? nameP1 : nameP2;
+    if (userLogged != nameP1 && userLogged != nameP2)
+        return;
+    console.log("userlogged", userLogged);
+    console.log("p1 uid", userLogged == nameP1 ? localStorage.getItem("UID") : null);
+    console.log("p2 uid", userLogged == nameP2 ? localStorage.getItem("UID") : null);
 	try {
 		const response = await fetch(url, {
 			method: "POST",
@@ -17,11 +24,13 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP2) {
                 "Authorization": "Token " + localStorage.getItem("authToken")
             },
 			body: JSON.stringify({
-				player1_UID: localStorage.getItem("UID"), 
+				player1_UID: localStorage.getItem("UID"),
 				player2_UID: null,
-                username_player2: ai == true ? null : nameP2,
+				// player2_UID: userLogged == nameP2 ? localStorage.getItem("UID") : null,
+                username_player2: ai == true ? null : otherPlayer,
 				score_player1: scoreP1,
 				score_player2: scoreP2
+                //tournamentWin: 0/1
 			})
 		});
 		if(!response.ok) { 
@@ -85,7 +94,7 @@ export function insertButton(winnerName) {
         rankingButton.style.margin = '0 10px';
         rankingButton.innerHTML = "Ranking";
         const playAgainButton = document.createElement('a');
-        playAgainButton.setAttribute('href', '/gameConfig');
+        playAgainButton.setAttribute('href', '/select');
         playAgainButton.setAttribute('data-i18n-key', 'playAgain');
         playAgainButton.setAttribute('class', 'btn btn-primary');
         playAgainButton.setAttribute('id', 'playAgain');

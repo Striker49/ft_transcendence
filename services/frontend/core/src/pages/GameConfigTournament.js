@@ -71,19 +71,19 @@ async function getInputs(nbPlayer) {
 	
 	if (nbPlayer === "8") {
 		return `
-			<p><input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player4" id="player4" placeholder="Player 4" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player5" id="player5" placeholder="Player 5" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player6" id="player6" placeholder="Player 6" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player7" id="player7" placeholder="Player 7" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player8" id="player8" placeholder="Player 8" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player4" id="player4" placeholder="player" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player5" id="player5" placeholder="Player 5" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player6" id="player6" placeholder="Player 6" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player7" id="player7" placeholder="Player 7" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player8" id="player8" placeholder="Player 8" maxlength="12"></p>
 		`;
 	} else {
 		return `
-			<p><input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
-			<p><input type="text" class="form-control" name="player4" id="player4" placeholder="Player 4" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
+			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player4" id="player4" placeholder="Player 4" maxlength="12"></p>
 		`;
 	}
 }

@@ -57,7 +57,7 @@ export function setLanguage() {
 document.addEventListener("DOMContentLoaded", (event) => {
 	// Redirect to another page if /game was reloaded
 	if (window.location.pathname === "/game") {
-		window.location.href = "/gameConfig";
+		window.location.href = "/select";
 	}
 	setLanguage();
 });
@@ -123,6 +123,10 @@ export function translatePage() {
 	document.querySelectorAll("[data-i18n-key]").forEach((element) => {
 		translateElement(element);
 	});
+	document.querySelectorAll("[data-i18n-phkey]").forEach((element, index) => {
+		translatePH(element, index);
+		console.log("element: ", element.placeholder);
+	});
 }
 
 // Replace the inner text of the given HTML element with the translation
@@ -131,14 +135,32 @@ function translateElement(element) {
 	//Checks if we have loaded translations already
 	if (JSON.stringify(translations) === '{}')
 		return;
-	if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
-		return;
+	// if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
+	// 	return;
 	// console.log(translations);
 	const key = element.getAttribute("data-i18n-key");
 	const translation = translations[key];
 	// Only update the element if the translation exists
 	if (translation) {
 		element.innerText = translation;
+	} else {
+		console.warn(`Translation key "${key}" not found.`);
+	}
+}
+
+function translatePH(element, index) {
+	//Checks if we have loaded translations already
+	if (JSON.stringify(translations) === '{}')
+		return;
+	// if (element.getAttribute("placeholder") && localStorage.getItem("UID"))
+	// 	return;
+	// console.log(translations);
+	const key = element.getAttribute("data-i18n-phkey");
+	const translation = translations[key];
+	// Only update the element if the translation exists
+	console.log("translationPH: ", translation);
+	if (translation) {
+		element.placeholder = translation + " " + (index + 2);
 	} else {
 		console.warn(`Translation key "${key}" not found.`);
 	}
