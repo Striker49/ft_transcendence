@@ -57,7 +57,7 @@ export function setLanguage() {
 document.addEventListener("DOMContentLoaded", (event) => {
 	// Redirect to another page if /game was reloaded
 	if (window.location.pathname === "/game") {
-		window.location.href = "/gameConfig";
+		window.location.href = "/select";
 	}
 	setLanguage();
 });

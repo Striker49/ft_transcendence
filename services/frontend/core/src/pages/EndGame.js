@@ -86,7 +86,7 @@ export default class extends Abstract {
 						</div>
 					</div>
 					<div class="row mx-0 my-4 justify-content-center">
-						<a href="/gameConfig" data-i18n-key="playAgain" id="playAgain" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto" data-link>Play again</a>
+						<a href="/select" data-i18n-key="playAgain" id="playAgain" class="btn btn-dark rounded-pill px-4 bg-orange text-dark fw-bold box-shadow border-0 w-auto" data-link>Play again</a>
 					</div>
 				</div>
 			</div>
