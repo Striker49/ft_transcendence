@@ -14,6 +14,7 @@ class GameStats(models.Model):
 	perfect_games=models.PositiveIntegerField(default=0)
 	rank=models.PositiveIntegerField(default=0, blank=True, null=True)
 	last_played=models.DateTimeField(blank=True, null=True)
+	tournaments_won=models.PositiveIntegerField(default=0)
 
 	class Meta:
 		ordering = ['id']
@@ -69,6 +70,7 @@ class PlayedGames(models.Model):
 	username_player2=models.CharField(max_length=256, blank=True, null=True)
 	score_player1=models.PositiveIntegerField(default=0)
 	score_player2=models.PositiveIntegerField(default=0)
+	tournamentWon=models.PositiveIntegerField(default=0)
  
 	class Meta:
 		ordering = ['created']
