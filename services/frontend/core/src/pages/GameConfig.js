@@ -182,7 +182,9 @@ document.addEventListener("click", (event) => {
 
 			const span = player2Input.nextElementSibling;
 			
-			if (!(player2Input.value === "" || player2Input.value == null || isWhiteSpace(player2Input.value))) {
+			if (player2Input.value === "" || player2Input.value == null || isWhiteSpace(player2Input.value)) {
+				username2 = player2Input.placeholder || username2;
+			} else {
 				username2 = player2Input.value;
 			}
 			if (username2 === username) {
