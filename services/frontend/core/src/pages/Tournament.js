@@ -159,6 +159,9 @@ const matchmaking = () => {
 	const names = JSON.parse(localStorage.getItem("tournament"));
 	const array = shuffle(names);
 
+	// const array = shuffle(names.slice(1));
+	// array.unshift(names[0]);
+
 	localStorage.setItem("tournament", JSON.stringify(array));
 };
 

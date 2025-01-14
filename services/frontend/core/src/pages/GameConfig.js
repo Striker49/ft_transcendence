@@ -54,7 +54,7 @@ async function getNbPlayer(queryName) {
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
 		p2NameField = `
 			<p>
-				<input type="text" class="form-control" name="player2" id="player2" maxlength="12">
+				<input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12" data-i18n-phkey="player">
 				<span class="form-error my-0 mt-2 fst-italic lh-1 d-block" style="font-size: 12px;"></span>
 			</p>
 		`;
@@ -66,7 +66,7 @@ async function getNbPlayer(queryName) {
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
 		p2NameField = `
 			<p>
-				<input type="text" class="form-control" name="player2" id="player2" maxlength="12">
+				<input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12" data-i18n-phkey="player">
 				<span class="form-error my-0 mt-2 fst-italic lh-1 d-block" style="font-size: 12px;"></span>
 			</p>
 		`;
@@ -87,8 +87,8 @@ export default class extends Abstract {
 		if (localTranslations == null)
 			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 		const userData = await getUserProfile();
-		const ai = await getNbPlayer("nbPlayer");
-		username = (userData ? userData.username : localTranslations["playerOne"])
+		await getNbPlayer("nbPlayer");
+		username = (userData ? userData.username : localTranslations["playerOne"]);
 		username2 = localTranslations["playerTwo"] || "Player 2";
 		localStorage.setItem("powerUps", false);
 		return `
@@ -181,12 +181,13 @@ document.addEventListener("click", (event) => {
 		if (player2Input) {
 
 			const span = player2Input.nextElementSibling;
-
-			if (player2Input.value === username) {
+			
+			if (!(player2Input.value === "" || player2Input.value == null || isWhiteSpace(player2Input.value))) {
+				username2 = player2Input.value;
+			}
+			if (username2 === username) {
 				printError(span, "uniqueName", "Name must be unique.");
 				return ;
-			} else if (!(player2Input.value === "" || player2Input.value == null || isWhiteSpace(player2Input.value))) {
-				username2 = player2Input.value;
 			}
 		}
 		
