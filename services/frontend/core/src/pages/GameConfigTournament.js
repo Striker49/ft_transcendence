@@ -2,7 +2,7 @@ import Abstract from "./Abstract.js";
 import { fetchTranslationsFor } from "../localization.js";
 import { navigateTo } from "../router/router.js";
 import { sanitizeString } from "../utils/sanitize.js";
-import { addSpan } from "../utils/validation.js";
+import { addSpan, clearSpan, isWhiteSpace, printError } from "../utils/validation.js";
 
 let username;
 let nbPlayer;
@@ -98,7 +98,7 @@ async function getInputsHtml(count) {
 async function getInputs(nbPlayer) {
 	
 	if (nbPlayer === "8") {
-		return getInputsHtml(8);
+		return await getInputsHtml(8);
 		// return `
 		// 	<p><input type="text" class="form-control" data-i18n-phkey="player" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
 		// 	<p><input type="text" class="form-control" data-i18n-phkey="player" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
@@ -109,7 +109,7 @@ async function getInputs(nbPlayer) {
 		// 	<p><input type="text" class="form-control" data-i18n-phkey="player" name="player8" id="player8" placeholder="Player 8" maxlength="12"></p>
 		// `;
 	} else {
-		return getInputsHtml(4);
+		return await getInputsHtml(4);
 		// return `
 		// 	<p><input type="text" class="form-control" data-i18n-phkey="player" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
 		// 	<p><input type="text" class="form-control" data-i18n-phkey="player" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
@@ -203,13 +203,29 @@ document.addEventListener("click", (event) => {
         event.preventDefault();
 		// Get aliases for tournament
 		const inputs = document.querySelectorAll("#game-config input[type=text]");
-		const round = [username];
+		const p1 = document.getElementById("player1").textContent;
+		const round = [sanitizeString(p1)];
+
+		let isValid = true;
+
 		for (const input of inputs.values()) {
-			if (!input.value) {
-				round.push(input.placeholder);
+
+			const span = input.nextElementSibling;
+
+			if (round.includes(input.value)) {
+				printError(span, "uniqueName", "Name must be unique.");
+				isValid = false;
+				continue;
+			}
+			else if (input.value === "" || input.value == null || isWhiteSpace(input.value)) {
+				round.push(sanitizeString(input.placeholder));
 			} else {
 				round.push(sanitizeString(input.value));
 			}
+			clearSpan(span);
+		}
+		if (!isValid) {
+			return;
 		}
 		localStorage.setItem("tournament", JSON.stringify(round));
 		localStorage.setItem("nbPlayer", nbPlayer);

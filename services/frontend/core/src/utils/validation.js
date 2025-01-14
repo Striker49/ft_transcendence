@@ -3,9 +3,9 @@ import { translatePage } from "../localization.js"
 
 export const addSpan = () => {
 
-	const span = document.createElement("p");
+	const span = document.createElement("span");
 
-	span.classList.add("form-error", "my-0", "mt-2", "fst-italic", "lh-1");
+	span.classList.add("form-error", "my-0", "mt-2", "fst-italic", "lh-1", "d-block");
 	span.style.fontSize = "12px";
 	return span;
 };
@@ -27,7 +27,7 @@ export const printError = (span, langKey, msg) => {
 	}
 };
 
-export const validateField = (field, isValid) => {
+const validateField = (field, isValid) => {
 
 	const span = field.nextElementSibling;
 
@@ -64,7 +64,7 @@ const validatePassword = (password, isValid) => {
 		printError(span, "passwordNotOriginal", "Password cannot be password");
 		return false;
 	} else if (isWhiteSpace(password.value)) {
-		printError(span, "passwordNotValid", "Please enter valid password");
+		printError(span, "passwordNotValid", "Please enter a valid password");
 		return false;
 	}
 	clearSpan(span);
