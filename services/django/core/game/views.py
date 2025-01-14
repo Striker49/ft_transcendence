@@ -91,8 +91,8 @@ class PlayedGamesViewSet(viewsets.ModelViewSet):
 		serializer.is_valid(raise_exception=True)
 		instance = serializer.save()
 
-		if instance.player1_UID:
-			player1_stats = get_object_or_404(models.GameStats, UID=instance.player1_UID)
+		player1_stats = get_object_or_404(models.GameStats, UID=instance.player1_UID)
+		if player1_stats:
 			if instance.score_player1 > instance.score_player2:
 				if instance.score_player2 == 0:
 					player1_stats.perfect_games += 1
