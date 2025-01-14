@@ -21,6 +21,7 @@ class GameStatsSerializer(serializers.ModelSerializer):
 			'total_games',
 			'win_percentage',
 			'perfect_games',
+			'tournaments_won',
 			'rank',
 			'last_played',
 		)
@@ -28,6 +29,7 @@ class GameStatsSerializer(serializers.ModelSerializer):
 		'losses': {'required': False},
 		'wins': {'required': False},
 		'last_played': {'required': False},
+		'tournaments_won': {'required': False},
 		}
 
 
@@ -61,11 +63,16 @@ class PlayedGamesSerializer(serializers.ModelSerializer):
 			'created',
 			'player1_UID',
 			'player2_UID',
+			'username_player1',
 			'username_player2',
 			'score_player1',
 			'score_player2',
+			'tournamentWon',
 		)
 		extra_kwargs = {
+		'player1_UID': {'required': False},
 		'player2_UID': {'required': False},
-		'username_player2': {'required': False}
+		'username_player2': {'required': False},
+		'username_player1': {'required': False},
+		'tournamentWon': {'required': False},
 		}
