@@ -135,8 +135,8 @@ function translateElement(element) {
 	//Checks if we have loaded translations already
 	if (JSON.stringify(translations) === '{}')
 		return;
-	// if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
-	// 	return;
+	if (element.getAttribute("data-skip-i18n") && localStorage.getItem("UID"))
+		return;
 	// console.log(translations);
 	const key = element.getAttribute("data-i18n-key");
 	const translation = translations[key];
