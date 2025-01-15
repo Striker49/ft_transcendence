@@ -28,7 +28,6 @@ async function getUserProfile() {
 			throw new Error(`Response status: ${response.status}`);
 		}
 		const userData = await response.json();
-		console.log("USER DATA", userData);
 		return userData;
 	} catch (error) {
 		console.error(error.message);
@@ -41,7 +40,6 @@ async function getNbPlayer(queryName) {
     const params = new URLSearchParams(window.location.search);
     if (params.get(queryName) == "1")
 	{
-		console.log("One player detected");
 		nbPlayer = true;
 		p2NameLabel = "";
 		p2NameField = "";
@@ -49,7 +47,6 @@ async function getNbPlayer(queryName) {
 	}
 	else if (params.get(queryName) == "2")
 	{
-		console.log("Two players detected");
 		nbPlayer = false;
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
 		p2NameField = `
@@ -62,7 +59,6 @@ async function getNbPlayer(queryName) {
 	}
 	else 
 	{
-		console.log("No player detected");
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
 		p2NameField = `
 			<p>
@@ -148,9 +144,6 @@ document.addEventListener("change", (event) => {
 	event.preventDefault();
 	if (event.target.matches("#theme")) {
 		const theme = document.getElementById("theme").value;
-		// newTheme = document.getElementById("theme")
-		// newTheme.innerHTML = theme.value;
-		console.log('theme', theme);
 		localStorage.setItem("theme", theme);
 
 	}
@@ -158,9 +151,7 @@ document.addEventListener("change", (event) => {
 
 document.addEventListener("click", (event) => {
     if (event.target.matches("#powerUps")) {
-		console.log("powerups!!!");
 		const checkBox = document.getElementById("powerUps");
-		// console.log("checkbox", checkBox);
 		if (checkBox.value == "true") {
 			checkBox.value = false;
 			localStorage.setItem("powerUps", false);
@@ -193,7 +184,6 @@ document.addEventListener("click", (event) => {
 			}
 		}
 		
-		// console.log("Form is being submitted with names:", username, username2);
 		// Build the URL with query parameters
 		const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
 		

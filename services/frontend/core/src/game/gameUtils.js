@@ -16,9 +16,6 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
         tournamentWon = 1;
     if (userLogged != nameP1 && userLogged != nameP2)
         return;
-    console.log("userlogged", userLogged);
-    console.log("p1 uid", userLogged == nameP1 ? localStorage.getItem("UID") : null);
-    console.log("p2 uid", userLogged == nameP2 ? localStorage.getItem("UID") : null);
 	try {
 		const response = await fetch(url, {
 			method: "POST",
@@ -40,6 +37,7 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
 			throw new Error(`Response status: ${response.status}`);
 		}
 		const stats = await response.json();
+        console.log("======= Ranking Stats =======");
 		console.log("RANKING", stats);
 	} catch (error) {
 		console.error(error.message);

@@ -40,7 +40,6 @@ export function createText(callback, string, size, positionx, positionz, color) 
 	const loader = new FontLoader();
 
 	let text = string;
-	console.log(string);
 
 	loader.load('/src/fonts/helvetiker_regular.typeface.json', function (font) {
 		const geometry = new TextGeometry(text, {

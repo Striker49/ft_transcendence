@@ -61,18 +61,12 @@ export function spawnPowerUp(scene, paddleL, paddleR, powerUps, ground, frames) 
     if (paddleL.poweredUp == false)
     {
         if (!powerUps[0])
-        {
-            console.debug("creating power up...");
             createPowerBox(scene, paddleL, 0, powerUps, ground);
-        }
     }
     if (paddleR.poweredUp == false)
     {
         if (!powerUps[1])
-        {
-            console.debug("creating power up...");
             createPowerBox(scene, paddleR, 1, powerUps, ground);
-        }
     }
 }
 
@@ -88,7 +82,6 @@ export function updatePowerUps(scene, paddleR, paddleL, powerUps, ground, powerU
             box2: index == 0 ? paddleL : paddleR
         }))
         {
-            // console.log("powerUps[index].poweredUp:", powerUps[index].poweredUp);
             if (powerUps[index].poweredUp == false)
                 {
                     if (index == 0)
