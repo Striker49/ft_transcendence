@@ -99,6 +99,8 @@ class PlayedGamesViewSet(viewsets.ModelViewSet):
 				player1_stats.wins += 1
 			else:
 				player1_stats.losses += 1
+			if instance.tournamentWon:
+				player1_stats.tournaments_won +=1
 			player1_stats.last_played = instance.created
 			player1_stats.save()
    
@@ -110,6 +112,8 @@ class PlayedGamesViewSet(viewsets.ModelViewSet):
 				player2_stats.wins += 1
 			else:
 				player2_stats.losses += 1
+			if instance.tournamentWon:
+				player2_stats.tournaments_won +=1
 			player2_stats.last_played = instance.created
 			player2_stats.save()
    
