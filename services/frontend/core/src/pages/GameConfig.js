@@ -1,6 +1,7 @@
 import Abstract from "./Abstract.js";
 import { navigateTo } from "../router/router.js";
 import { fetchTranslationsFor } from "../localization.js";
+import { clearSpan, isWhiteSpace, printError } from "../utils/validation.js";
 
 let p2NameLabel;
 let p2NameField;
@@ -51,14 +52,24 @@ async function getNbPlayer(queryName) {
 		console.log("Two players detected");
 		nbPlayer = false;
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\" maxlength=\"12\"></p>";
+		p2NameField = `
+			<p>
+				<input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12" data-i18n-phkey="player">
+				<span class="form-error my-0 mt-2 fst-italic lh-1 d-block" style="font-size: 12px;"></span>
+			</p>
+		`;
 		localStorage.setItem("nbPlayer", "2");
 	}
 	else 
 	{
 		console.log("No player detected");
 		p2NameLabel = "<p><label id=\"p2Form\" for=\"player2\" class=\"form-label\"><span data-i18n-key=\"player\">Player</span> 2</label></p>";
-		p2NameField = "<p><input type=\"text\" class=\"form-control\" name=\"player2\" id=\"player2\" maxlength=\"12\"></p>";
+		p2NameField = `
+			<p>
+				<input type="text" class="form-control" name="player2" id="player2" placeholder="Player 2" maxlength="12" data-i18n-phkey="player">
+				<span class="form-error my-0 mt-2 fst-italic lh-1 d-block" style="font-size: 12px;"></span>
+			</p>
+		`;
 		// (!params.get(queryName) && localStorage.getItem("nbPlayer"))
 		return (localStorage.getItem("nbPlayer") == "1" ? true : false)
 	}
@@ -76,8 +87,8 @@ export default class extends Abstract {
 		if (localTranslations == null)
 			localTranslations = await fetchTranslationsFor(localStorage.getItem("lang") || document.querySelector("[lang]").getAttribute("lang"));
 		const userData = await getUserProfile();
-		const ai = await getNbPlayer("nbPlayer");
-		username = (userData ? userData.username : localTranslations["playerOne"])
+		await getNbPlayer("nbPlayer");
+		username = (userData ? userData.username : localTranslations["playerOne"]);
 		username2 = localTranslations["playerTwo"] || "Player 2";
 		localStorage.setItem("powerUps", false);
 		return `
@@ -164,21 +175,29 @@ document.addEventListener("click", (event) => {
         event.preventDefault();
 		// Clear Tournament params
 		localStorage.removeItem("tournament");
-		localStorage.removeItem("tournamentMatch");
-		// document.addEventListener("submit", e => {
+		// Retrieve username and username2 values from the input fields
+		username = document.getElementById("player1").textContent;
+		const player2Input = document.getElementById("player2");
+		if (player2Input) {
 
-			// Retrieve username and username2 values from the input fields
-			const player2Input = document.getElementById("player2");
-			if (player2Input) {
-				username2 = player2Input.value || username2;
+			const span = player2Input.nextElementSibling;
+			
+			if (player2Input.value === "" || player2Input.value == null || isWhiteSpace(player2Input.value)) {
+				username2 = player2Input.placeholder || username2;
+			} else {
+				username2 = player2Input.value;
 			}
-			
-			// console.log("Form is being submitted with names:", username, username2);
-			// Build the URL with query parameters
-			const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
-			
-			// Navigate to the URL
-			navigateTo(url);
-		// });
+			if (username2 === username) {
+				printError(span, "uniqueName", "Name must be unique.");
+				return ;
+			}
+		}
+		
+		// console.log("Form is being submitted with names:", username, username2);
+		// Build the URL with query parameters
+		const url = `/game?username=${encodeURIComponent(username)}&username2=${encodeURIComponent(username2)}`;
+		
+		// Navigate to the URL
+		navigateTo(url);
     }
 });

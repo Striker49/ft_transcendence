@@ -2,6 +2,7 @@ import Abstract from "./Abstract.js";
 import { fetchTranslationsFor } from "../localization.js";
 import { navigateTo } from "../router/router.js";
 import { sanitizeString } from "../utils/sanitize.js";
+import { addSpan, clearSpan, isWhiteSpace, printError } from "../utils/validation.js";
 
 let username;
 let nbPlayer;
@@ -67,24 +68,39 @@ async function getLabels(nbPlayer) {
 	}
 }
 
+async function getInputsHtml(count) {
+
+	const div = document.createElement("div");
+	const fragment = document.createDocumentFragment();
+
+	for (let i = 2; i <= count; ++i) {
+
+		const input = document.createElement("input");
+		const p = document.createElement("p");
+		const span = addSpan();
+
+		input.type = "text";
+		input.className = "form-control";
+		input.id = "player" + i;
+		input.name = "player" + i;
+		input.placeholder = "Player " + i;
+		input.setAttribute("data-i18n-phkey", "player");
+		input.setAttribute("maxlength", "12");
+
+		p.appendChild(input);
+		p.appendChild(span);
+		fragment.appendChild(p);
+	}
+	div.appendChild(fragment);
+	return div.innerHTML;
+}
+
 async function getInputs(nbPlayer) {
 	
 	if (nbPlayer === "8") {
-		return `
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player4" id="player4" placeholder="player" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player5" id="player5" placeholder="Player 5" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player6" id="player6" placeholder="Player 6" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player7" id="player7" placeholder="Player 7" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player8" id="player8" placeholder="Player 8" maxlength="12"></p>
-		`;
+		return await getInputsHtml(8);
 	} else {
-		return `
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player2" id="player2" placeholder="Player 2" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player3" id="player3" placeholder="Player 3" maxlength="12"></p>
-			<p><input type="text" class="form-control" data-i18n-phkey="player" name="player4" id="player4" placeholder="Player 4" maxlength="12"></p>
-		`;
+		return await getInputsHtml(4);
 	}
 }
 
@@ -173,13 +189,31 @@ document.addEventListener("click", (event) => {
         event.preventDefault();
 		// Get aliases for tournament
 		const inputs = document.querySelectorAll("#game-config input[type=text]");
-		const round = [username];
+		const p1 = document.getElementById("player1").textContent;
+		const round = [sanitizeString(p1)];
+
+		let isValid = true;
+
 		for (const input of inputs.values()) {
-			if (!input.value) {
-				round.push(input.placeholder);
+
+			const span = input.nextElementSibling;
+
+			if (round.includes(input.value)
+			|| ((input.value === "" || input.value == null || isWhiteSpace(input.value)))
+			&&	round.includes(input.placeholder)) {
+				printError(span, "uniqueName", "Name must be unique.");
+				isValid = false;
+				continue;
+			}
+			else if (input.value === "" || input.value == null || isWhiteSpace(input.value)) {
+				round.push(sanitizeString(input.placeholder));
 			} else {
 				round.push(sanitizeString(input.value));
 			}
+			clearSpan(span);
+		}
+		if (!isValid) {
+			return;
 		}
 		localStorage.setItem("tournament", JSON.stringify(round));
 		localStorage.setItem("nbPlayer", nbPlayer);

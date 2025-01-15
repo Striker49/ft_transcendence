@@ -80,7 +80,7 @@
 
   "passwordNotOriginal": "Password cannot be password",
 
-  "passwordNotValid": "Please enter valid password",
+  "passwordNotValid": "Please enter a valid password",
 
   "usernameRequired": "Username is required",
 
@@ -116,6 +116,8 @@
   "back": "Back",
   
   "tournament": "Tournament",
+
+  "uniqueName": "Name must be unique.",
 
   "nextMatch": "Next Match",
 

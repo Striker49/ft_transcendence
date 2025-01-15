@@ -116,6 +116,8 @@
   
   "tournament": "Toernooi",
 
+  "uniqueName": "Naam moet uniek zijn.",
+
   "nextMatch": "Volgende wedstrijd",
 
   "stopTournament": "Stop toernooi",

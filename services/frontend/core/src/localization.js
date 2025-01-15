@@ -125,7 +125,7 @@ export function translatePage() {
 	});
 	document.querySelectorAll("[data-i18n-phkey]").forEach((element, index) => {
 		translatePH(element, index);
-		console.log("element: ", element.placeholder);
+		// console.log("element: ", element.placeholder);
 	});
 }
 
@@ -158,7 +158,7 @@ function translatePH(element, index) {
 	const key = element.getAttribute("data-i18n-phkey");
 	const translation = translations[key];
 	// Only update the element if the translation exists
-	console.log("translationPH: ", translation);
+	// console.log("translationPH: ", translation);
 	if (translation) {
 		element.placeholder = translation + " " + (index + 2);
 	} else {

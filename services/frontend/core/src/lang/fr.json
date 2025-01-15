@@ -116,6 +116,8 @@
   
   "tournament": "Tournoi",
 
+  "uniqueName": "Veuillez mettre un nom unique.",
+
   "nextMatch": "Prochain match",
 
   "stopTournament": "Arrêter le tournoi",
