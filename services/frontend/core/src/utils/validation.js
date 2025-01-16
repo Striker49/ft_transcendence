@@ -54,8 +54,8 @@ const validateUsername = (username, isValid) => {
 const validatePassword = (password, isValid) => {
 
 	const span = password.nextElementSibling;
-	const min = 1;
-	const max = 256;
+	const min = 6;
+	const max = 20;
 
 	if (password.value.length < min || password.value.length > max) {
 		printError(span, "passwordLength", `Password must be between ${min} and ${max} characters`);

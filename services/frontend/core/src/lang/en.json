@@ -76,7 +76,7 @@
 
   "friendlist": "Friendlist",
 
-  "passwordLength": "Password must be 6 and 256 characters",
+  "passwordLength": "Password must be 6 and 20 characters",
 
   "passwordNotOriginal": "Password cannot be password",
 
