@@ -99,6 +99,7 @@
 
   "addFriend": "Ajouter un ami",
 
+  "alreadyFriend": "Cet utilisateur est déjà votre ami.",
 
   "singleGame": "Jeu Solo",
 
@@ -121,6 +122,8 @@
   "nextMatch": "Prochain match",
 
   "stopTournament": "Arrêter le tournoi",
+
+  "tournamentsWon": "Tournois remportés",
 
   "showResult": "Voir le résultat",
 

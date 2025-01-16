@@ -68,6 +68,19 @@ const addImage = (src, alt, id) => {
 	return img;
 };
 
+const addSpinner = async () => {
+
+	const spinner = document.createElement("div");
+	const span = document.createElement("span");
+
+	span.textContent = "Loading...";
+	span.className = "visually-hidden";
+	spinner.classList.add("spinner-border", "text-secondary", "position-absolute", "top-50", "start-50", "z-n1");
+	spinner.setAttribute("role", "status");
+	spinner.appendChild(span);
+	return spinner;
+};
+
 const fetchUserStats = async username => {
 
 	const headers = new Headers({
@@ -245,7 +258,6 @@ const createFriendship = async uid2 => {
 	const token = localStorage.getItem("authToken");
 	const uid1 = localStorage.getItem("UID");
 
-	// This can be problematic if we edit the value in the local storage
 	const data = {
 		"user1_ID": uid1 < uid2 ? uid1 : uid2,
 		"user2_ID": uid1 > uid2 ? uid1 : uid2,
@@ -424,7 +436,6 @@ const updateFriendlist = async () => {
 	const fragment = document.createDocumentFragment();
 	const uid = localStorage.getItem("UID");
 
-	// In retrospect, it's kind of weird that I need to get the uid from local storage to display correct friend info 
 	if (uid) {
 		for (const friend of friendlist) {
 			if (uid == friend.user1_ID) {
@@ -567,6 +578,7 @@ const toggleContent = async isSearchMode => {
 	} else {
 		body.classList.remove("search-mode");
 	}
+	body.appendChild(await addSpinner());
 	body.replaceChildren(await addCurrentUser(), await addContent());
 	translatePage();
 };
@@ -647,6 +659,7 @@ document.addEventListener("show.bs.offcanvas", async e => {
 
 	if (e.target.matches("#friendlist")) {
 		const body = document.querySelector("#friendlist .offcanvas-body");
+		body.appendChild(await addSpinner());
 		body.replaceChildren(await addCurrentUser(), await addContent());
 		translatePage();
 	}
@@ -673,14 +686,19 @@ document.addEventListener("click", e => {
 			e.preventDefault();
 			const input = document.querySelector("#searchBar input").value;
 			if (input) {
-				// Should I put the username in a variable ?
 				if (input == localStorage.getItem("username")) {
 					printError(getSpan(), "sameUser", "Cannot add yourself as a friend.");
 				} else {
 					checkIfUserExists(input).then(user => {
 						if (user) {
-							clearSpan(getSpan());
-							createFriendship(user[0].UID);
+							getFriendshipID(user[0].username).then(isFriend => {
+								if (isFriend) {
+									printError(getSpan(), "alreadyFriend", "This user is already your friend.");
+								} else {
+									clearSpan(getSpan());
+									createFriendship(user[0].UID);
+								}
+							});
 						} else {
 							printError(getSpan(), "userNotFound", "Username not found. Please provide an existing username");
 						}

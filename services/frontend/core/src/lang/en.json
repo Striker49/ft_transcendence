@@ -100,6 +100,7 @@
 
   "addFriend": "Add friend",
 
+  "alreadyFriend": "This user is already your friend.",
 
   "singleGame": "Single Game",
 
@@ -122,6 +123,8 @@
   "nextMatch": "Next Match",
 
   "stopTournament": "Stop Tournament",
+
+  "tournamentsWon": "Tournaments Won",
 
   "showResult": "Show Result",
 

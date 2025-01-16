@@ -373,7 +373,7 @@ const updateUserStats = async () => {
 		updateStat(document.querySelector("#gamesWon"), userStats[0].wins);
 		updateStat(document.querySelector("#gamesLost"), userStats[0].losses);
 		updateStat(document.querySelector("#gamesPlayed"), userStats[0].total_games);
-		// updateStat(document.querySelector("#gamesPerfect"), userStats[0].perfect);
+		updateStat(document.querySelector("#tournamentsWon"), userStats[0].tournaments_won);
 
 		document.querySelector("#rank").textContent = userStats[0].rank || "-42";
 	} else {
@@ -570,8 +570,8 @@ const displayUserProfile = () => {
 								<div class="progress-bar bg-info" style="width: 0%;"></div>
 							</div>
 						</div>
-						<div id="gamesPerfect" class="mb-3">
-							<p class="mb-2"><span class="fw-bold" data-i18n-key="gamesPerfect">Perfect games</span><span class="float-end">0 / 42</span></p>
+						<div id="tournamentsWon" class="mb-3">
+							<p class="mb-2"><span class="fw-bold" data-i18n-key="tournamentsWon">Tournaments Won</span><span class="float-end">0 / 42</span></p>
 							<div class="progress bg-dark box-shadow" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="42">
 								<div class="progress-bar bg-warning" style="width: 0%;"></div>
 							</div>

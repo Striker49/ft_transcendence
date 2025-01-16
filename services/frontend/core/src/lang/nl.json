@@ -99,6 +99,7 @@
 
   "addFriend": "Vriend toevoegen",
 
+  "alreadyFriend": "Deze gebruiker is al je vriend.",
 
   "singleGame": "Solo Spel",
 
@@ -121,6 +122,8 @@
   "nextMatch": "Volgende wedstrijd",
 
   "stopTournament": "Stop toernooi",
+
+  "tournamentsWon": "Gewonnen toernooien",
 
   "showResult": "Resultaat weergeven",
 
