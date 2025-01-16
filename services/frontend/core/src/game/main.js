@@ -144,8 +144,13 @@ function initGame() {
     numberOfWins = Math.max(1, Math.min(11, parseInt(localStorage.getItem("numberOfWins") || 3, 10)));
     if (localStorage.getItem("numberOfWins") != numberOfWins)
         localStorage.setItem("numberOfWins", numberOfWins);
-    console.debug('initGame now', numberOfWins);
-    console.debug('initGame theme', localStorage.getItem("theme"));
+    console.debug('(==========Game Settings=========)');
+    console.debug('player 1:           ', nameP1);
+    console.debug('player 2:           ', nameP2);
+    console.debug('theme:           ', localStorage.getItem("theme"));
+    console.debug('power ups:       ', localStorage.getItem("powerUps"));
+    console.debug('ai:              ', ai);
+    console.debug('number of wins:  ', numberOfWins);
     //Create left paddle
     paddleL = new Box({
         width: paddleWidth,
@@ -453,13 +458,9 @@ function showWinner(winnerName) {
 function endGame(winner) {
     winnerName = (winner == 2 ? nameP1 : nameP2);
     winnerColor = (winner == 2 ? paddleL.material.color : paddleR.material.color);
-    console.debug("winner", winner);
-    console.debug("nameP1", nameP1);
-    console.debug("nameP2", nameP2);
-    console.debug("winnerName", winnerName);
-    console.debug("textnameP1", winnerText);
+    console.debug("(Game Ended");
+    console.debug("winner", winnerName);
     customTextureNumber = removeGameObjects(scene, ball, paddleL, paddleR, ground, customTextureNumber, currentText, powerUps, winnerText, winnerNameText, textnameP1, textnameP2);
-    console.log(textnameP1);
     state = 0;
     updateScore();
     showWinner(winnerName);

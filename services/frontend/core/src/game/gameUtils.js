@@ -11,11 +11,11 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
     console.debug(localStorage.getItem("authToken"));
     let userLogged = localStorage.getItem("username");
     let otherPlayer = nameP2 == userLogged ? nameP1 : nameP2;
-    if (userLogged != nameP1 && userLogged != nameP2)
+    let tournamentWon = 0;
+    if (getEndState && ((userLogged == nameP1 && scoreP1 > scoreP2) || userLogged == nameP2 && scoreP2 > scoreP1))
+        tournamentWon = 1;
+    if (userLogged != nameP1 && userLogged != nameP2 && !localStorage.getItem("UID"))
         return;
-    console.log("userlogged", userLogged);
-    console.log("p1 uid", userLogged == nameP1 ? localStorage.getItem("UID") : null);
-    console.log("p2 uid", userLogged == nameP2 ? localStorage.getItem("UID") : null);
 	try {
 		const response = await fetch(url, {
 			method: "POST",
@@ -24,19 +24,20 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
                 "Authorization": "Token " + localStorage.getItem("authToken")
             },
 			body: JSON.stringify({
-				player1_UID: localStorage.getItem("UID"),
-				player2_UID: null,
-				// player2_UID: userLogged == nameP2 ? localStorage.getItem("UID") : null,
-                username_player2: ai == true ? null : otherPlayer,
+				player1_UID: userLogged == nameP1 ? localStorage.getItem("UID") : null,
+				player2_UID: userLogged == nameP2 ? localStorage.getItem("UID") : null,
+                username_player1: nameP1,
+                username_player2: ai ? null : nameP2,
 				score_player1: scoreP1,
-				score_player2: scoreP2
-                //tournamentWin: 0/1
+				score_player2: scoreP2,
+                tournamentWon: tournamentWon
 			})
 		});
 		if(!response.ok) { 
 			throw new Error(`Response status: ${response.status}`);
 		}
 		const stats = await response.json();
+        console.log("======= Ranking Stats =======");
 		console.log("RANKING", stats);
 	} catch (error) {
 		console.error(error.message);

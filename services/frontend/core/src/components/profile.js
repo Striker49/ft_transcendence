@@ -245,6 +245,8 @@ const submitProfileForm = async form => {
 			upload = false;
         }
 		displayUserProfile();
+		localStorage.setItem("username", form.username.value);
+		console.log("username", form.username.value);
 
 	} catch (error) {
 		showFormErrors(error.message);
@@ -310,10 +312,8 @@ const listGamesHistory = async () => {
 		gamesHistoryDiv.innerHTML = "";
 		gamesHistory.forEach(game => {
 			let player2 = sanitizeString(game.username_player2) || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>";
-			// if (player2 == localStorage.getItem("username"))
-			// 	player2 = sanitizeString(game.username_player1) || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>"
-			console.log("P1name: ", game);
-			console.log("P1name sent: ", player2);
+			if (player2 == localStorage.getItem("username"))
+				player2 = sanitizeString(game.username_player1) || "<span data-i18n-key=\"CPU\">" + localTranslations["CPU"] + "</span>"
 			if (player2 == "Player 2" || player2 == "Joueur 2" || player2 == "Speler 2")
 				player2 = "<span data-i18n-key=\"playerTwo\">" + player2 + "</span>";
 			const status = game.score_player1 > game.score_player2 ? "<span data-i18n-key=\"won\">" + localTranslations["won"] + "</span>" : "<span data-i18n-key=\"lost\">" + localTranslations["lost"] + "</span>";
