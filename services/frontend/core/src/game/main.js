@@ -464,8 +464,8 @@ function endGame(winner) {
     state = 0;
     updateScore();
     showWinner(winnerName);
-    sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2);
     insertButton(winnerName);
+    sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2);
 }
 
 document.addEventListener('click', (event) => {

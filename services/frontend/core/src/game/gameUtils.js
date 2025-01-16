@@ -12,7 +12,7 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
     let userLogged = localStorage.getItem("username");
     let otherPlayer = nameP2 == userLogged ? nameP1 : nameP2;
     let tournamentWon = 0;
-    if (getEndState && ((userLogged == nameP1 && scoreP1 > scoreP2) || userLogged == nameP2 && scoreP2 > scoreP1))
+    if (getEndState() && ((userLogged == nameP1 && scoreP1 > scoreP2) || userLogged == nameP2 && scoreP2 > scoreP1))
         tournamentWon = 1;
     if (userLogged != nameP1 && userLogged != nameP2 && !localStorage.getItem("UID"))
         return;
