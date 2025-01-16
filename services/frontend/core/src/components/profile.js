@@ -245,6 +245,8 @@ const submitProfileForm = async form => {
 			upload = false;
         }
 		displayUserProfile();
+		localStorage.setItem("username", form.username.value);
+		console.log("username", form.username.value);
 
 	} catch (error) {
 		showFormErrors(error.message);

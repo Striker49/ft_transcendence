@@ -14,7 +14,7 @@ export async function sendGameStats(scoreP1, scoreP2, ai, nameP1, nameP2) {
     let tournamentWon = 0;
     if (getEndState && ((userLogged == nameP1 && scoreP1 > scoreP2) || userLogged == nameP2 && scoreP2 > scoreP1))
         tournamentWon = 1;
-    if (userLogged != nameP1 && userLogged != nameP2)
+    if (userLogged != nameP1 && userLogged != nameP2 && !localStorage.getItem("UID"))
         return;
 	try {
 		const response = await fetch(url, {
