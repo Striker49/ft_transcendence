@@ -64,7 +64,7 @@ Below are the key modules we've chosen to complete the project:
 - **User Dashboards & Statistics** 
 
 ## Setup  
-To get started with ft_trancendence locally:  
+To get started with ft_transcendence locally:  
 
 ### Prerequisites  
 - [Docker](https://www.docker.com/)
@@ -73,7 +73,7 @@ To get started with ft_trancendence locally:
 ```bash
 # Clone the repository
 git clone git@github.com:Striker49/ft_transcendence.git
-cd ft_trancendence
+cd ft_transcendence
 
 # Build and start the application
 make deploy
