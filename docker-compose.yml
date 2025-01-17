@@ -2,10 +2,10 @@ services:
   db:
     build:
       context: services/postgres
-      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+      dockerfile: build/Dockerfile
     environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${SQL_PASSWORD}
+      - POSTGRES_USER=${SQL_USER}
     volumes:
       - postgres-db:/var/lib/postgresql/data
     expose:
@@ -13,7 +13,7 @@ services:
     networks:
       - django_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${SQL_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,11 +22,12 @@ services:
   django:
     build:
       context: ./services/django
-      dockerfile: build/Dockerfile.dev
+      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
     env_file:
-      - ./services/django/.env.dev
+      - .env
     volumes:
       - ./services/django:/code
+      - ./services/django/core/mediafiles:/code/core/mediafiles
     expose:
       - "8000"
     networks:
@@ -44,7 +45,7 @@ services:
   frontend:
     build:
       context: ./services/frontend
-      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
+      dockerfile: build/Dockerfile
     volumes:
       - /frontend/node_modules
       - ./services/frontend/core:/frontend/
@@ -62,9 +63,7 @@ services:
   nginx:
     build:
       context: ./services/nginx
-      dockerfile: build/Dockerfile.${DOCKERFILE_EXT}
-    env_file:
-    - ./services/nginx/.env
+      dockerfile: build/Dockerfile
     volumes:
       - ./services/nginx/core/config:/etc/nginx/conf.d
       - ./services/django:/code

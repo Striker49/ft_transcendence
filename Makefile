@@ -30,23 +30,6 @@ deploy:
 	make build-hard
 	make up-shell
 
-dev:
-	make down
-	make build
-	make up
-
-prod:
-	make down
-	docker-compose -f docker-compose.prod.yml build --no-cache
-	docker-compose -f docker-compose.prod.yml up -d
-
-eval:
-	docker stop $$(docker ps -qa); \
-	docker rm $$(docker ps -qa); \
-	docker rmi -f $$(docker images -qa); \
-	docker volume rm $$(docker volume ls -q); \
-	docker network rm $$(docker network ls -q) 2>/dev/null
-
 clean:
 	docker rmi $$(docker images -f "dangling=true" -q)
 
