@@ -5,11 +5,17 @@
 2. [Modules Overview](#modules-overview)  
 3. [Setup](#setup)  
 4. [Usage](#usage)  
-5. [Contributors](#contributors)  
-6. [License](#license)  
+5. [Contributors](#contributors)   
 
 ## About  
 A feature-rich school(42) project implementing advanced backend, frontend, and gaming functionalities with support for multiple languages, 3D graphics, AI opponents, and more.
+
+## Some screenshots
+
+<p align="center">
+<img width="600" alt="game" src="screenshots/game.png">
+<img width="600" alt="profile" src="screenshots/profile.png">
+
 
 ### Key Features  
 - Real-time local multiplayer **Pong** game.  
