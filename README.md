@@ -87,7 +87,7 @@ docker-compose up --build
 - Navigate through various features such as profile, PONG game and tournament, and customizable game settings.  
 
 ## Contributors  
-- **Oli**: Frontend toolkit, user management, dashboards.  
+- **[Oli](https://github.com/oroy-dev)**: Frontend toolkit, user management, dashboards.  
 - **Seb**: Advanced 3D techniques, multilingual support, game customization.  
 - **Juan**: Project Structure
 - **[Ziggy](https://github.com/ziggyvdven)**: Backend, database, authentication.  
