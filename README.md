@@ -90,4 +90,4 @@ docker-compose up --build
 - **Oli**: Frontend toolkit, user management, dashboards.  
 - **Seb**: Advanced 3D techniques, multilingual support, game customization.  
 - **Juan**: Project Structure
-- **Ziggy**: Backend, database, authentication.  
+- **[Ziggy](https://github.com/ziggyvdven)**: Backend, database, authentication.  
